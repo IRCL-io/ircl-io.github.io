@@ -380,80 +380,76 @@
         <!-- End of Merch-->
 
         <!--FAQs-->
-        <section id="faqs" class="scrollto clearfix">
-            <div class="row clearfix">
+<section id="faqs" class="scrollto clearfix">
+    <div class="row clearfix">
 
-                <div class="col-3">
-
-                    <div class="section-heading">
-                        <h3>FAQs</h3>
-                        <h2 class="section-title">Frequently Asked Questions</h2>
-                        <p class="section-subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                            eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam!</p>
-                            <!-- Search Input -->
+        <div class="col-3">
+            <div class="section-heading">
+                <h3>FAQs</h3>
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam!</p>
                 <input type="text" id="searchInput" placeholder="Search FAQs..." />
-                    </div>
-                </div>
-
-                <div class="col-2-3">
-				<!-- Your FAQ items go here -->
-					<a href="#faqs" class="col-3" data-faq="What Materials Should I Use?">
-                        <img src="./images/company-images/company-logo1.png" alt="What Materials Should I Use?"/>
-                        <div class="client-overlay"><span>What Materials Should I Use?</span>
-                        </div>
-                    </a>
-                    
-                    <a href="#faqs" class="col-3" data-faq="How Much Does it Cost?">
-                        <img src="./images/company-images/company-logo2.png" alt="How Much Does it Cost?"/>
-                        <div class="client-overlay"><span>How Much Does it Cost?</span>
-                        </div>
-                    </a>
-                    
-                    <a href="#faqs" class="col-3" data-faq="What are the Rules?">
-                        <img src="./images/company-images/company-logo3.png" alt="What are the Rules?"/>
-                        <div class="client-overlay"><span>What are the Rules?</span>
-                        </div>
-                    </a>
-                    
-                    <a href="#faqs" class="col-3" data-faq="Who Can Fight?">
-                        <img src="./images/company-images/company-logo4.png" alt="Who Can Fight?"/>
-                        <div class="client-overlay"><span>Who Can Fight?</span>
-                        </div>
-                    </a>
-                    
-                    <a href="#faqs" class="col-3" data-faq="Where Do We Fight?">
-                        <img src="./images/company-images/company-logo5.png" alt="Where Do We Fight?"/>
-                        <div class="client-overlay"><span>Where Do We Fight?</span>
-                        </div>
-                    </a>
-                    
-                    <a href="#faqs" class="col-3" data-faq="How Often Do Fights Happen?">
-                        <img src="./images/company-images/company-logo6.png" alt="How Often Do Fights Happen?"/>
-                        <div class="client-overlay"><span>How Often Do Fights Happen?</span>
-                        </div>
-                    </a>
-                    
-                    <a href="#faqs" class="col-3">
-                        <img src="./images/company-images/company-logo7.png" alt="Company"/>
-                        <div class="client-overlay"><span>Ball</span>
-                        </div>
-                    </a>
-                    
-                    <a href="#faqs" class="col-3">
-                        <img src="./images/company-images/company-logo8.png" alt="Company"/>
-                        <div class="client-overlay"><span>Cold</span>
-                        </div>
-                    </a>
-
-                    <a href="#faqs" class="col-3">
-                        <img src="./images/company-images/company-logo9.png" alt="Company"/>
-                        <div class="client-overlay"><span>Cold</span>
-                        </div>
-                    </a>
-                </div>
             </div>
-        </section>
+        </div>
+
+        <div class="col-2-3">
+            <!-- FAQ items -->
+            <div class="faq-item">
+                <a href="#faqs" class="col-3" data-faq="What Materials Should I Use?" onclick="showFAQ(this, 'answer1')">
+                    <img src="./images/company-images/company-logo1.png" alt="What Materials Should I Use?" />
+                    <div class="client-overlay">
+                        <span class="faq-answer">What Materials Should I Use?</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="faq-item">
+                <a href="#faqs" class="col-3" data-faq="How Much Does it Cost?" onclick="showFAQ(this, 'answer2')">
+                    <img src="./images/company-images/company-logo2.png" alt="How Much Does it Cost?" />
+                    <div class="client-overlay">
+                        <span class="faq-answer">How Much Does it Cost?</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="faq-item">
+                <a href="#faqs" class="col-3" data-faq="What are the Rules?" onclick="showFAQ(this, 'answer3')">
+                    <img src="./images/company-images/company-logo3.png" alt="What are the Rules?" />
+                    <div class="client-overlay">
+                        <span class="faq-answer">What are the Rules?</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="faq-item">
+                <a href="#faqs" class="col-3" data-faq="Who Can Fight?" onclick="showFAQ(this, 'answer4')">
+                    <img src="./images/company-images/company-logo4.png" alt="Who Can Fight?" />
+                    <div class="client-overlay">
+                        <span class="faq-answer">Who Can Fight?</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="faq-item">
+                <a href="#faqs" class="col-3" data-faq="Where Do We Fight?" onclick="showFAQ(this, 'answer5')">
+                    <img src="./images/company-images/company-logo5.png" alt="Where Do We Fight?" />
+                    <div class="client-overlay">
+                        <span class="faq-answer">Where Do We Fight?</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="faq-item">
+                <a href="#faqs" class="col-3" data-faq="How Often Do Fights Happen?" onclick="showFAQ(this, 'answer6')">
+                    <img src="./images/company-images/company-logo6.png" alt="How Often Do Fights Happen?" />
+                    <div class="client-overlay">
+                        <span class="faq-answer">How Often Do Fights Happen?</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
         <!--End of FAQs-->
 
         <!-- Calendar-->
@@ -582,6 +578,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
+</script>
+<script>
+function showFAQ(faqLink, faqId) {
+    const faqAnswers = {
+        'answer1': 'For the best results, you should use high-strength plastic and/or aluminum for the robot frame.',
+        'answer2': 'The cost varies depending on the robot parts, but basic kits start at $300.',
+        'answer3': 'The rules are simple: no outside weapons, robots must pass safety checks, and there are no weight classes.',
+        'answer4': 'Anyone can fight, as long as they pass the safety checks and adhere to the competition rules.',
+        'answer5': 'Fights take place in designated arenas located in major cities across the country.',
+        'answer6': 'Fights happen every two months, with smaller local events occurring more frequently.'
+    };
+
+    // Find the closest parent with class 'faq-item' and then find the answer container
+    const faqItem = faqLink.closest('.faq-item');
+    const answerContainer = faqItem.querySelector('.faq-answer');
+
+    // Set the answer inside the appropriate container
+    const answer = faqAnswers[faqId] || 'Answer not found.';
+    answerContainer.innerText = answer;
+}
 </script>
 </body>
 </html>
