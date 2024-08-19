@@ -275,8 +275,10 @@
                 <div class="col-3">
                     <!--Message from the Owner-->
                     <blockquote class="testimonial text-right bigtest">
-                        <q>Ever since I was a young child, I remember the fleeting instances of seeing robotics fighting on TV. Immediately I craved that experience, but it wasn't for a long time that I felt like building a cool robot like that was even possible,even when I became an engineer as an adult. Today however, because of the latest greatest technologies available like RC, drones, and 3D printing, it is easier than ever to make and maintain your awesome design. Our league helps with fostering that access and uniting people to make these experiences real for everyone.</q>
-                        <footer>- David Ultis, Founder</footer>
+                        <q id="quotible">Art of war</q>
+
+                        <footer>- Sun Tzu, The Art of War</footer>
+                        
                     </blockquote>
                     <!-- End of Testimonial-->
 
@@ -529,6 +531,7 @@
 </div>
 
 <!-- Include JavaScript resources-->
+<script src="js/quote.js"></script>
 <script src="js/jquery.1.8.3.min.js"></script>
 <script src="js/wow.min.js"></script>
 <script src="js/featherlight.min.js"></script>
@@ -598,6 +601,7 @@ function showFAQ(faqLink, faqId) {
     const answer = faqAnswers[faqId] || 'Answer not found.';
     answerContainer.innerText = answer;
 }
+    
 </script>
 </body>
 </html>
