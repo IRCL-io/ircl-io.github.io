@@ -24,22 +24,20 @@
     <g transform="translate(0, 50)">
         <rect width="300" height="450" fill="rgb(51, 51, 51)" stroke="black" rx="15" ry="15"/>
         <image href="https://ircl-io.github.io/images/IRCL_logo_Transparent2.png" x="1" y="14" width="290" stroke="black" />
-        
-        <text x="150.0" y="42" font-size="24" font-weight="bold" fill="white" text-anchor="middle" font-family="Roboto">Scorpious</text>
-        
-        <image href="https://www.robotcombatevents.com/assets/RCELogo-3383ca77f76e5be2b7755ea9d0c464aea25a87d8c9f2a4cffd63643392f59fe7.png" x="35" y="60" width="230" height="230"/>
+        <text x="150.0" y="42" font-size="24" font-weight="bold" fill="white" text-anchor="middle" font-family="Roboto">JUMBO</text>
+        <image href="https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/11026/jumbo.jpg" x="35" y="60" width="230" height="230"/>
+        <text x="150.0" y="330" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">rank: 172</text>
         <rect x="0" y="353" width="300" height="40" fill="rgba(51, 51, 51, 0.5)" />
-        <text x="150.0" y="380" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">Wright Stuff</text>
+        <text x="150.0" y="380" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">Something</text>
         <text x="150.0" y="420" font-size="16" fill="grey" text-anchor="middle" font-family="Roboto">IRCL Antmageddon 2024</text>
     </g>
     
     <g transform="translate(320, 50)">
         <rect width="300" height="450" fill="rgb(51, 51, 51)" stroke="black" rx="15" ry="15"/>
         <image href="https://ircl-io.github.io/images/IRCL_logo_Transparent2.png" x="1" y="14" width="290" stroke="black" />
-        
-        <text x="150.0" y="42" font-size="24" font-weight="bold" fill="white" text-anchor="middle" font-family="Roboto">JUMBO</text>
-        
-        <image href="https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/11026/jumbo.jpg" x="35" y="60" width="230" height="230"/>
+        <text x="150.0" y="42" font-size="24" font-weight="bold" fill="white" text-anchor="middle" font-family="Roboto">Stingray</text>
+        <image href="https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/9240/20230523_150358.jpg" x="35" y="60" width="230" height="230"/>
+        <text x="150.0" y="330" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">first event</text>
         <rect x="0" y="353" width="300" height="40" fill="rgba(51, 51, 51, 0.5)" />
         <text x="150.0" y="380" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">Something</text>
         <text x="150.0" y="420" font-size="16" fill="grey" text-anchor="middle" font-family="Roboto">IRCL Antmageddon 2024</text>
@@ -48,22 +46,20 @@
     <g transform="translate(0, 520)">
         <rect width="300" height="450" fill="rgb(51, 51, 51)" stroke="black" rx="15" ry="15"/>
         <image href="https://ircl-io.github.io/images/IRCL_logo_Transparent2.png" x="1" y="14" width="290" stroke="black" />
-        
-        <text x="150.0" y="42" font-size="24" font-weight="bold" fill="white" text-anchor="middle" font-family="Roboto">Stingray</text>
-        
-        <image href="https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/9240/20230523_150358.jpg" x="35" y="60" width="230" height="230"/>
+        <text x="150.0" y="42" font-size="24" font-weight="bold" fill="white" text-anchor="middle" font-family="Roboto">Brawndo the thirst mutilator</text>
+        <image href="https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/16424/PXL_20241026_021724261.jpg" x="35" y="60" width="230" height="230"/>
+        <text x="150.0" y="330" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">first event</text>
         <rect x="0" y="353" width="300" height="40" fill="rgba(51, 51, 51, 0.5)" />
-        <text x="150.0" y="380" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">Something</text>
+        <text x="150.0" y="380" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">Idiocracy</text>
         <text x="150.0" y="420" font-size="16" fill="grey" text-anchor="middle" font-family="Roboto">IRCL Antmageddon 2024</text>
     </g>
     
     <g transform="translate(320, 520)">
         <rect width="300" height="450" fill="rgb(51, 51, 51)" stroke="black" rx="15" ry="15"/>
         <image href="https://ircl-io.github.io/images/IRCL_logo_Transparent2.png" x="1" y="14" width="290" stroke="black" />
-        
-        <text x="150.0" y="42" font-size="24" font-weight="bold" fill="white" text-anchor="middle" font-family="Roboto">Brawndo the thirst mutilator</text>
-        
-        <image href="https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/16424/PXL_20241026_021724261.jpg" x="35" y="60" width="230" height="230"/>
+        <text x="150.0" y="42" font-size="24" font-weight="bold" fill="white" text-anchor="middle" font-family="Roboto">Docter Lexus</text>
+        <image href="https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/9813/forker.png" x="35" y="60" width="230" height="230"/>
+        <text x="150.0" y="330" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">first event</text>
         <rect x="0" y="353" width="300" height="40" fill="rgba(51, 51, 51, 0.5)" />
         <text x="150.0" y="380" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">Idiocracy</text>
         <text x="150.0" y="420" font-size="16" fill="grey" text-anchor="middle" font-family="Roboto">IRCL Antmageddon 2024</text>
