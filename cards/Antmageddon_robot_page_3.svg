@@ -1,0 +1,83 @@
+
+    <svg width="816" height="1056" xmlns="http://www.w3.org/2000/svg">
+        <!-- Link to Google Roboto font using @font-face -->
+        <style>
+            @font-face {
+                font-family: 'Roboto';
+                font-style: normal;
+                font-weight: 400;
+                src: url('https://fonts.gstatic.com/s/roboto/v29/KFOmCnqEu92Fr1Mu4mxP.ttf') format('truetype');
+            }
+            @font-face {
+                font-family: 'Roboto';
+                font-style: normal;
+                font-weight: 700;
+                src: url('https://fonts.gstatic.com/s/roboto/v29/KFOlCnqEu92Fr1MmWUlfBBc9.ttf') format('truetype');
+            }
+            text {
+                font-family: 'Roboto', sans-serif;
+            }
+        </style>
+
+        
+    
+    <g transform="translate(0, 0)">
+        <rect width="300" height="450" fill="rgb(51, 51, 51)" stroke="black" rx="15" ry="15"/>
+        <image href="https://ircl-io.github.io/images/IRCL_logo_Transparent2.png" x="1" y="14" width="290" stroke="black" />
+        <text x="150.0" y="42" font-size="24" font-weight="bold" fill="white" text-anchor="middle" font-family="Roboto">Freyja</text>
+        <image href="https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/16616/Freyja.jpg" x="35" y="60" width="230" height="230"/>
+        <text x="150.0" y="330" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">first event</text>
+
+        <text x="150.0" y="340" font-size="10" fill="white" text-anchor="middle" font-family="Roboto">ant weight</text>
+        <text x="150.0" y="360" font-size="10" fill="white" text-anchor="middle" font-family="Roboto">team</text>
+
+        <rect x="0" y="353" width="300" height="40" fill="rgba(51, 51, 51, 0.5)" />
+        <text x="150.0" y="380" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">Batchelor Bots</text>
+        <text x="150.0" y="420" font-size="16" fill="grey" text-anchor="middle" font-family="Roboto">IRCL! Antmageddon 2024</text>
+    </g>
+    
+    <g transform="translate(320, 0)">
+        <rect width="300" height="450" fill="rgb(51, 51, 51)" stroke="black" rx="15" ry="15"/>
+        <image href="https://ircl-io.github.io/images/IRCL_logo_Transparent2.png" x="1" y="14" width="290" stroke="black" />
+        <text x="150.0" y="42" font-size="24" font-weight="bold" fill="white" text-anchor="middle" font-family="Roboto">Tiny Totem</text>
+        <image href="https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/17152/TinyTotem.JPG" x="35" y="60" width="230" height="230"/>
+        <text x="150.0" y="330" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">first event</text>
+
+        <text x="150.0" y="340" font-size="10" fill="white" text-anchor="middle" font-family="Roboto">ant weight</text>
+        <text x="150.0" y="360" font-size="10" fill="white" text-anchor="middle" font-family="Roboto">team</text>
+
+        <rect x="0" y="353" width="300" height="40" fill="rgba(51, 51, 51, 0.5)" />
+        <text x="150.0" y="380" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">Barnhouse Robotics</text>
+        <text x="150.0" y="420" font-size="16" fill="grey" text-anchor="middle" font-family="Roboto">IRCL! Antmageddon 2024</text>
+    </g>
+    
+    <g transform="translate(0, 470)">
+        <rect width="300" height="450" fill="rgb(51, 51, 51)" stroke="black" rx="15" ry="15"/>
+        <image href="https://ircl-io.github.io/images/IRCL_logo_Transparent2.png" x="1" y="14" width="290" stroke="black" />
+        <text x="150.0" y="42" font-size="24" font-weight="bold" fill="white" text-anchor="middle" font-family="Roboto">ICU</text>
+        <image href="https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/13076/Spatula.jpg" x="35" y="60" width="230" height="230"/>
+        <text x="150.0" y="330" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">rank: 507</text>
+
+        <text x="150.0" y="340" font-size="10" fill="white" text-anchor="middle" font-family="Roboto">ant weight</text>
+        <text x="150.0" y="360" font-size="10" fill="white" text-anchor="middle" font-family="Roboto">team</text>
+
+        <rect x="0" y="353" width="300" height="40" fill="rgba(51, 51, 51, 0.5)" />
+        <text x="150.0" y="380" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">Tele Present Tense</text>
+        <text x="150.0" y="420" font-size="16" fill="grey" text-anchor="middle" font-family="Roboto">IRCL! Antmageddon 2024</text>
+    </g>
+    
+    <g transform="translate(320, 470)">
+        <rect width="300" height="450" fill="rgb(51, 51, 51)" stroke="black" rx="15" ry="15"/>
+        <image href="https://ircl-io.github.io/images/IRCL_logo_Transparent2.png" x="1" y="14" width="290" stroke="black" />
+        <text x="150.0" y="42" font-size="24" font-weight="bold" fill="white" text-anchor="middle" font-family="Roboto">Micro Raptor</text>
+        <image href="https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/12183/IMG_20240712_161424738.jpg" x="35" y="60" width="230" height="230"/>
+        <text x="150.0" y="330" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">rank: 291</text>
+
+        <text x="150.0" y="340" font-size="10" fill="white" text-anchor="middle" font-family="Roboto">plant weight</text>
+        <text x="150.0" y="360" font-size="10" fill="white" text-anchor="middle" font-family="Roboto">team</text>
+
+        <rect x="0" y="353" width="300" height="40" fill="rgba(51, 51, 51, 0.5)" />
+        <text x="150.0" y="380" font-size="20" fill="white" text-anchor="middle" font-family="Roboto">Team HyperTech Robotics</text>
+        <text x="150.0" y="420" font-size="16" fill="grey" text-anchor="middle" font-family="Roboto">IRCL! Antmageddon 2024</text>
+    </g>
+    </svg>
