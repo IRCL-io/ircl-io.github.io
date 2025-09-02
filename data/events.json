@@ -1,0 +1,38 @@
+[
+  {
+    "title": "Ho Ho Havoc 2025",
+    "date": "2025-11-22",
+    "date_text": "Nov 22, 2025",
+    "location": "ABU Games",
+    "href": "events/Ho Ho Havoc 2025.html",
+    "image": "images/Ho_Ho_Havoc_Flyer.png",
+    "external_url": null
+  },
+  {
+    "title": "Bot Oblivion 2025",
+    "date": null,
+    "date_text": "TBD 2025",
+    "location": "",
+    "href": "events/Bot Oblivion 2025.html",
+    "image": "https://robotcombatevents.s3.amazonaws.com/uploads/event/logo/4646/BotOblivion2025.png",
+    "external_url": "https://www.robotcombatevents.com/events/4646"
+  },
+  {
+    "title": "Spring Bot Breaker 2025",
+    "date": null,
+    "date_text": "TBD 2025",
+    "location": "",
+    "href": "events/Spring Bot Breaker 2025.html",
+    "image": "https://img.youtube.com/vi/4E-GoIVSqRU/hqdefault.jpg",
+    "external_url": "https://www.robotcombatevents.com/events/3557"
+  },
+  {
+    "title": "Antmageddon 2024",
+    "date": "2024-11-23",
+    "date_text": "Nov 23, 2024",
+    "location": "ABU Games",
+    "href": "events/Antmageddon 2024.html",
+    "image": "https://robotcombatevents.s3.amazonaws.com/uploads/event/logo/1940/IRCLbanner.png",
+    "external_url": "https://www.robotcombatevents.com/events/1940"
+  }
+]

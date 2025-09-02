@@ -7,8 +7,8 @@
     <title>IRCL - Idaho Robot Combat League</title>
 
     <!-- Meta Keywords and Description -->
-    <meta name="keywords" content="">
-    <meta name="description" content="">
+    <meta name="keywords" content="combat robotics, Idaho, robot combat, IRCL, events, workshops">
+    <meta name="description" content="Idaho Robot Combat League hosts combat robotics events and workshops across the Treasure Valley. Join our community, learn, compete, and support STEM in Idaho.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
     <!-- Favicon -->
@@ -19,13 +19,26 @@
 
     <!-- Namari Color CSS -->
     <link rel="stylesheet" href="./css/color.css">
+    <!-- IRCL custom styles -->
+    <link rel="stylesheet" href="./css/custom.css">
 
-    <!-- Icon Fonts - Font Awesome Icons -->
-    <link rel="stylesheet" href="./css/font-awesome.min.css">
+    <!-- Icon Fonts - Font Awesome Icons (v5) -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
     <!-- Animate CSS -->
     <link href="./css/animate.css" rel="stylesheet" type="text/css">
+
+    <!-- Open Graph / Twitter -->
+    <link rel="canonical" href="https://ircl-io.github.io/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="IRCL - Idaho Robot Combat League">
+    <meta property="og:description" content="Idaho Robot Combat League hosts combat robotics events and workshops across the Treasure Valley. Join our community, learn, compete, and support STEM in Idaho.">
+    <meta property="og:url" content="https://ircl-io.github.io/">
+    <meta property="og:image" content="https://ircl-io.github.io/images/IRCL_logo_Transparent.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="IRCL - Idaho Robot Combat League">
+    <meta name="twitter:description" content="Idaho Robot Combat League hosts combat robotics events and workshops across the Treasure Valley. Join our community, learn, compete, and support STEM in Idaho.">
+    <meta name="twitter:image" content="https://ircl-io.github.io/images/IRCL_logo_Transparent.png">
 
     <!-- Google Webfonts -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800" rel="stylesheet" type="text/css">
@@ -74,23 +87,13 @@
                         <!--Social Icons in Header-->
                         <ul class="social-icons">
                             <li>
-                                <a target="_blank" title="Facebook" href="https://www.facebook.com/groups/3329951360635273/?_rdr">
+                                <a target="_blank" rel="noopener noreferrer" title="Facebook" href="https://www.facebook.com/groups/3329951360635273/?_rdr">
                                     <i class="fab fa-facebook fa-1x"></i><span>Facebook</span>
                                 </a>
                             </li>
                             <li>
-                                <a target="_blank" title="Discord" href="https://discord.com/invite/NwgPEAYwya">
+                                <a target="_blank" rel="noopener noreferrer" title="Discord" href="https://discord.com/invite/NwgPEAYwya">
                                     <i class="fab fa-discord fa-1x"></i><span>Discord</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a target="_blank" title="Twitter" href="http://www.twitter.com/username">
-                                    <i class="fab fa-twitter fa-1x"></i><span>Twitter</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a target="_blank" title="Instagram" href="http://www.instagram.com/username">
-                                    <i class="fab fa-instagram fa-1x"></i><span>Instagram</span>
                                 </a>
                             </li>
                         </ul>
@@ -149,9 +152,8 @@
 
                 <!--Call to Action-->
                 <h3>November 22 at ABU Games!</h3>
-                <a href="./events/Ho Ho Havoc 2025.html"><img src="./images/Ho_Ho_Havoc_Flyer.png"></a>
-                <h3>November 22 at ABU Games!</h3>
-                <a target="_blank" title="Donate" href="https://www.paypal.com/donate/?campaign_id=LJ5XKXT6HJRDU" class="button"><i class="fa fa-money"></i> DONATE HERE</a>
+                <a href="./events/Ho Ho Havoc 2025.html"><img src="./images/Ho_Ho_Havoc_Flyer.png" alt="Ho Ho Havoc 2025 Flyer" loading="lazy"></a>
+                <a target="_blank" rel="noopener noreferrer" title="Donate" href="https://www.paypal.com/donate/?campaign_id=LJ5XKXT6HJRDU" class="button"><i class="fa fa-money"></i> DONATE HERE</a>
                 <!--End Call to Action-->
 
             </div>
@@ -169,12 +171,36 @@
                 <div class="col-3">
                     <div class="section-heading">
                         <h3>NEWS EVENTS</h3>
-                        <a href="events/Ho Ho Havoc 2025.html"><iframe src="events/Ho Ho Havoc 2025.html" height="300px" width="100%" title="Ho Ho Havoc 2025"></iframe></a>
-                        <iframe src="events/Bot Oblivion 2025.html" height="300px" width="100%" title="Bot Oblivion 2025"></iframe>
-
-                        <iframe src="events/Spring Bot Breaker 2025.html" height="300px" width="100%" title="Bot Oblivion 2025"></iframe>
-
-                        <iframe src="events/Antmageddon 2024.html" height="300px" width="100%" title="Antmageddon 2024"></iframe>
+                        <div id="eventCards" class="event-cards">
+                            <a class="event-card" href="events/Ho Ho Havoc 2025.html">
+                                <img src="images/Ho_Ho_Havoc_Flyer.png" alt="Ho Ho Havoc 2025 flyer" loading="lazy">
+                                <div class="event-card-body">
+                                    <h4>Ho Ho Havoc 2025</h4>
+                                    <p class="event-meta">Nov 22 • ABU Games</p>
+                                </div>
+                            </a>
+                            <a class="event-card" href="events/Bot Oblivion 2025.html">
+                                <img src="images/IRCL_logo_Transparent.png" alt="IRCL logo" loading="lazy">
+                                <div class="event-card-body">
+                                    <h4>Bot Oblivion 2025</h4>
+                                    <p class="event-meta">Details and video</p>
+                                </div>
+                            </a>
+                            <a class="event-card" href="events/Spring Bot Breaker 2025.html">
+                                <img src="images/IRCL_logo_Transparent.png" alt="IRCL logo" loading="lazy">
+                                <div class="event-card-body">
+                                    <h4>Spring Bot Breaker 2025</h4>
+                                    <p class="event-meta">Details and video</p>
+                                </div>
+                            </a>
+                            <a class="event-card" href="events/Antmageddon 2024.html">
+                                <img src="images/IRCL_logo_Transparent.png" alt="IRCL logo" loading="lazy">
+                                <div class="event-card-body">
+                                    <h4>Antmageddon 2024</h4>
+                                    <p class="event-meta">Nov 23, 2024 • ABU Games</p>
+                                </div>
+                            </a>
+                        </div>
                         
                     </div>
 
@@ -251,17 +277,17 @@
                  data-featherlight-filter="a">
 
                 <a href="./images/gallery-images/gallery-image-1.jpg" data-featherlight="image" class="col-3 wow fadeIn"
-                   data-wow-delay="0.1s"><img src="images/gallery-images/gallery-image-1.jpg" alt="Landing Page"/></a>
+                   data-wow-delay="0.1s"><img src="images/gallery-images/gallery-image-1.jpg" alt="IRCL gallery image 1" loading="lazy"/></a>
                 <a href="./images/gallery-images/gallery-image-2.jpg" data-featherlight="image" class="col-3 wow fadeIn"
-                   data-wow-delay="0.3s"><img src="images/gallery-images/gallery-image-2.jpg" alt="Landing Page"/></a>
+                   data-wow-delay="0.3s"><img src="images/gallery-images/gallery-image-2.jpg" alt="IRCL gallery image 2" loading="lazy"/></a>
                 <a href="./images/gallery-images/gallery-image-3.jpg" data-featherlight="image" class="col-3 wow fadeIn"
-                   data-wow-delay="0.5s"><img src="images/gallery-images/gallery-image-3.jpg" alt="Landing Page"/></a>
+                   data-wow-delay="0.5s"><img src="images/gallery-images/gallery-image-3.jpg" alt="IRCL gallery image 3" loading="lazy"/></a>
                 <a href="./images/gallery-images/gallery-image-4.jpg" data-featherlight="image" class="col-3 wow fadeIn"
-                   data-wow-delay="1.1s"><img src="images/gallery-images/gallery-image-4.jpg" alt="Landing Page"/></a>
+                   data-wow-delay="1.1s"><img src="images/gallery-images/gallery-image-4.jpg" alt="IRCL gallery image 4" loading="lazy"/></a>
                 <a href="./images/gallery-images/gallery-image-5.jpg" data-featherlight="image" class="col-3 wow fadeIn"
-                   data-wow-delay="0.9s"><img src="images/gallery-images/gallery-image-5.jpg" alt="Landing Page"/></a>
+                   data-wow-delay="0.9s"><img src="images/gallery-images/gallery-image-5.jpg" alt="IRCL gallery image 5" loading="lazy"/></a>
                 <a href="./images/gallery-images/gallery-image-6.jpg" data-featherlight="image" class="col-3 wow fadeIn"
-                   data-wow-delay="0.7s"><img src="images/gallery-images/gallery-image-6.jpg" alt="Landing Page"/></a>
+                   data-wow-delay="0.7s"><img src="images/gallery-images/gallery-image-6.jpg" alt="IRCL gallery image 6" loading="lazy"/></a>
 
         </aside>
         <!--End of Gallery-->
@@ -294,11 +320,11 @@
                     </div>
                     
                     <p>
-                        Just Cuz Robotics, run buy Seth Schaffer, has just released a new WEKA dual 20a brushed ESC that has some pretty niffy features;
-                        aside from its incredibly compact size. With a few simple steps, this little guy can actualy detect your inputs and program
+                        Just Cuz Robotics, run by Seth Schaffer, has released a new WEKA dual 20A brushed ESC with some pretty nifty features,
+                        aside from its incredibly compact size. With a few simple steps, this little guy can actually detect your inputs and program
                         its own mixing! Check out his great video on it here:
                      </p>
-                     <p><a target="_blank" title="he Heart of the Best Driving Bots: WEKA Intro and User Guide" href="https://www.youtube.com/watch?v=nK85cw2gmbU" class="button"><i class="fa fa-user" aria-hidden="ture"></i>  WEKA User Guide </a>
+                    <p><a target="_blank" rel="noopener noreferrer" title="The Heart of the Best Driving Bots: WEKA Intro and User Guide" href="https://www.youtube.com/watch?v=nK85cw2gmbU" class="button"><i class="fa fa-user" aria-hidden="true"></i>  WEKA User Guide </a>
                     </p>
                 </div>
                 <!--End Content Right Side-->
@@ -331,7 +357,7 @@
                     <footer>IRCL Costume Glasses
                     <br>
                     <div class="section-heading">
-                    <h3>Out of Stock. But, you can still <a target="_blank" title="Donate" href="https://www.paypal.com/donate/?campaign_id=LJ5XKXT6HJRDU" class="button"><i class="fab fa-paypal"></i> DONATE HERE</a></h3>
+                    <h3>Out of Stock. But, you can still <a target="_blank" rel="noopener noreferrer" title="Donate" href="https://www.paypal.com/donate/?campaign_id=LJ5XKXT6HJRDU" class="button"><i class="fab fa-paypal"></i> DONATE HERE</a></h3>
                     </div>
                     </footer>
                 </blockquote>
@@ -343,7 +369,7 @@
                     <footer>IRCL Burgundy Bow Tie
                     <br>
                     <div class="section-heading">
-                    <h3>Out of Stock. But, you can still <a target="_blank" title="Donate" href="https://www.paypal.com/donate/?campaign_id=LJ5XKXT6HJRDU" class="button"><i class="fab fa-paypal"></i> DONATE HERE</a></h3>
+                    <h3>Out of Stock. But, you can still <a target="_blank" rel="noopener noreferrer" title="Donate" href="https://www.paypal.com/donate/?campaign_id=LJ5XKXT6HJRDU" class="button"><i class="fab fa-paypal"></i> DONATE HERE</a></h3>
                     </div>
 </footer>
                 </blockquote>
@@ -353,7 +379,7 @@
                     <footer>IRCL Suspenders
                     <br>
                     <div class="section-heading">
-                    <h3>Out of Stock. But, you can still <a target="_blank" title="Donate" href="https://www.paypal.com/donate/?campaign_id=LJ5XKXT6HJRDU" class="button"><i class="fab fa-paypal"></i> DONATE HERE</a></h3>
+                    <h3>Out of Stock. But, you can still <a target="_blank" rel="noopener noreferrer" title="Donate" href="https://www.paypal.com/donate/?campaign_id=LJ5XKXT6HJRDU" class="button"><i class="fab fa-paypal"></i> DONATE HERE</a></h3>
                     </div>
 </footer>
                 </blockquote>
@@ -453,23 +479,23 @@
 				<h2 class="section-title">External Links</h2>
 				</div>
 				<p>Event Registration:</p>
-				<p><a href="https://www.robotcombatevents.com" target=”_blank”>Robot Combat Events</a></p>
+				<p><a href="https://www.robotcombatevents.com" target="_blank" rel="noopener noreferrer">Robot Combat Events</a></p>
 				<hr>
 				<p>Rules</p>
-				<p><a href="https://sparc.tools/" target="_blank">SPARC Ruleset</a></p>
+				<p><a href="https://sparc.tools/" target="_blank" rel="noopener noreferrer">SPARC Ruleset</a></p>
 				<hr>
 				<p>Robot Designs:</p>
-				<p><a href="https://teammalice.com/index.php/scar-kit-and-spares/scar-plastic-antweight-electronics-kit/" target=”_blank”>Team Malice Plastic Antweight Designs</a></p>
+				<p><a href="https://teammalice.com/index.php/scar-kit-and-spares/scar-plastic-antweight-electronics-kit/" target="_blank" rel="noopener noreferrer">Team Malice Plastic Antweight Designs</a></p>
 				<hr>
 				<p>Robot Parts:</p>
-				<p><a href="https://www.repeat-robotics.com" target=”_blank”>Repeat Robotics</a></p>
-				<p><a href="https://www.justcuzrobotics.com" target=”_blank”>Just 'Cuz Robotics</a></p>
-				<p><a href="https://www.palmbeachbots.com" target=”_blank”>Palm Beach Bots</a></p>
+				<p><a href="https://www.repeat-robotics.com" target="_blank" rel="noopener noreferrer">Repeat Robotics</a></p>
+				<p><a href="https://www.justcuzrobotics.com" target="_blank" rel="noopener noreferrer">Just 'Cuz Robotics</a></p>
+				<p><a href="https://www.palmbeachbots.com" target="_blank" rel="noopener noreferrer">Palm Beach Bots</a></p>
 				<hr>
 				<p>Friends of IRCL</p>
-				<p><a href="https://www.facebook.com/UtahCombatRobotics/" target="_blank">Utah Combat Robotics (UCR)</a></p>
-				<p><a href="https://crimsonrobotics.com/" target="_blank">Crimson Robotics</a></p>
-				<p><a href="http://azroboticcombat.com/" target="_blank">Arizona Robotic Combat (ARC)</a></p>
+				<p><a href="https://www.facebook.com/UtahCombatRobotics/" target="_blank" rel="noopener noreferrer">Utah Combat Robotics (UCR)</a></p>
+				<p><a href="https://crimsonrobotics.com/" target="_blank" rel="noopener noreferrer">Crimson Robotics</a></p>
+				<p><a href="http://azroboticcombat.com/" target="_blank" rel="noopener noreferrer">Arizona Robotic Combat (ARC)</a></p>
 			</div>
 		</section>
         <!-- End of Calendar-->
@@ -487,23 +513,13 @@
             <!--Social Icons in Footer-->
             <ul class="col-2 social-icons">
                 <li>
-                    <a target="_blank" title="Facebook" href="https://www.facebook.com/username">
-                        <i class="fa fab-facebook fa-1x"></i><span>Facebook</span>
+                    <a target="_blank" rel="noopener noreferrer" title="Facebook" href="https://www.facebook.com/groups/3329951360635273/?_rdr">
+                        <i class="fab fa-facebook fa-1x"></i><span>Facebook</span>
                     </a>
                 </li>
                 <li>
-                    <a target="_blank" title="Google+" href="http://google.com/+username">
-                        <i class="fa fab-google-plus fa-1x"></i><span>Google+</span>
-                    </a>
-                </li>
-                <li>
-                    <a target="_blank" title="Twitter" href="http://www.twitter.com/username">
-                        <i class="fa fab-twitter fa-1x"></i><span>Twitter</span>
-                    </a>
-                </li>
-                <li>
-                    <a target="_blank" title="Instagram" href="http://www.instagram.com/username">
-                        <i class="fa fab-instagram fa-1x"></i><span>Instagram</span>
+                    <a target="_blank" rel="noopener noreferrer" title="Discord" href="https://discord.com/invite/NwgPEAYwya">
+                        <i class="fab fa-discord fa-1x"></i><span>Discord</span>
                     </a>
                 </li>
             </ul>
@@ -528,6 +544,7 @@
 <script src="js/lightbox.min.js"></script>
 <script src="js/site.js"></script>
 <script src="js/quote.js"></script>
+<script src="js/events.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
@@ -570,11 +587,11 @@ document.addEventListener('DOMContentLoaded', function() {
 function showFAQ(faqLink, faqId) {
     const faqAnswers = {
         'answer1': 'For the best results, you should use high-strength plastic and/or aluminum for the robot frame.',
-        'answer2': 'The cost varies depending on the robot size class, parts, but basic kits can start around $300.',
-        'answer3': 'The rules IRCL uses are available in the "External Links" secion.',
+        'answer2': 'The cost varies depending on the robot size class and parts, but basic kits can start around $300.',
+        'answer3': 'The rules IRCL uses are available in the "External Links" section.',
         'answer4': 'Anyone can fight, as long as they pass the safety checks and adhere to the competition rules.',
-        'answer5': 'IRCL fights take place at various places throughout the Treasure Valley. Check our Events Calendar.',
-        'answer6': 'IRCL trys to schedule fights every three months, with similar regional events taking palce all the time.',
+        'answer5': 'IRCL fights take place at various venues throughout the Treasure Valley. Check our Events Calendar.',
+        'answer6': 'IRCL tries to schedule fights every three months, with similar regional events taking place all the time.',
     };
 
     // Find the closest parent with class 'faq-item' and then find the answer container
