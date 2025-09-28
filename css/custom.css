@@ -51,3 +51,16 @@
     display: block;
     margin: 0 auto;
 }
+
+.newsletter-button {
+    margin-left: 12px;
+    background: #e74c3c;
+    color: #fff;
+    border-color: #e74c3c;
+}
+
+.newsletter-button:hover {
+    background: #c0392b;
+    border-color: #c0392b;
+    color: #fff;
+}
