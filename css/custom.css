@@ -2,8 +2,8 @@
 
 .event-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
 }
 
 .event-card {
@@ -63,6 +63,16 @@
     background: #c0392b;
     border-color: #c0392b;
     color: #fff;
+}
+
+.events-section {
+    margin: 0 auto 40px;
+    max-width: 1100px;
+    text-align: center;
+}
+
+.events-section .section-heading {
+    margin-bottom: 24px;
 }
 
 .hero-wrapper {
@@ -199,5 +209,11 @@
 
     .newsletter-button {
         margin-left: 0;
+    }
+}
+
+@media (min-width: 992px) {
+    .event-cards {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
