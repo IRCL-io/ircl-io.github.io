@@ -53,7 +53,7 @@
 }
 
 .newsletter-button {
-    margin-left: 12px;
+    margin-left: 0;
     background: #e74c3c;
     color: #fff;
     border-color: #e74c3c;
@@ -63,4 +63,141 @@
     background: #c0392b;
     border-color: #c0392b;
     color: #fff;
+}
+
+.hero-wrapper {
+    width: 100%;
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 12px;
+    backdrop-filter: blur(4px);
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.hero-copy h1 {
+    margin-bottom: 12px;
+}
+
+.hero-subtitle {
+    font-size: 18px;
+    line-height: 1.6;
+    margin: 0;
+    color: #f0f3f7;
+}
+
+.hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.hero-buttons .button,
+.hero-highlight-actions .button {
+    margin: 0;
+}
+
+.hero-highlight {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-highlight-label {
+    display: inline-block;
+    background: #e74c3c;
+    color: #fff;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 6px 12px;
+    border-bottom-right-radius: 8px;
+}
+
+.hero-highlight img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.hero-highlight-body {
+    padding: 18px 20px 22px;
+}
+
+.hero-highlight-body h3 {
+    margin: 0 0 8px;
+}
+
+.hero-highlight-meta {
+    margin: 0 0 18px;
+    color: #666;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.hero-highlight-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.button-light {
+    background: #0052cc;
+    border-color: #0052cc;
+    color: #fff;
+}
+
+.button-light:hover {
+    background: #003f99;
+    border-color: #003f99;
+    color: #fff;
+}
+
+.button-outline {
+    background: transparent;
+    border-color: #0052cc;
+    color: #0052cc;
+}
+
+.button-outline:hover {
+    background: #0052cc;
+    color: #fff;
+}
+
+#banner-content.row {
+    padding-top: 110px;
+    padding-bottom: 70px;
+}
+
+@media (min-width: 768px) {
+    .hero-content {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 30px 40px;
+        gap: 40px;
+    }
+
+    .hero-copy {
+        max-width: 560px;
+    }
+
+    .hero-subtitle {
+        font-size: 20px;
+    }
+
+    .newsletter-button {
+        margin-left: 0;
+    }
 }
