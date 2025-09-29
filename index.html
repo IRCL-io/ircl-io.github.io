@@ -9,7 +9,7 @@
     <!-- Meta Keywords and Description -->
     <meta name="keywords" content="combat robotics, Idaho, robot combat, IRCL, events, workshops">
     <meta name="description" content="Idaho Robot Combat League hosts combat robotics events and workshops across the Treasure Valley. Join our community, learn, compete, and support STEM in Idaho.">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="./images/favicon.ico" title="Favicon">
@@ -145,7 +145,7 @@
             <div class="col-1 hero-wrapper">
                 <div class="hero-content">
                     <div class="hero-copy">
-                        <!-- <h1>IDAHO ROBOT COMBAT LEAGUE</h1> -->
+                        <h1>IDAHO ROBOT COMBAT LEAGUE</h1>
                         <img src="images/IRCL_logo_Transparent.png" alt="IRCL logo" width="80%" loading="lazy">
                         <p class="hero-subtitle">We are a 501(c)3 community non-profit dedicated to educational workshops and combat robotics competitions throughout Idaho's Treasure Valley.</p>
                         <div class="hero-buttons">
@@ -159,7 +159,7 @@
                         <img src="./images/Ho_Ho_Havoc_Flyer.png" alt="Ho Ho Havoc 2025 Flyer" loading="lazy">
                         <div class="hero-highlight-body">
                             <h3>Ho Ho Havoc 2025</h3>
-                            <p class="hero-highlight-meta">November 22 • ABU Games</p>
+                            <p class="hero-highlight-meta">November 22 &bull; ABU Games</p>
                             <div class="hero-highlight-actions">
                                 <a href="./events/Ho Ho Havoc 2025.html" class="button button-light"><i class="fa fa-info-circle"></i> Event Details</a>
                                 <a href="https://www.robotcombatevents.com/events/5999" target="_blank" rel="noopener noreferrer" class="button button-outline"><i class="fa fa-robot"></i> Register</a>
@@ -186,7 +186,7 @@
                             <img src="images/Ho_Ho_Havoc_Flyer.png" alt="Ho Ho Havoc 2025 flyer" loading="lazy">
                             <div class="event-card-body">
                                 <h4>Ho Ho Havoc 2025</h4>
-                                <p class="event-meta">Nov 22 • ABU Games</p>
+                                <p class="event-meta">Nov 22 &bull; ABU Games</p>
                             </div>
                         </a>
                         <a class="event-card" href="events/Bot Oblivion 2025.html">
@@ -210,13 +210,13 @@
                                 <p class="event-meta">November 23, 2024 ABU Games, Boise. Antweight & plastic antweight tournament.</p>
                             </div>
                         </a>
-                        <a class="event-card" href="">
+                        <div class="event-card" >
                             <img src="images/IRCL_logo_Transparent.png" alt="IRCL logo" loading="lazy">
                             <div class="event-card-body">
                                 <h4>King of the Ant Hill 2024</h4>
                                 <p class="event-meta">July 20, 2024 Gem State Gaming Convention - Expo Idaho. IRCLs first event.</p>
                             </div>
-                        </a>
+                        </div>
                     </div>
                 </div>
 
@@ -459,20 +459,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <script>
         $(document).ready(function() {
-            $('a.video').featherlight({
-                iframe: {
-                    padding: 0
-                },
-                closeOnClick: 'background', // Adjust this to control when the lightbox closes
-                closeOnEsc: true,
-            });
-
-            // Prevent closing when clicking on iframe content
-            $(document).on('click', '.featherlight', function(e) {
-                if ($(e.target).hasClass('featherlight-content') || $(e.target).is('iframe')) {
-                    e.stopPropagation();  // Prevent closing when clicking inside content
-                }
-            });
+            //
         });
 </script>
 <script>
