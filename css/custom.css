@@ -6,6 +6,36 @@
     gap: 20px;
 }
 
+/* Global site notice styles (postponement/cancellation banner) */
+.site-notice {
+    background: #fffbe6;
+    color: #1a1a1a;
+    border-left: 6px solid #e67e22;
+    border-radius: 10px;
+    padding: 14px 16px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.site-notice h3 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    color: #c0392b;
+}
+
+.site-notice p {
+    margin: 0 0 6px 0;
+}
+
+.site-notice .tldr {
+    font-weight: 600;
+}
+
+/* Variant for cancellation/postponement emphasis */
+.notice-cancel {
+    background: #fff1f0;
+    border-left-color: #e74c3c;
+}
+
 .event-card {
     display: block;
     background: #fff;
@@ -204,6 +234,35 @@
     background: #0052cc;
     color: #fff;
 }
+
+/* Badges and utilities */
+.badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #555;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+    z-index: 2;
+}
+
+.badge-postponed {
+    background: #e74c3c;
+}
+
+.is-hidden {
+    display: none !important;
+}
+
+/* Ensure containers can host overlaid badges */
+.event-card { position: relative; }
+.hero-highlight { position: relative; }
 
 #banner-content.row {
     padding-top: 110px;
