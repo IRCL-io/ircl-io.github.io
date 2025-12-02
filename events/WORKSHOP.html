@@ -1,0 +1,300 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Robot Build Workshop | Idaho Robot Combat League</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050b16;
+      --panel: rgba(255,255,255,0.06);
+      --panel-strong: rgba(255,255,255,0.12);
+      --accent: #ff7b47;
+      --accent-2: #6ce1ff;
+      --text: #e8ecf5;
+      --muted: #95a4c4;
+      --card: #0f1c2e;
+      --radius: 18px;
+      --shadow: 0 20px 70px rgba(0,0,0,0.45);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Space Grotesk', 'Inter', system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at 10% 20%, rgba(255,123,71,0.12), transparent 35%),
+                  radial-gradient(circle at 80% 0%, rgba(108,225,255,0.18), transparent 30%),
+                  var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+      padding: 0 18px 72px;
+    }
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding-top: 48px;
+    }
+    header {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: linear-gradient(120deg, rgba(255,123,71,0.18), rgba(108,225,255,0.18));
+      color: var(--text);
+      font-size: 14px;
+      letter-spacing: 0.4px;
+      width: fit-content;
+    }
+    .eyebrow span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    h1 {
+      font-size: clamp(32px, 5vw, 46px);
+      margin: 8px 0 10px;
+      letter-spacing: -0.02em;
+    }
+    .lede {
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 520px;
+      margin-bottom: 16px;
+    }
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+    .cta {
+      padding: 12px 18px;
+      background: linear-gradient(120deg, var(--accent), #ff935f);
+      border: none;
+      color: #0b0b0f;
+      border-radius: 12px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      cursor: pointer;
+      box-shadow: 0 12px 40px rgba(255,123,71,0.45);
+      text-decoration: none;
+    }
+    .ghost {
+      background: var(--panel);
+      color: var(--text);
+      border: 1px solid var(--panel-strong);
+      box-shadow: none;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--panel-strong);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin: 22px 0 30px;
+    }
+    .info-item {
+      display: grid;
+      gap: 6px;
+      padding: 16px;
+      background: var(--panel);
+      border-radius: 14px;
+      border: 1px solid var(--panel-strong);
+    }
+    .info-label {
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+    }
+    .info-value {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      margin: 28px 0 14px;
+    }
+    .section-title::before {
+      content: '';
+      width: 36px;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+    }
+    .row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .robots {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
+    }
+    .bot-card {
+      background: linear-gradient(160deg, rgba(255,123,71,0.08), rgba(108,225,255,0.07));
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: var(--shadow);
+    }
+    .bot-card img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: contain;
+      background: rgba(0,0,0,0.25);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(108,225,255,0.14);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.1px;
+    }
+    .price-tag {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--panel);
+      border: 1px solid var(--panel-strong);
+      color: var(--text);
+      font-size: 14px;
+    }
+    footer {
+      margin-top: 32px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    @media (max-width: 640px) {
+      body { padding: 0 14px 54px; }
+      .card { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div>
+        <div class="eyebrow"><span>Idaho Robot Combat League</span> | 1-day event</div>
+        <h1>Robot Build Workshop</h1>
+        <p class="lede">Build a battle-ready bot alongside IRCL mentors. Pick your chassis, learn the fundamentals, and leave with a combat robot you built yourself.</p>
+        <div class="cta-row">
+          <a class="cta" href="mailto:info@ircl.io?subject=Robot%20Build%20Workshop">Reserve your seat</a>
+          <span class="price-tag">$250</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title">Event Snapshot</div>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Date</div>
+            <div class="info-value">Saturday, January 17, 2026</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Time</div>
+            <div class="info-value">8:30am - 8:00pm</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Location</div>
+            <div class="info-value">ABU Games<br>7211 W Colonial St<br>Boise, ID 83709</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Build Cost</div>
+            <div class="info-value price-tag">$250</div>
+          </div>
+        </div>
+        <div class="chips">
+          <span class="chip">Hands-on coaching</span>
+          <span class="chip">Choose your robot kit</span>
+          <span class="chip">Competition ready</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="section-title">Choose Your Combat Robot</div>
+    <div class="robots">
+      <div class="bot-card">
+        <span class="badge">9Volt</span>
+        <img src="./boomboxrot.png" alt="9Volt robot render">
+        <p>Compact and nimble, ideal for first-time builders who want quick wins and fast action.</p>
+      </div>
+      <div class="bot-card">
+        <span class="badge">Force Knight</span>
+        <img src="./boomboxrot.png" alt="Force Knight robot render">
+        <p>Balanced offense and defense for builders who want a reliable all-rounder in the arena.</p>
+      </div>
+      <div class="bot-card">
+        <span class="badge">Goobimizer</span>
+        <img src="./boomboxrot.png" alt="Goobimizer robot render">
+        <p>Bold design with big personality, great for creative builds that stand out on fight day.</p>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 28px;">
+      <div class="card">
+        <div class="section-title">What to Expect</div>
+        <p>Spend the day immersed in the build. Our mentors guide you from kit pick-up to wiring, drive tuning, and safety checks, so you leave with a working combat bot and the confidence to compete.</p>
+        <div class="chips">
+          <span class="chip">Tooling provided</span>
+          <span class="chip">Mentored build tables</span>
+          <span class="chip">Safety walkthrough</span>
+          <span class="chip">Test hits &amp; drive time</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title">Schedule</div>
+        <div class="info-item" style="background: transparent; border: 0; padding: 0;">
+          <div class="info-label">Workshop hours</div>
+          <div class="info-value">8:30am - 8:00pm</div>
+        </div>
+        <p style="color: var(--muted);">Arrive early to pick your kit, settle in, and set up your build station. Expect dedicated build time, mentor check-ins, and a final systems check before wrap.</p>
+      </div>
+    </div>
+
+    <footer>
+      Presented by the Idaho Robot Combat League. Have questions? Email <a href="mailto:info@ircl.io" style="color: var(--text);">info@ircl.io</a>.
+    </footer>
+  </div>
+</body>
+</html>
+
+
+
+
