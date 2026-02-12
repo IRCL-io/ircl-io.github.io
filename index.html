@@ -150,20 +150,34 @@
                         <p class="hero-subtitle">We are a 501(c)3 community non-profit dedicated to educational workshops and combat robotics competitions throughout Idaho's Treasure Valley.</p>
              
                     </div>
-                    <aside class="hero-highlight">
-                        <span class="badge" style="background: #0052cc;" aria-label="Event">Event</span>
-                        <span class="hero-highlight-label">Registration Open</span>
-                        <img src="./images/IRCL_SBB2026-2.jpg" alt="Spring Bot Breaker 2026 flyer" loading="lazy">
-                        <div class="hero-highlight-body">
-                            <h3>Spring Bot Breaker 2026</h3>
-                            <p class="hero-highlight-meta">Mar 28, 2026 &bull; 10:30am &bull; ABU Games</p>
-                            <p>Full-combat antweight and beetleweight brackets. Free spectators, trophies and prizes.</p>
-                            <div class="hero-highlight-actions">
-                                <a href="https://www.robotcombatevents.com/events/6479" target="_blank" rel="noopener noreferrer" class="button button-light"><i class="fa fa-robot"></i> Register on RCE</a>
-                                <a href="./events/Spring Bot Breaker 2026.html" class="button button-outline"><i class="fa fa-info-circle"></i> Event Details</a>
+                    <div class="hero-panels">
+                        <aside class="hero-highlight">
+                            <span class="badge" style="background: #0052cc;" aria-label="Event">Event</span>
+                            <span class="hero-highlight-label">Registration Open</span>
+                            <img src="./images/IRCL_SBB2026-2.jpg" alt="Spring Bot Breaker 2026 flyer" loading="lazy">
+                            <div class="hero-highlight-body">
+                                <h3>Spring Bot Breaker 2026</h3>
+                                <p class="hero-highlight-meta">Mar 28, 2026 &bull; 10:30am &bull; ABU Games</p>
+                                <p>Full-combat antweight and beetleweight brackets. Free spectators, trophies and prizes.</p>
+                                <div class="hero-highlight-actions">
+                                    <a href="https://www.robotcombatevents.com/events/6479" target="_blank" rel="noopener noreferrer" class="button button-light"><i class="fa fa-robot"></i> Register on RCE</a>
+                                    <a href="./events/Spring Bot Breaker 2026.html" class="button button-outline"><i class="fa fa-info-circle"></i> Event Details</a>
+                                </div>
                             </div>
-                        </div>
-                    </aside>
+                        </aside>
+                        <aside class="hero-ttdb" data-ttdb-panel="spring-bot-breaker-2026">
+                            <span class="badge" style="background: #e67e22;" aria-label="TTDB">TTDB</span>
+                            <div class="hero-ttdb-header">
+                                <h3>Mighty Competitors</h3>
+                                <p>Card stack drawn from the Spring Bot Breaker 2026 roster.</p>
+                            </div>
+                            <div class="hero-ttdb-stack" id="sbb-ttdb-stack" aria-hidden="true"></div>
+                            <div class="hero-ttdb-meta" aria-live="polite">
+                                <span class="hero-ttdb-weight" id="sbb-ttdb-weight">Loading...</span>
+                                <span class="hero-ttdb-name" id="sbb-ttdb-name">Loading roster</span>
+                            </div>
+                        </aside>
+                    </div>
                 </div>
             </div>
         </div><!--End of Row-->
@@ -443,6 +457,160 @@
 <script src="js/lightbox.min.js"></script>
 <script src="js/site.js"></script>
 <script src="js/quote.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const panel = document.querySelector('[data-ttdb-panel="spring-bot-breaker-2026"]');
+    if (!panel) {
+        return;
+    }
+
+    const stackEl = document.getElementById("sbb-ttdb-stack");
+    const nameEl = document.getElementById("sbb-ttdb-name");
+    const weightEl = document.getElementById("sbb-ttdb-weight");
+    const TTDB_PATH = "cards/cards/IRCL_TTDB.md";
+    const EVENT_HEADER = "## Spring Bot Breaker 2026 (Event)";
+    const WEIGHT_ORDER = ["Beetleweight", "Full Combat Antweight", "Plastic Antweight"];
+    const ROTATE_MS = 2400;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let bots = [];
+    let activeIndex = 0;
+    let rotateTimer = null;
+
+    const normalizePath = (path) => {
+        if (!path) {
+            return "";
+        }
+        if (path.startsWith("http")) {
+            return path;
+        }
+        return `cards/cards/${path.replace(/^\.?\//, "")}`;
+    };
+
+    const parseCardImages = (content) => {
+        const map = new Map();
+        const cardRegex = /^##\s+(.+?)\r?\n- Card image:\s+!\[[^\]]*\]\(([^)]+)\)/gm;
+        for (const match of content.matchAll(cardRegex)) {
+            const name = match[1].trim();
+            const path = match[2].trim();
+            if (path.includes("Spring_Bot_Breaker_2026/")) {
+                map.set(name, normalizePath(path));
+            }
+        }
+        return map;
+    };
+
+    const parseEventRobots = (content) => {
+        const eventStart = content.indexOf(EVENT_HEADER);
+        if (eventStart === -1) {
+            return [];
+        }
+        const eventBlock = content.slice(eventStart);
+        const eventEnd = eventBlock.indexOf("---", EVENT_HEADER.length);
+        const block = eventEnd === -1 ? eventBlock : eventBlock.slice(0, eventEnd);
+        const lines = block.split(/\r?\n/);
+        const robots = [];
+        for (const line of lines) {
+            const match = line.match(/^-\\s+@\\S+\\s+(.+?)\\s+\\(([^)]+)\\)\\s*$/);
+            if (match) {
+                robots.push({ name: match[1].trim(), weight: match[2].trim() });
+            }
+        }
+        return robots;
+    };
+
+    const orderBots = (robots) => {
+        const ordered = [];
+        WEIGHT_ORDER.forEach((weight) => {
+            robots.filter((robot) => robot.weight === weight).forEach((robot) => {
+                ordered.push(robot);
+            });
+        });
+        return ordered;
+    };
+
+    const renderStack = () => {
+        if (!stackEl) {
+            return;
+        }
+        stackEl.innerHTML = "";
+        bots.forEach((bot, index) => {
+            const img = document.createElement("img");
+            img.src = bot.card;
+            img.alt = `${bot.name} robot card`;
+            img.loading = "lazy";
+            img.className = "ttdb-card";
+            img.style.setProperty("--stack-index", Math.min(index, 6));
+            if (index === 0) {
+                img.classList.add("is-active");
+            }
+            stackEl.appendChild(img);
+        });
+        updateMeta(0);
+    };
+
+    const updateMeta = (index) => {
+        const bot = bots[index];
+        if (!bot) {
+            return;
+        }
+        if (nameEl) {
+            nameEl.textContent = bot.name;
+        }
+        if (weightEl) {
+            weightEl.textContent = bot.weight;
+        }
+        const cards = stackEl ? stackEl.querySelectorAll(".ttdb-card") : [];
+        cards.forEach((card, idx) => {
+            card.classList.toggle("is-active", idx === index);
+        });
+    };
+
+    const startRotation = () => {
+        if (prefersReducedMotion || bots.length <= 1) {
+            return;
+        }
+        rotateTimer = window.setInterval(() => {
+            activeIndex = (activeIndex + 1) % bots.length;
+            updateMeta(activeIndex);
+        }, ROTATE_MS);
+    };
+
+    fetch(TTDB_PATH, { cache: "no-store" })
+        .then((res) => res.text())
+        .then((content) => {
+            const cardMap = parseCardImages(content);
+            const robots = parseEventRobots(content);
+            bots = orderBots(robots)
+                .map((robot) => ({
+                    ...robot,
+                    card: cardMap.get(robot.name)
+                }))
+                .filter((robot) => robot.card);
+
+            if (!bots.length) {
+                if (nameEl) {
+                    nameEl.textContent = "Roster unavailable";
+                }
+                if (weightEl) {
+                    weightEl.textContent = "Check back soon";
+                }
+                return;
+            }
+
+            renderStack();
+            startRotation();
+        })
+        .catch(() => {
+            if (nameEl) {
+                nameEl.textContent = "Roster unavailable";
+            }
+            if (weightEl) {
+                weightEl.textContent = "Check back soon";
+            }
+        });
+});
+</script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');

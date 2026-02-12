@@ -135,6 +135,19 @@
     margin: 0 auto;
 }
 
+.hero-panels {
+    display: grid;
+    gap: 24px;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.hero-panels > aside {
+    width: min(360px, 100%);
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .hero-copy h1 {
     margin-bottom: 12px;
     display: inline-block;
@@ -169,9 +182,6 @@
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
     overflow: hidden;
-    max-width: 360px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .hero-highlight-label {
@@ -210,6 +220,85 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+}
+
+.hero-ttdb {
+    background: #111418;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.22);
+    padding: 18px 18px 22px;
+    color: #f5f5f5;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hero-ttdb-header h3 {
+    margin: 6px 0 8px;
+    font-size: 20px;
+    color: #ffd166;
+}
+
+.hero-ttdb-header p {
+    margin: 0 0 16px;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 14px;
+}
+
+.hero-ttdb-stack {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.12), transparent 70%);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.hero-ttdb-stack::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.08), transparent 65%);
+    pointer-events: none;
+}
+
+.hero-ttdb-stack .ttdb-card {
+    position: absolute;
+    inset: 8px;
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
+    object-fit: contain;
+    opacity: 0.12;
+    transform: translate(calc(var(--stack-index) * 1px), calc(var(--stack-index) * 2px)) rotate(calc(var(--stack-index) * -0.6deg)) scale(0.98);
+    filter: grayscale(0.4);
+    transition: opacity 0.4s ease, transform 0.4s ease, filter 0.4s ease;
+}
+
+.hero-ttdb-stack .ttdb-card.is-active {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    filter: none;
+    z-index: 2;
+}
+
+.hero-ttdb-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.hero-ttdb-name {
+    font-size: 16px;
+    text-transform: none;
+    letter-spacing: 0.02em;
+    color: #fff;
+    font-weight: 600;
 }
 
 .button-light {
@@ -288,6 +377,12 @@
 
 .newsletter-button {
         margin-left: 0;
+    }
+}
+
+@media (min-width: 900px) {
+    .hero-panels {
+        grid-template-columns: repeat(2, minmax(0, 360px));
     }
 }
 
