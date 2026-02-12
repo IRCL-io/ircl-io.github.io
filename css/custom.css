@@ -271,28 +271,24 @@
     width: calc(100% - 16px);
     height: calc(100% - 16px);
     object-fit: contain;
-    opacity: 0.12;
     transform: translate(calc(var(--stack-index) * 1px - 18px), calc(var(--stack-index) * 2px + 24px)) rotate(calc(var(--stack-index) * -0.6deg)) scale(0.97);
     filter: grayscale(0.4);
-    transition: opacity 0.7s ease, transform 0.7s ease, filter 0.7s ease;
+    transition: transform 0.7s ease, filter 0.7s ease;
 }
 
 .hero-ttdb-stack .ttdb-card.is-active {
-    opacity: 1;
     transform: translate(0, 0) rotate(0deg) scale(1);
     filter: none;
     z-index: 2;
 }
 
 .hero-ttdb-stack .ttdb-card.is-enter {
-    opacity: 0.7;
     transform: translate(-46px, 52px) rotate(-10deg) scale(0.95);
     z-index: 1;
 }
 
-.hero-ttdb-stack .ttdb-card.is-exit {
-    opacity: 0.85;
-    transform: translate(var(--exit-x, 12px), var(--exit-y, -8px)) rotate(var(--exit-rotate, 4deg)) scale(1.01);
+.hero-ttdb-stack .ttdb-card.is-drift {
+    transform: translate(var(--drift-x, 12px), var(--drift-y, -8px)) rotate(var(--drift-rotate, 3deg)) scale(1.01);
     z-index: 3;
 }
 
