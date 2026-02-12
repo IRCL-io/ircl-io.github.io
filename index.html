@@ -480,6 +480,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const CYCLE_STEP_MS = 3000;
     const SELECT_SCALE_EXP = 4.0;
     const BASE_SCALE = 0.10;
+    const EVENT_TITLE = "Spring Bot Breaker 2026 (Event)";
 
     let records = {};
     let order = [];
@@ -496,6 +497,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let cycleList = [];
     let cycleIndex = 0;
     let cycleSourceId = null;
+    let eventId = null;
     const imageCache = new Map();
 
     const setStatus = (text) => {
@@ -683,9 +685,19 @@ document.addEventListener("DOMContentLoaded", () => {
         centerOnSelected();
         renderGlobe();
         if (!fromCycle) {
-            scheduleCycleFromSelected();
+            scheduleCycleFromEvent();
         }
     };
+
+    function getEventBots(sourceId) {
+        if (!sourceId || !records[sourceId]) {
+            return [];
+        }
+        const edges = records[sourceId].edges || [];
+        return edges
+            .filter((edge) => edge.type === "has_bot" && records[edge.target])
+            .map((edge) => edge.target);
+    }
 
     const updateFromContent = (content) => {
         if (content.startsWith("File not found:") || content.startsWith("TypeError")) {
@@ -705,14 +717,16 @@ document.addEventListener("DOMContentLoaded", () => {
         order = parsed.order;
         coords = parsed.coords;
         imageCache.clear();
-        if (!records[selectedId]) {
-            selectedId = parsed.selected || (order.length ? order[0] : null);
+        eventId = Object.keys(records).find((recordId) => records[recordId]?.title === EVENT_TITLE) || null;
+        const eventBots = eventId ? getEventBots(eventId) : [];
+        if (!records[selectedId] || (eventBots.length && !eventBots.includes(selectedId))) {
+            selectedId = eventBots.length ? eventBots[0] : parsed.selected || (order.length ? order[0] : null);
         }
         setStatus(order.length ? `Records: ${order.length}` : "No records found");
         setHeader();
         centerOnSelected();
         renderGlobe();
-        scheduleCycleFromSelected();
+        scheduleCycleFromEvent();
     };
 
     const fetchTtdbContent = async () => {
@@ -741,19 +755,16 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     };
 
-    const scheduleCycleFromSelected = () => {
+    const scheduleCycleFromEvent = () => {
         cancelCycle();
-        if (!selectedId || !records[selectedId]) {
+        if (!eventId) {
             return;
         }
-        const edges = records[selectedId].edges || [];
-        const bots = edges
-            .filter((edge) => edge.type === "has_bot" && records[edge.target])
-            .map((edge) => edge.target);
+        const bots = getEventBots(eventId);
         if (!bots.length) {
             return;
         }
-        cycleSourceId = selectedId;
+        cycleSourceId = eventId;
         cycleList = bots;
         cycleIndex = 0;
         cycleAfterId = window.setTimeout(cycleStep, CYCLE_START_DELAY_MS);
@@ -1083,7 +1094,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const dx = item.x - x;
             const dy = item.y - y;
             if (Math.hypot(dx, dy) <= item.r) {
-                if (item.isSelected && item.z >= 0.95) {
+                if (item.isSelected) {
                     const url = records[item.id]?.url;
                     if (url) {
                         window.open(url, "_blank", "noopener");
@@ -1155,4 +1166,3 @@ function showFAQ(faqLink, faqId) {
 </script>
 </body>
 </html>
-
