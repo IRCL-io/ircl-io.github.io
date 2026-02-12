@@ -272,9 +272,9 @@
     height: calc(100% - 16px);
     object-fit: contain;
     opacity: 0.12;
-    transform: translate(calc(var(--stack-index) * 1px), calc(var(--stack-index) * 2px)) rotate(calc(var(--stack-index) * -0.6deg)) scale(0.98);
+    transform: translate(calc(var(--stack-index) * 1px - 18px), calc(var(--stack-index) * 2px + 24px)) rotate(calc(var(--stack-index) * -0.6deg)) scale(0.97);
     filter: grayscale(0.4);
-    transition: opacity 0.4s ease, transform 0.4s ease, filter 0.4s ease;
+    transition: opacity 0.65s ease, transform 0.65s ease, filter 0.65s ease;
 }
 
 .hero-ttdb-stack .ttdb-card.is-active {
@@ -282,6 +282,22 @@
     transform: translate(0, 0) rotate(0deg) scale(1);
     filter: none;
     z-index: 2;
+    animation: ttdb-card-swoop 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes ttdb-card-swoop {
+    0% {
+        transform: translate(-30px, 36px) rotate(-6deg) scale(0.94);
+        opacity: 0.4;
+    }
+    70% {
+        transform: translate(6px, -6px) rotate(1.5deg) scale(1.01);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+        opacity: 1;
+    }
 }
 
 .hero-ttdb-meta {
