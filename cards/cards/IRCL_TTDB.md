@@ -59,7 +59,7 @@ agent_note: "Cycle-01 event dataset for Spring Bot Breaker 2026."
 @LAT0LON0 | created:1770743813 | updated:1770743813 | relates:has_bot>@LAT-75LON-170,has_bot>@LAT-60LON-130,has_bot>@LAT-45LON-90,has_bot>@LAT-30LON-50,has_bot>@LAT-15LON-10,has_bot>@LAT0LON30,has_bot>@LAT15LON70,has_bot>@LAT30LON110,has_bot>@LAT45LON150,has_bot>@LAT60LON-170,has_bot>@LAT75LON-130,has_bot>@LAT-75LON-130,has_bot>@LAT-60LON-90,has_bot>@LAT-45LON-50,has_bot>@LAT-30LON-10,has_bot>@LAT-15LON30,has_bot>@LAT0LON70,has_bot>@LAT15LON110,has_bot>@LAT30LON150,has_bot>@LAT45LON-170,has_bot>@LAT60LON-130,has_bot>@LAT75LON-90,has_bot>@LAT-75LON-90,has_bot>@LAT-60LON-50
 
 ## Bot Oblivion 2025 (Event)
-- Back card image: C:/git/Robot-Combat-Trading-Cards/cards/Bot_Oblivion_2025/Bot_Oblivion_2025_back.png
+- Back card image: ![Bot Oblivion 2025 Back](Bot_Oblivion_2025/Bot_Oblivion_2025_back.png)
 - URL: https://www.robotcombatevents.com/events/4646
 - Location: Gem State Gaming Convention
 - Dates: Saturday, July 19, 2025 - Sunday, July 20, 2025
@@ -131,7 +131,7 @@ agent_note: "Cycle-01 event dataset for Spring Bot Breaker 2026."
 - Weight class: Beetleweight
 - Team: Bad Decisions Robotics
 - URL: https://www.robotcombatevents.com/groups/2611/resources/14013
-- Image: ![Renegade](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/14013/IMG_1146-min.jpeg)
+- Image: ![Renegade](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/14013/IMG_1403-min.jpeg)
 
 ---
 
