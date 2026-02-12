@@ -287,10 +287,6 @@
     z-index: 1;
 }
 
-.hero-ttdb-stack .ttdb-card.is-drift {
-    transform: translate(var(--drift-x, 12px), var(--drift-y, -8px)) rotate(var(--drift-rotate, 3deg)) scale(1.01);
-    z-index: 3;
-}
 
 .hero-ttdb-meta {
     display: flex;

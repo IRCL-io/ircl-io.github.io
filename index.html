@@ -475,10 +475,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const EVENT_HEADER = "## Spring Bot Breaker 2026 (Event)";
     const WEIGHT_ORDER = ["Beetleweight", "Full Combat Antweight", "Plastic Antweight"];
     const HOLD_MS = 1200;
-    const DRIFT_MS = 600;
     const SWOOP_MS = 900;
     const FINAL_MS = 1400;
-    const ROTATE_MS = HOLD_MS + DRIFT_MS + SWOOP_MS + FINAL_MS;
+    const ROTATE_MS = HOLD_MS + SWOOP_MS + FINAL_MS;
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let bots = [];
@@ -593,10 +592,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const incoming = cards[index];
 
         cards.forEach((card) => {
-            card.classList.remove("is-active", "is-enter", "is-drift");
-            card.style.removeProperty("--drift-rotate");
-            card.style.removeProperty("--drift-x");
-            card.style.removeProperty("--drift-y");
+            card.classList.remove("is-active", "is-enter");
         });
 
         if (incoming) {
@@ -617,23 +613,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         cards.forEach((card) => {
-            card.classList.remove("is-active", "is-enter", "is-drift");
-            card.style.removeProperty("--drift-rotate");
-            card.style.removeProperty("--drift-x");
-            card.style.removeProperty("--drift-y");
+            card.classList.remove("is-active", "is-enter");
         });
 
         outgoing.classList.add("is-active");
-
-        const drift = () => {
-            const rotate = (Math.random() * 4 + 1.5).toFixed(2);
-            const offsetX = (Math.random() * 10 + 8).toFixed(2);
-            const offsetY = (Math.random() * -10 - 6).toFixed(2);
-            outgoing.style.setProperty("--drift-rotate", `${rotate}deg`);
-            outgoing.style.setProperty("--drift-x", `${offsetX}px`);
-            outgoing.style.setProperty("--drift-y", `${offsetY}px`);
-            outgoing.classList.add("is-drift");
-        };
 
         const swoop = () => {
             incoming.classList.add("is-enter");
@@ -649,11 +632,8 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         transitionTimer = window.setTimeout(() => {
-            drift();
-            transitionTimer = window.setTimeout(() => {
-                swoop();
-                transitionTimer = window.setTimeout(finalize, SWOOP_MS);
-            }, DRIFT_MS);
+            swoop();
+            transitionTimer = window.setTimeout(finalize, SWOOP_MS);
         }, HOLD_MS);
     };
 
