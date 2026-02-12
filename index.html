@@ -467,14 +467,10 @@ document.addEventListener("DOMContentLoaded", () => {
         "cards/cards/IRCL_TTDB.md",
         "cards/IRCL_TTDB.md"
     ];
-    const REFRESH_MS = 1500;
     const ANIMATION_MS = 16;
-    const CYCLE_START_DELAY_MS = 3000;
     const CYCLE_STEP_MS = 3000;
     const SELECT_SCALE_EXP = 4.0;
     const BASE_SCALE = 0.10;
-    const EVENT_TITLE = "Spring Bot Breaker 2026 (Event)";
-
     let records = {};
     let order = [];
     let coords = {};
@@ -710,8 +706,10 @@ document.addEventListener("DOMContentLoaded", () => {
         order = parsed.order;
         coords = parsed.coords;
         imageCache.clear();
-        eventId = Object.keys(records).find((recordId) => records[recordId]?.title === EVENT_TITLE) || null;
-        const eventBots = eventId ? getEventBots(eventId) : [];
+        const candidateEvent = parsed.selected && records[parsed.selected] ? parsed.selected : null;
+        const candidateBots = candidateEvent ? getEventBots(candidateEvent) : [];
+        eventId = candidateBots.length ? candidateEvent : null;
+        const eventBots = eventId ? candidateBots : [];
         if (!records[selectedId] || (eventBots.length && !eventBots.includes(selectedId))) {
             selectedId = eventBots.length ? eventBots[0] : parsed.selected || (order.length ? order[0] : null);
         }
@@ -760,7 +758,7 @@ document.addEventListener("DOMContentLoaded", () => {
         cycleSourceId = eventId;
         cycleList = bots;
         cycleIndex = 0;
-        cycleAfterId = window.setTimeout(cycleStep, CYCLE_START_DELAY_MS);
+        cycleAfterId = window.setTimeout(cycleStep, CYCLE_STEP_MS);
     };
 
     const cancelCycle = () => {
@@ -1103,10 +1101,6 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("resize", () => {
         renderGlobe();
     });
-
-    window.setInterval(() => {
-        refreshAll();
-    }, REFRESH_MS);
 
     refreshAll();
 });
