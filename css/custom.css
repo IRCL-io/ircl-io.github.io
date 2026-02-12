@@ -144,7 +144,7 @@
 }
 
 .hero-panels > aside {
-    width: min(720px, 100%);
+    width: min(1100px, 100%);
     margin-left: auto;
     margin-right: auto;
 }
@@ -207,7 +207,7 @@
 }
 
 .hero-highlight-body {
-    padding: 18px 20px 22px;
+    padding: 12px 16px 14px;
 }
 
 .hero-highlight-body h3 {
@@ -215,7 +215,7 @@
 }
 
 .hero-highlight-meta {
-    margin: 0 0 18px;
+    margin: 0 0 10px;
     color: #666;
     font-weight: 600;
     letter-spacing: 0.5px;
@@ -224,7 +224,7 @@
 .hero-highlight-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
 }
 
 .hero-ttdb {
@@ -420,7 +420,7 @@
 
 @media (min-width: 900px) {
     .hero-panels {
-        grid-template-columns: repeat(2, minmax(0, 360px));
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 
