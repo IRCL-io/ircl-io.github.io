@@ -283,7 +283,7 @@
 }
 
 .hero-ttdb-stack .ttdb-card.is-enter {
-    transform: translate(-46px, 52px) rotate(-10deg) scale(0.95);
+    transform: translate(-160px, 180px) rotate(-12deg) scale(0.9);
     z-index: 1;
 }
 
