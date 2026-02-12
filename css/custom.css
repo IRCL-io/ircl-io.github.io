@@ -274,7 +274,7 @@
 .hero-ttdb-globe {
     position: relative;
     width: calc(100% + 36px);
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 2 / 1;
     min-height: 320px;
     background: radial-gradient(circle at top, rgba(255, 255, 255, 0.12), transparent 70%);
     border-radius: 12px;
