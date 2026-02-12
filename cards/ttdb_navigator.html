@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>IRCL TTDB Navigator</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0b0c10;
+    --panel: #0f0f12;
+    --panel-2: #111318;
+    --accent: #7cc7ff;
+    --accent-2: #ffd166;
+    --muted: #a7a7b3;
+    --text: #e9e9f0;
+    --border: #2a2f3a;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .topbar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: #0d0f14;
+  }
+
+  .topbar .title {
+    font-weight: 700;
+    font-size: 16px;
+    margin-right: auto;
+  }
+
+  .topbar button,
+  .topbar label {
+    font-size: 13px;
+  }
+
+  .topbar button {
+    background: #1b2230;
+    color: var(--text);
+    border: 1px solid #2b3344;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .topbar button:hover {
+    border-color: var(--accent);
+  }
+
+  .topbar input[type="checkbox"] {
+    margin-right: 6px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 8px;
+    height: calc(100vh - 52px);
+    padding: 8px;
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .list-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .list-panel h3 {
+    margin: 0;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+
+  .record-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    flex: 1;
+    background: var(--panel-2);
+  }
+
+  .record-list li {
+    padding: 8px 12px;
+    border-bottom: 1px solid #1a1f28;
+    cursor: pointer;
+  }
+
+  .record-list li:hover {
+    background: #1a2330;
+  }
+
+  .record-list li.active {
+    background: #293447;
+    color: #ffffff;
+  }
+
+  .right {
+    display: grid;
+    grid-template-rows: 3fr 2fr;
+    gap: 8px;
+  }
+
+  .record-panel {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .record-text {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    overflow: auto;
+  }
+
+  .record-image {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    position: relative;
+  }
+
+  .record-image canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .globe-panel {
+    position: relative;
+    background: #08090c;
+  }
+
+  .globe-panel canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .md-h1 { font-size: 18px; font-weight: 700; color: #ffd166; margin: 0 0 6px; }
+  .md-h2 { font-size: 16px; font-weight: 700; color: #f4a261; margin: 12px 0 6px; }
+  .md-h3 { font-size: 14px; font-weight: 700; color: #e76f51; margin: 12px 0 6px; }
+  .md-h4 { font-size: 13px; font-weight: 700; color: #e9c46a; margin: 12px 0 6px; }
+  .md-bullet { margin-left: 16px; color: var(--text); }
+  .md-quote { margin-left: 16px; color: var(--muted); }
+  .md-code { font-family: "Courier New", monospace; color: #c4f1ff; white-space: pre-wrap; }
+  .md-fence { font-family: "Courier New", monospace; color: #6c7a89; }
+  .md-rule { height: 1px; background: #39424e; margin: 12px 0; }
+  .md-muted { color: var(--muted); }
+  .md-link { color: var(--accent); text-decoration: underline; cursor: pointer; }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; height: auto; }
+    .right { grid-template-rows: auto; }
+    .record-panel { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="title" id="currentSelection">Selected: (loading)</div>
+    <button id="refreshBtn">Refresh</button>
+    <label><input type="checkbox" id="autoRefresh" checked />Auto refresh</label>
+    <label><input type="file" id="fileInput" accept=".md,text/markdown" />Load local file</label>
+  </div>
+
+  <div class="layout">
+    <div class="panel list-panel">
+      <h3>Records</h3>
+      <ul class="record-list" id="recordList"></ul>
+    </div>
+
+    <div class="right">
+      <div class="panel record-panel">
+        <div class="record-text" id="recordText"></div>
+        <div class="record-image"><canvas id="recordImage"></canvas></div>
+      </div>
+      <div class="panel globe-panel"><canvas id="globe"></canvas></div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const DB_PATH = "cards/IRCL_TTDB.md";
+  const REFRESH_MS = 1500;
+  const ANIMATION_MS = 16;
+
+  const recordList = document.getElementById("recordList");
+  const recordText = document.getElementById("recordText");
+  const recordImageCanvas = document.getElementById("recordImage");
+  const globeCanvas = document.getElementById("globe");
+  const currentSelection = document.getElementById("currentSelection");
+  const refreshBtn = document.getElementById("refreshBtn");
+  const autoRefresh = document.getElementById("autoRefresh");
+  const fileInput = document.getElementById("fileInput");
+
+  let fileContentOverride = null;
+  let records = {};
+  let order = [];
+  let selectedId = null;
+  let coords = {};
+  let globeRotLat = 0;
+  let globeRotLon = 0;
+  let globeTargetLat = 0;
+  let globeTargetLon = 0;
+  let globeAnimating = false;
+  let globeItems = [];
+
+  function escapeHtml(text) {
+    return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function parseDbRecords(content) {
+    let selected = null;
+    const cursorMatch = content.match(/```cursor([\s\S]*?)```/);
+    if (cursorMatch) {
+      let inSelected = false;
+      for (const line of cursorMatch[1].split(/\r?\n/)) {
+        const stripped = line.trim();
+        if (stripped.startsWith("selected:")) {
+          inSelected = true;
+          continue;
+        }
+        if (inSelected) {
+          const itemMatch = stripped.match(/^-\s*(\S+)/);
+          if (itemMatch) {
+            selected = itemMatch[1];
+            break;
+          }
+          if (stripped && !stripped.startsWith("-")) {
+            break;
+          }
+        }
+      }
+    }
+
+    const outRecords = {};
+    const outOrder = [];
+    const outCoords = {};
+
+    const blocks = content.split(/\n\s*---+\s*\n/);
+    for (const block of blocks) {
+      const lines = block.split(/\r?\n/).map(line => line.replace(/\n$/, ""));
+      let headerIndex = -1;
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].startsWith("@")) {
+          headerIndex = i;
+          break;
+        }
+      }
+      if (headerIndex === -1) continue;
+      const headerLine = lines[headerIndex].trim();
+      const recordId = headerLine.split(/\s+/)[0];
+      const body = lines.slice(headerIndex + 1).join("\n").replace(/^\n+|\n+$/g, "");
+
+      let title = null;
+      for (const line of body.split(/\r?\n/)) {
+        const match = line.match(/^##\s+(.*)$/);
+        if (match) {
+          title = match[1].trim();
+          break;
+        }
+      }
+
+      const edges = [];
+      const relatesMatch = headerLine.match(/relates:([^|]+)/);
+      if (relatesMatch) {
+        for (const tokenRaw of relatesMatch[1].split(",")) {
+          const token = tokenRaw.trim();
+          if (!token) continue;
+          let edgeType = "relates";
+          let target = token;
+          if (token.includes(">")) {
+            const parts = token.split(">", 2);
+            edgeType = parts[0].trim();
+            target = parts[1].trim();
+          }
+          edges.push({ type: edgeType, target });
+        }
+      }
+
+      const coordMatch = recordId.match(/@LAT(-?\d+(?:\.\d+)?)LON(-?\d+(?:\.\d+)?)/);
+      if (coordMatch) {
+        outCoords[recordId] = [parseFloat(coordMatch[1]), parseFloat(coordMatch[2])];
+      }
+
+      outRecords[recordId] = { header: headerLine, body, title, edges };
+      outOrder.push(recordId);
+    }
+
+    return { records: outRecords, order: outOrder, selected, coords: outCoords };
+  }
+
+  function renderList() {
+    recordList.innerHTML = "";
+    for (const recordId of order) {
+      const title = records[recordId]?.title;
+      const label = title ? `${recordId} - ${title}` : recordId;
+      const li = document.createElement("li");
+      li.textContent = label;
+      if (recordId === selectedId) li.classList.add("active");
+      li.addEventListener("click", () => selectRecord(recordId, true));
+      recordList.appendChild(li);
+    }
+  }
+
+  function setHeader() {
+    if (selectedId) {
+      currentSelection.textContent = `Selected: ${selectedId}`;
+    } else {
+      currentSelection.textContent = "Selected: (none)";
+    }
+  }
+
+  function renderMarkdown(content) {
+    let html = "";
+    let inCode = false;
+    const lines = content.split(/\r?\n/);
+    for (const rawLine of lines) {
+      const line = rawLine.replace(/\s+$/, "");
+      if (line.startsWith("```")) {
+        inCode = !inCode;
+        html += `<div class="md-fence">${escapeHtml(line)}</div>`;
+        continue;
+      }
+      if (inCode) {
+        html += `<div class="md-code">${escapeHtml(line)}</div>`;
+        continue;
+      }
+
+      const headingMatch = line.match(/^(#{1,6})\s+(.*)$/);
+      if (headingMatch) {
+        const level = Math.min(4, headingMatch[1].length);
+        html += `<div class="md-h${level}">${escapeHtml(headingMatch[2])}</div>`;
+        continue;
+      }
+      if (/^\s*(-|\*|\d+\.)\s+/.test(line)) {
+        html += `<div class="md-bullet">${escapeHtml(line)}</div>`;
+        continue;
+      }
+      if (/^\s*>\s+/.test(line)) {
+        html += `<div class="md-quote">${escapeHtml(line)}</div>`;
+        continue;
+      }
+      if (/^\s*---+\s*$/.test(line)) {
+        html += `<div class="md-rule"></div>`;
+        continue;
+      }
+      html += `<div>${escapeHtml(line)}</div>`;
+    }
+    return html;
+  }
+
+  function renderRecord(recordId) {
+    if (!recordId || !records[recordId]) {
+      recordText.innerHTML = renderMarkdown("No record selected.");
+      renderRecordImage(null);
+      return;
+    }
+    const record = records[recordId];
+    let html = "";
+    html += `<div class="md-h2">${escapeHtml(recordId)}</div>`;
+    html += `<div class="md-muted">${escapeHtml(record.header)}</div>`;
+
+    if (record.edges && record.edges.length) {
+      html += `<div class="md-h3">Related records</div>`;
+      for (const edge of record.edges) {
+        const target = edge.target || "";
+        const edgeType = edge.type || "relates";
+        const isKnown = Boolean(records[target]);
+        const cls = isKnown ? "md-link" : "md-muted";
+        if (isKnown) {
+          html += `<div class="md-bullet">- ${escapeHtml(edgeType)} -> <span class="${cls}" data-target="${escapeHtml(target)}">${escapeHtml(target)}</span></div>`;
+        } else {
+          html += `<div class="md-bullet">- ${escapeHtml(edgeType)} -> <span class="${cls}">${escapeHtml(target)}</span></div>`;
+        }
+      }
+    }
+
+    if (record.body) {
+      html += "<div style=\"height:8px\"></div>";
+      html += renderMarkdown(record.body);
+    }
+
+    recordText.innerHTML = html;
+
+    for (const link of recordText.querySelectorAll(".md-link")) {
+      link.addEventListener("click", () => selectRecord(link.dataset.target, false));
+    }
+
+    const imageRef = extractImageReference(record.body || "");
+    renderRecordImage(imageRef);
+  }
+
+  function extractImageReference(body) {
+    for (const line of body.split(/\r?\n/)) {
+      const mdMatch = line.match(/!\[[^\]]*\]\(([^)]+)\)/);
+      if (mdMatch) return mdMatch[1].trim();
+
+      const fieldMatch = line.match(/^\s*-\s*(Card image|Back card image|Image):\s*(.+)$/);
+      if (fieldMatch) {
+        const value = fieldMatch[2].trim();
+        const innerMatch = value.match(/!\[[^\]]*\]\(([^)]+)\)/);
+        if (innerMatch) return innerMatch[1].trim();
+        return value;
+      }
+    }
+    return null;
+  }
+
+  function renderRecordImage(imageRef) {
+    const ctx = recordImageCanvas.getContext("2d");
+    const rect = recordImageCanvas.getBoundingClientRect();
+    recordImageCanvas.width = rect.width;
+    recordImageCanvas.height = rect.height;
+    ctx.clearRect(0, 0, rect.width, rect.height);
+
+    const pad = 12;
+    const drawMessage = (msg) => {
+      ctx.fillStyle = "#a7a7b3";
+      ctx.font = "14px Segoe UI";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(msg, rect.width / 2, rect.height / 2, rect.width - pad * 2);
+    };
+
+    if (!imageRef) {
+      drawMessage("No image found in record.");
+      return;
+    }
+
+    if (imageRef.startsWith("http://") || imageRef.startsWith("https://")) {
+      drawMessage("Remote image (not loaded).");
+      return;
+    }
+
+    let imagePath = imageRef;
+    if (!imageRef.startsWith("/") && !imageRef.match(/^[A-Za-z]:\\/)) {
+      const baseDir = DB_PATH.split("/").slice(0, -1).join("/");
+      imagePath = baseDir ? `${baseDir}/${imageRef}` : imageRef;
+    }
+
+    const img = new Image();
+    img.onload = () => {
+      const targetW = rect.width - pad * 2;
+      const targetH = rect.height - pad * 2;
+      const scale = Math.max(img.width / targetW, img.height / targetH);
+      const drawW = img.width / scale;
+      const drawH = img.height / scale;
+      const x = (rect.width - drawW) / 2;
+      const y = (rect.height - drawH) / 2;
+      ctx.drawImage(img, x, y, drawW, drawH);
+    };
+    img.onerror = () => {
+      drawMessage("Image file not found or unsupported.");
+    };
+    img.src = imagePath;
+  }
+
+  function selectRecord(recordId, fromList) {
+    if (!recordId || !records[recordId]) {
+      recordText.innerHTML = renderMarkdown("No records available.");
+      return;
+    }
+    selectedId = recordId;
+    renderList();
+    renderRecord(recordId);
+    setHeader();
+    centerOnSelected();
+    renderGlobe();
+  }
+
+  function refreshAll(force = false) {
+    if (fileContentOverride) {
+      updateFromContent(fileContentOverride);
+      return;
+    }
+    fetch(DB_PATH, { cache: "no-store" })
+      .then(resp => {
+        if (!resp.ok) throw new Error(`File not found: ${DB_PATH}`);
+        return resp.text();
+      })
+      .then(updateFromContent)
+      .catch(err => updateFromContent(String(err)));
+  }
+
+  function updateFromContent(content) {
+    if (content.startsWith("File not found:") || content.startsWith("TypeError")) {
+      records = {};
+      order = [];
+      coords = {};
+      selectedId = null;
+      renderList();
+      recordText.innerHTML = renderMarkdown(content);
+      renderGlobe();
+      setHeader();
+      return;
+    }
+    const parsed = parseDbRecords(content);
+    records = parsed.records;
+    order = parsed.order;
+    coords = parsed.coords;
+    if (!records[selectedId]) {
+      selectedId = parsed.selected || (order.length ? order[0] : null);
+    }
+    renderList();
+    renderRecord(selectedId);
+    setHeader();
+    centerOnSelected();
+    renderGlobe();
+  }
+
+  function centerOnSelected() {
+    if (!selectedId) return;
+    const coord = coords[selectedId];
+    if (!coord) return;
+    const [lat, lon] = coord;
+    const latR = lat * Math.PI / 180;
+    const lonR = lon * Math.PI / 180;
+    const x = Math.cos(latR) * Math.sin(lonR);
+    const y = Math.sin(latR);
+    const z = Math.cos(latR) * Math.cos(lonR);
+    const rotLon = -Math.atan2(x, z);
+    const z1 = Math.hypot(x, z);
+    const rotLat = Math.atan2(y, z1);
+    globeTargetLat = rotLat;
+    globeTargetLon = rotLon;
+    if (!globeAnimating) {
+      globeAnimating = true;
+      setTimeout(animateGlobe, ANIMATION_MS);
+    }
+  }
+
+  function angleDelta(target, current) {
+    let delta = target - current;
+    while (delta > Math.PI) delta -= 2 * Math.PI;
+    while (delta < -Math.PI) delta += 2 * Math.PI;
+    return delta;
+  }
+
+  function animateGlobe() {
+    if (!globeAnimating) return;
+    const deltaLat = angleDelta(globeTargetLat, globeRotLat);
+    const deltaLon = angleDelta(globeTargetLon, globeRotLon);
+    if (Math.abs(deltaLat) < 0.002 && Math.abs(deltaLon) < 0.002) {
+      globeRotLat = globeTargetLat;
+      globeRotLon = globeTargetLon;
+      globeAnimating = false;
+      renderGlobe();
+      return;
+    }
+    globeRotLat += deltaLat * 0.15;
+    globeRotLon += deltaLon * 0.15;
+    renderGlobe();
+    setTimeout(animateGlobe, ANIMATION_MS);
+  }
+
+  function projectPoint(lat, lon) {
+    const latR = lat * Math.PI / 180;
+    const lonR = lon * Math.PI / 180;
+    let x = Math.cos(latR) * Math.sin(lonR);
+    let y = Math.sin(latR);
+    let z = Math.cos(latR) * Math.cos(lonR);
+
+    const cosY = Math.cos(globeRotLon);
+    const sinY = Math.sin(globeRotLon);
+    const x1 = x * cosY + z * sinY;
+    const z1 = -x * sinY + z * cosY;
+
+    const cosX = Math.cos(globeRotLat);
+    const sinX = Math.sin(globeRotLat);
+    const y1 = y * cosX - z1 * sinX;
+    const z2 = y * sinX + z1 * cosX;
+
+    return [x1, y1, z2];
+  }
+
+  function drawGraticule(ctx, cx, cy, radius) {
+    const drawVisibleLine = (points) => {
+      let line = [];
+      for (const [px, py, visible] of points) {
+        if (visible) {
+          line.push([px, py]);
+        } else if (line.length) {
+          if (line.length >= 2) drawLine(line);
+          line = [];
+        }
+      }
+      if (line.length >= 2) drawLine(line);
+    };
+
+    const drawLine = (points) => {
+      ctx.beginPath();
+      ctx.strokeStyle = "#1a1f2a";
+      ctx.lineWidth = 1;
+      ctx.moveTo(points[0][0], points[0][1]);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i][0], points[i][1]);
+      }
+      ctx.stroke();
+    };
+
+    for (let lon = -150; lon < 180; lon += 30) {
+      const points = [];
+      for (let lat = -90; lat <= 90; lat += 6) {
+        const [x, y, z] = projectPoint(lat, lon);
+        if (z > 0) {
+          points.push([cx + x * radius, cy - y * radius, true]);
+        } else {
+          points.push([0, 0, false]);
+        }
+      }
+      drawVisibleLine(points);
+    }
+
+    for (let lat = -60; lat < 90; lat += 30) {
+      const points = [];
+      for (let lon = -180; lon <= 180; lon += 6) {
+        const [x, y, z] = projectPoint(lat, lon);
+        if (z > 0) {
+          points.push([cx + x * radius, cy - y * radius, true]);
+        } else {
+          points.push([0, 0, false]);
+        }
+      }
+      drawVisibleLine(points);
+    }
+  }
+
+  function renderGlobe() {
+    const ctx = globeCanvas.getContext("2d");
+    const rect = globeCanvas.getBoundingClientRect();
+    globeCanvas.width = rect.width;
+    globeCanvas.height = rect.height;
+    ctx.clearRect(0, 0, rect.width, rect.height);
+
+    globeItems = [];
+
+    const width = Math.max(rect.width, 200);
+    const height = Math.max(rect.height, 200);
+    const padding = 6;
+    const radius = width / 2 - padding;
+    if (radius <= 10) return;
+
+    const cx = width / 2;
+    const cy = height / 2;
+
+    ctx.fillStyle = "#0e1117";
+    ctx.strokeStyle = "#2a2f3a";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, radius, radius, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.strokeStyle = "#141824";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, radius * 0.92, radius * 0.92, 0, 0, Math.PI * 2);
+    ctx.stroke();
+
+    drawGraticule(ctx, cx, cy, radius);
+
+    const projections = {};
+    const nodesFront = [];
+    const nodesBack = [];
+    let selectedPoint = null;
+
+    for (const [recordId, [lat, lon]] of Object.entries(coords)) {
+      const [x, y, z] = projectPoint(lat, lon);
+      projections[recordId] = [x, y, z];
+      if (recordId === selectedId) {
+        selectedPoint = [recordId, x, y, z];
+      } else if (z > 0) {
+        nodesFront.push([recordId, x, y, z]);
+      } else {
+        nodesBack.push([recordId, x, y, z]);
+      }
+    }
+
+    ctx.fillStyle = "#2b303b";
+    for (const [recordId, x, y, z] of nodesBack) {
+      const px = cx + x * radius;
+      const py = cy - y * radius;
+      ctx.beginPath();
+      ctx.ellipse(px, py, 3, 3, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    for (const [sourceId, record] of Object.entries(records)) {
+      const edges = record.edges || [];
+      if (!edges.length) continue;
+      const sourceProj = projections[sourceId];
+      if (!sourceProj || sourceProj[2] <= 0) continue;
+      const sxp = cx + sourceProj[0] * radius;
+      const syp = cy - sourceProj[1] * radius;
+      for (const edge of edges) {
+        const targetId = edge.target;
+        const targetProj = projections[targetId];
+        if (!targetProj || targetProj[2] <= 0) continue;
+        const txp = cx + targetProj[0] * radius;
+        const typ = cy - targetProj[1] * radius;
+        const isSelected = sourceId === selectedId || targetId === selectedId;
+        ctx.strokeStyle = isSelected ? "#7cc7ff" : "#2a3a4d";
+        ctx.lineWidth = isSelected ? 2 : 1;
+        ctx.beginPath();
+        ctx.moveTo(sxp, syp);
+        ctx.lineTo(txp, typ);
+        ctx.stroke();
+      }
+    }
+
+    for (const [recordId, x, y, z] of nodesFront) {
+      const px = cx + x * radius;
+      const py = cy - y * radius;
+      ctx.fillStyle = "#7cc7ff";
+      ctx.strokeStyle = "#0b0b10";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.ellipse(px, py, 5, 5, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      globeItems.push({ id: recordId, x: px, y: py, r: 6 });
+    }
+
+    if (selectedPoint) {
+      const [recordId, x, y, z] = selectedPoint;
+      const px = cx + x * radius;
+      const py = cy - y * radius;
+      ctx.fillStyle = "#ffd166";
+      ctx.strokeStyle = "#f4a261";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.ellipse(px, py, 7, 7, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#e9e9f0";
+      ctx.font = "bold 10px Segoe UI";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "bottom";
+      ctx.fillText(recordId, px, py - 8);
+      globeItems.push({ id: recordId, x: px, y: py, r: 9 });
+    }
+  }
+
+  globeCanvas.addEventListener("click", (event) => {
+    const rect = globeCanvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    for (const item of globeItems) {
+      const dx = item.x - x;
+      const dy = item.y - y;
+      if (Math.hypot(dx, dy) <= item.r) {
+        selectRecord(item.id, false);
+        break;
+      }
+    }
+  });
+
+  refreshBtn.addEventListener("click", () => refreshAll(true));
+  window.addEventListener("resize", () => {
+    renderRecordImage(extractImageReference(records[selectedId]?.body || ""));
+    renderGlobe();
+  });
+
+  fileInput.addEventListener("change", (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      fileContentOverride = String(reader.result || "");
+      autoRefresh.checked = false;
+      updateFromContent(fileContentOverride);
+    };
+    reader.readAsText(file);
+  });
+
+  setInterval(() => {
+    if (autoRefresh.checked && !fileContentOverride) {
+      refreshAll();
+    }
+  }, REFRESH_MS);
+
+  refreshAll(true);
+})();
+</script>
+</body>
+</html>
