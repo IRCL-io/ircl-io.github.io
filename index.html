@@ -481,6 +481,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let activeIndex = 0;
     let rotateTimer = null;
     let ttdbBase = "/cards/cards/";
+    let previousIndex = null;
 
     const normalizePath = (path) => {
         if (!path) {
@@ -583,10 +584,35 @@ document.addEventListener("DOMContentLoaded", () => {
         if (weightEl) {
             weightEl.textContent = bot.weight;
         }
-        const cards = stackEl ? stackEl.querySelectorAll(".ttdb-card") : [];
-        cards.forEach((card, idx) => {
-            card.classList.toggle("is-active", idx === index);
+        const cards = stackEl ? Array.from(stackEl.querySelectorAll(".ttdb-card")) : [];
+        const outgoing = previousIndex !== null ? cards[previousIndex] : null;
+        const incoming = cards[index];
+
+        cards.forEach((card) => {
+            card.classList.remove("is-active", "is-enter", "is-exit");
+            card.style.removeProperty("--exit-rotate");
+            card.style.removeProperty("--exit-x");
+            card.style.removeProperty("--exit-y");
         });
+
+        if (outgoing && outgoing !== incoming) {
+            const rotate = (Math.random() * 6 + 2).toFixed(2);
+            const offsetX = (Math.random() * 10 + 8).toFixed(2);
+            const offsetY = (Math.random() * -10 - 6).toFixed(2);
+            outgoing.style.setProperty("--exit-rotate", `${rotate}deg`);
+            outgoing.style.setProperty("--exit-x", `${offsetX}px`);
+            outgoing.style.setProperty("--exit-y", `${offsetY}px`);
+            outgoing.classList.add("is-exit");
+        }
+
+        if (incoming) {
+            incoming.classList.add("is-enter");
+            requestAnimationFrame(() => {
+                incoming.classList.add("is-active");
+            });
+        }
+
+        previousIndex = index;
     };
 
     const startRotation = () => {
