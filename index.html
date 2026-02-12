@@ -477,6 +477,10 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
     const REFRESH_MS = 1500;
     const ANIMATION_MS = 16;
+    const CYCLE_START_DELAY_MS = 3000;
+    const CYCLE_STEP_MS = 3000;
+    const SELECT_SCALE_EXP = 4.0;
+    const BASE_SCALE = 0.10;
 
     let records = {};
     let order = [];
@@ -488,6 +492,12 @@ document.addEventListener("DOMContentLoaded", () => {
     let globeTargetLon = 0;
     let globeAnimating = false;
     let globeItems = [];
+    let ttdbBase = "cards/cards/";
+    let cycleAfterId = null;
+    let cycleList = [];
+    let cycleIndex = 0;
+    let cycleSourceId = null;
+    const imageCache = new Map();
 
     const setStatus = (text) => {
         if (statusEl) {
@@ -499,6 +509,72 @@ document.addEventListener("DOMContentLoaded", () => {
         if (selectionEl) {
             selectionEl.textContent = text;
         }
+    };
+
+    const extractFieldValue = (body, fieldNames) => {
+        if (!body) {
+            return null;
+        }
+        const pattern = fieldNames.map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+        const regex = new RegExp(`^\\s*-\\s*(${pattern})\\s*:\\s*(.+)$`, "i");
+        for (const line of body.split(/\r?\n/)) {
+            const match = line.match(regex);
+            if (match) {
+                return match[2].trim();
+            }
+        }
+        return null;
+    };
+
+    const extractCardImage = (body) => {
+        const value = extractFieldValue(body, ["Card image", "Image"]);
+        if (value) {
+            const mdMatch = value.match(/!\[[^\]]*\]\(([^)]+)\)/);
+            if (mdMatch) {
+                return mdMatch[1].trim();
+            }
+            return value.trim();
+        }
+        const mdMatch = body.match(/!\[[^\]]*\]\(([^)]+)\)/);
+        if (mdMatch) {
+            return mdMatch[1].trim();
+        }
+        return null;
+    };
+
+    const resolveImagePath = (imageRef) => {
+        if (!imageRef) {
+            return null;
+        }
+        if (imageRef.startsWith("http://") || imageRef.startsWith("https://")) {
+            return imageRef;
+        }
+        if (imageRef.startsWith("/")) {
+            return imageRef;
+        }
+        return `${ttdbBase}${imageRef.replace(/^\.?\//, "")}`;
+    };
+
+    const getImage = (imageRef) => {
+        const resolved = resolveImagePath(imageRef);
+        if (!resolved) {
+            return null;
+        }
+        if (imageCache.has(resolved)) {
+            return imageCache.get(resolved);
+        }
+        const img = new Image();
+        img.onload = () => {
+            imageCache.set(resolved, img);
+            renderGlobe();
+        };
+        img.onerror = () => {
+            imageCache.set(resolved, null);
+            renderGlobe();
+        };
+        imageCache.set(resolved, img);
+        img.src = resolved;
+        return img;
     };
 
     const parseDbRecords = (content) => {
@@ -579,7 +655,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 outCoords[recordId] = [parseFloat(coordMatch[1]), parseFloat(coordMatch[2])];
             }
 
-            outRecords[recordId] = { header: headerLine, body, title, edges };
+            const cardImage = extractCardImage(body);
+            const url = extractFieldValue(body, ["URL"]);
+
+            outRecords[recordId] = { header: headerLine, body, title, edges, cardImage, url };
             outOrder.push(recordId);
         }
 
@@ -595,7 +674,8 @@ document.addEventListener("DOMContentLoaded", () => {
         setSelection(title ? `Selected: ${title}` : `Selected: ${selectedId}`);
     };
 
-    const selectRecord = (recordId) => {
+    const selectRecord = (recordId, options = {}) => {
+        const { fromCycle = false } = options;
         if (!recordId || !records[recordId]) {
             return;
         }
@@ -603,6 +683,9 @@ document.addEventListener("DOMContentLoaded", () => {
         setHeader();
         centerOnSelected();
         renderGlobe();
+        if (!fromCycle) {
+            scheduleCycleFromSelected();
+        }
     };
 
     const updateFromContent = (content) => {
@@ -611,6 +694,8 @@ document.addEventListener("DOMContentLoaded", () => {
             order = [];
             coords = {};
             selectedId = null;
+            imageCache.clear();
+            cancelCycle();
             setStatus("TTDB not reachable");
             setSelection("Check back soon");
             renderGlobe();
@@ -620,6 +705,7 @@ document.addEventListener("DOMContentLoaded", () => {
         records = parsed.records;
         order = parsed.order;
         coords = parsed.coords;
+        imageCache.clear();
         if (!records[selectedId]) {
             selectedId = parsed.selected || (order.length ? order[0] : null);
         }
@@ -627,6 +713,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setHeader();
         centerOnSelected();
         renderGlobe();
+        scheduleCycleFromSelected();
     };
 
     const fetchTtdbContent = async () => {
@@ -636,6 +723,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!res.ok) {
                     continue;
                 }
+                ttdbBase = path.slice(0, path.lastIndexOf("/") + 1);
                 return await res.text();
             } catch (err) {
                 continue;
@@ -648,9 +736,51 @@ document.addEventListener("DOMContentLoaded", () => {
         fetchTtdbContent()
             .then(updateFromContent)
             .catch(() => {
+                cancelCycle();
                 setStatus("TTDB not reachable");
                 setSelection("Check back soon");
             });
+    };
+
+    const scheduleCycleFromSelected = () => {
+        cancelCycle();
+        if (!selectedId || !records[selectedId]) {
+            return;
+        }
+        const edges = records[selectedId].edges || [];
+        const bots = edges
+            .filter((edge) => edge.type === "has_bot" && records[edge.target])
+            .map((edge) => edge.target);
+        if (!bots.length) {
+            return;
+        }
+        cycleSourceId = selectedId;
+        cycleList = bots;
+        cycleIndex = 0;
+        cycleAfterId = window.setTimeout(cycleStep, CYCLE_START_DELAY_MS);
+    };
+
+    const cancelCycle = () => {
+        if (cycleAfterId) {
+            window.clearTimeout(cycleAfterId);
+        }
+        cycleAfterId = null;
+        cycleList = [];
+        cycleIndex = 0;
+        cycleSourceId = null;
+    };
+
+    const cycleStep = () => {
+        if (!cycleList.length || !cycleSourceId) {
+            cancelCycle();
+            return;
+        }
+        const recordId = cycleList[cycleIndex];
+        cycleIndex = (cycleIndex + 1) % cycleList.length;
+        if (records[recordId]) {
+            selectRecord(recordId, { fromCycle: true });
+        }
+        cycleAfterId = window.setTimeout(cycleStep, CYCLE_STEP_MS);
     };
 
     const centerOnSelected = () => {
@@ -878,37 +1008,71 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        for (const [recordId, x, y, z] of nodesFront) {
+        const drawNode = (recordId, x, y, z, isSelected) => {
             const px = cx + x * radius;
             const py = cy - y * radius;
-            ctx.fillStyle = "#7cc7ff";
-            ctx.strokeStyle = "#0b0b10";
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.ellipse(px, py, 5, 5, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
-            globeItems.push({ id: recordId, x: px, y: py, r: 6 });
+            const record = records[recordId] || {};
+            const imageRef = record.cardImage;
+            const img = imageRef ? getImage(imageRef) : null;
+            if (img && img.complete && img.naturalWidth) {
+                let scale = BASE_SCALE;
+                if (isSelected) {
+                    const t = Math.max(0, Math.min(1, (z + 1) / 2));
+                    const tExp = Math.pow(t, SELECT_SCALE_EXP);
+                    const maxDim = Math.max(img.naturalWidth, img.naturalHeight);
+                    const targetPixels = Math.max(height * 0.8, 1);
+                    let targetScale = maxDim > 0 ? targetPixels / maxDim : BASE_SCALE;
+                    if (targetScale < BASE_SCALE) {
+                        targetScale = BASE_SCALE;
+                    }
+                    scale = BASE_SCALE + (targetScale - BASE_SCALE) * tExp;
+                }
+
+                const maxDim = Math.max(img.naturalWidth, img.naturalHeight);
+                const maxAllowed = radius * 1.9;
+                if (maxDim > 0) {
+                    scale = Math.min(scale, maxAllowed / maxDim);
+                }
+                const drawW = img.naturalWidth * scale;
+                const drawH = img.naturalHeight * scale;
+                ctx.drawImage(img, px - drawW / 2, py - drawH / 2, drawW, drawH);
+                globeItems.push({
+                    id: recordId,
+                    x: px,
+                    y: py,
+                    r: Math.max(drawW, drawH) / 2,
+                    z,
+                    isSelected
+                });
+            } else {
+                const size = isSelected ? 7 : 5;
+                ctx.fillStyle = isSelected ? "#ffd166" : "#7cc7ff";
+                ctx.strokeStyle = isSelected ? "#f4a261" : "#0b0b10";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.ellipse(px, py, size, size, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+                globeItems.push({ id: recordId, x: px, y: py, r: size + 2, z, isSelected });
+            }
+
+            if (isSelected) {
+                const label = records[recordId]?.title || recordId;
+                ctx.fillStyle = "#e9e9f0";
+                ctx.font = "bold 10px Segoe UI";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "bottom";
+                ctx.fillText(label, px, py - 8);
+            }
+        };
+
+        for (const [recordId, x, y, z] of nodesFront) {
+            drawNode(recordId, x, y, z, false);
         }
 
         if (selectedPoint) {
             const [recordId, x, y, z] = selectedPoint;
-            const px = cx + x * radius;
-            const py = cy - y * radius;
-            ctx.fillStyle = "#ffd166";
-            ctx.strokeStyle = "#f4a261";
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.ellipse(px, py, 7, 7, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
-            ctx.fillStyle = "#e9e9f0";
-            ctx.font = "bold 10px Segoe UI";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "bottom";
-            const label = records[recordId]?.title || recordId;
-            ctx.fillText(label, px, py - 8);
-            globeItems.push({ id: recordId, x: px, y: py, r: 9 });
+            drawNode(recordId, x, y, z, true);
         }
     };
 
@@ -920,6 +1084,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const dx = item.x - x;
             const dy = item.y - y;
             if (Math.hypot(dx, dy) <= item.r) {
+                if (item.isSelected && item.z >= 0.95) {
+                    const url = records[item.id]?.url;
+                    if (url) {
+                        window.open(url, "_blank", "noopener");
+                        break;
+                    }
+                }
                 selectRecord(item.id);
                 break;
             }
