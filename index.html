@@ -467,7 +467,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const stackEl = document.getElementById("sbb-ttdb-stack");
     const nameEl = document.getElementById("sbb-ttdb-name");
     const weightEl = document.getElementById("sbb-ttdb-weight");
-    const TTDB_PATH = "cards/cards/IRCL_TTDB.md";
+    const TTDB_PATH = "/cards/cards/IRCL_TTDB.md";
     const EVENT_HEADER = "## Spring Bot Breaker 2026 (Event)";
     const WEIGHT_ORDER = ["Beetleweight", "Full Combat Antweight", "Plastic Antweight"];
     const ROTATE_MS = 2400;
@@ -484,7 +484,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (path.startsWith("http")) {
             return path;
         }
-        return `cards/cards/${path.replace(/^\.?\//, "")}`;
+        return `/cards/cards/${path.replace(/^\.?\//, "")}`;
     };
 
     const parseCardImages = (content) => {
@@ -538,7 +538,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const img = document.createElement("img");
             img.src = bot.card;
             img.alt = `${bot.name} robot card`;
-            img.loading = "lazy";
+            img.loading = "eager";
+            img.decoding = "async";
             img.className = "ttdb-card";
             img.style.setProperty("--stack-index", Math.min(index, 6));
             if (index === 0) {
