@@ -271,7 +271,7 @@
     width: calc(100% - 16px);
     height: calc(100% - 16px);
     object-fit: contain;
-    transform: translate(calc(var(--stack-index) * 1px - 18px), calc(var(--stack-index) * 2px + 24px)) rotate(calc(var(--stack-index) * -0.6deg)) scale(0.97);
+    transform: translate(calc(var(--stack-index) * 1px - 18px), calc(var(--stack-index) * 2px + 24px)) scale(0.97);
     filter: grayscale(0.4);
     transition: transform 0.7s ease, filter 0.7s ease;
 }
@@ -283,7 +283,7 @@
 }
 
 .hero-ttdb-stack .ttdb-card.is-enter {
-    transform: translate(-160px, 180px) rotate(-12deg) scale(0.9);
+    transform: translate(-160px, 180px) scale(0.9);
     z-index: 1;
 }
 
