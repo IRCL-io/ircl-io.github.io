@@ -176,6 +176,7 @@
                                 <span class="hero-ttdb-weight" id="sbb-ttdb-weight">Loading...</span>
                                 <span class="hero-ttdb-name" id="sbb-ttdb-name">Loading roster</span>
                             </div>
+                            <div class="hero-ttdb-debug" id="sbb-ttdb-debug" aria-live="polite"></div>
                         </aside>
                     </div>
                 </div>
@@ -467,6 +468,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const stackEl = document.getElementById("sbb-ttdb-stack");
     const nameEl = document.getElementById("sbb-ttdb-name");
     const weightEl = document.getElementById("sbb-ttdb-weight");
+    const debugEl = document.getElementById("sbb-ttdb-debug");
     const TTDB_PATHS = [
         "/cards/cards/IRCL_TTDB.md",
         "/cards/IRCL_TTDB.md",
@@ -600,20 +602,31 @@ document.addEventListener("DOMContentLoaded", () => {
         }, ROTATE_MS);
     };
 
+    const setDebug = (text) => {
+        if (debugEl) {
+            debugEl.textContent = text;
+        }
+    };
+
     const fetchTtdbContent = async () => {
         for (const path of TTDB_PATHS) {
             try {
+                setDebug(`Fetching ${path}...`);
                 const res = await fetch(path, { cache: "no-store" });
                 if (!res.ok) {
+                    setDebug(`Fetch failed (${res.status}) for ${path}`);
                     continue;
                 }
                 const content = await res.text();
                 if (!content.includes(EVENT_HEADER)) {
+                    setDebug(`No event header found in ${path}`);
                     continue;
                 }
                 ttdbBase = path.slice(0, path.lastIndexOf("/") + 1);
+                setDebug(`Loaded TTDB from ${path}`);
                 return content;
             } catch (err) {
+                setDebug(`Fetch error for ${path}`);
                 continue;
             }
         }
@@ -636,13 +649,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     nameEl.textContent = "Roster unavailable";
                 }
                 if (weightEl) {
-                    weightEl.textContent = "Check back soon";
+                    weightEl.textContent = "TTDB not reachable";
                 }
+                setDebug(`Parsed ${robots.length} robots, ${cardMap.size} cards, 0 matched`);
                 return;
             }
 
             renderStack();
             startRotation();
+            setDebug(`Parsed ${robots.length} robots, ${cardMap.size} cards, ${bots.length} matched`);
         })
         .catch(() => {
             if (nameEl) {
@@ -651,6 +666,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (weightEl) {
                 weightEl.textContent = "TTDB not reachable";
             }
+            setDebug("TTDB fetch failed");
         });
 });
 </script>
