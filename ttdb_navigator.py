@@ -8,7 +8,7 @@ from tkinter import ttk
 from tkinter import font as tkfont
 import webbrowser
 
-DB_PATH = Path("cards/IRCL_TTDB.md")
+DB_PATH = Path("cards/cards/IRCL_TTDB.md")
 
 REFRESH_MS = 1500
 ANIMATION_MS = 16

@@ -165,16 +165,17 @@
                                 </div>
                             </div>
                         </aside>
-                        <aside class="hero-ttdb" data-ttdb-panel="spring-bot-breaker-2026">
+                        <aside class="hero-ttdb" data-ttdb-panel="ttdb-globe">
                             <div class="hero-ttdb-header">
-                                <h3>Registered Competitors</h3>
+                                <h3>TTDB Globe Navigator</h3>
                                 <div class="hero-ttdb-meta" aria-live="polite">
-                                <span class="hero-ttdb-weight" id="sbb-ttdb-weight">Loading...</span>
-                                <span class="hero-ttdb-name" id="sbb-ttdb-name">Loading roster</span>
+                                    <span class="hero-ttdb-weight" id="ttdb-globe-status">Loading...</span>
+                                    <span class="hero-ttdb-name" id="ttdb-globe-selection">Loading records</span>
+                                </div>
                             </div>
+                            <div class="hero-ttdb-globe">
+                                <canvas id="ttdb-globe-canvas" aria-label="TTDB globe view" role="img"></canvas>
                             </div>
-                            <div class="hero-ttdb-stack" id="sbb-ttdb-stack" aria-hidden="true"></div>
-                            
                         </aside>
                     </div>
                 </div>
@@ -458,197 +459,174 @@
 <script src="js/quote.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    const panel = document.querySelector('[data-ttdb-panel="spring-bot-breaker-2026"]');
+    const panel = document.querySelector('[data-ttdb-panel="ttdb-globe"]');
     if (!panel) {
         return;
     }
-
-    const stackEl = document.getElementById("sbb-ttdb-stack");
-    const nameEl = document.getElementById("sbb-ttdb-name");
-    const weightEl = document.getElementById("sbb-ttdb-weight");
+    const statusEl = document.getElementById("ttdb-globe-status");
+    const selectionEl = document.getElementById("ttdb-globe-selection");
+    const globeCanvas = document.getElementById("ttdb-globe-canvas");
+    if (!globeCanvas) {
+        return;
+    }
     const TTDB_PATHS = [
         "/cards/cards/IRCL_TTDB.md",
         "/cards/IRCL_TTDB.md",
         "cards/cards/IRCL_TTDB.md",
         "cards/IRCL_TTDB.md"
     ];
-    const EVENT_HEADER = "## Spring Bot Breaker 2026 (Event)";
-    const WEIGHT_ORDER = ["Beetleweight", "Full Combat Antweight", "Plastic Antweight"];
-    const HOLD_MS = 1200;
-    const SWOOP_MS = 900;
-    const FINAL_MS = 1400;
-    const ROTATE_MS = HOLD_MS + SWOOP_MS + FINAL_MS;
+    const REFRESH_MS = 1500;
+    const ANIMATION_MS = 16;
 
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let bots = [];
-    let activeIndex = 0;
-    let rotateTimer = null;
-    let ttdbBase = "/cards/cards/";
-    let previousIndex = null;
-    let transitionTimer = null;
+    let records = {};
+    let order = [];
+    let coords = {};
+    let selectedId = null;
+    let globeRotLat = 0;
+    let globeRotLon = 0;
+    let globeTargetLat = 0;
+    let globeTargetLon = 0;
+    let globeAnimating = false;
+    let globeItems = [];
 
-    const normalizePath = (path) => {
-        if (!path) {
-            return "";
+    const setStatus = (text) => {
+        if (statusEl) {
+            statusEl.textContent = text;
         }
-        if (path.startsWith("http")) {
-            return path;
-        }
-        if (path.startsWith("/")) {
-            return path;
-        }
-        return `${ttdbBase}${path.replace(/^\.?\//, "")}`;
     };
 
-    const parseCardImages = (content) => {
-        const map = new Map();
-        const blocks = content.split(/\n---\n/);
-        blocks.forEach((block) => {
-            const nameMatch = block.match(/^##\s+(.+?)\s*$/m);
-            const cardMatch = block.match(/- Card image:\s+!\[([^\]]*)\]\(([^)]+)\)/m);
-            if (!cardMatch) {
-                return;
-            }
-            const path = cardMatch[2].trim();
-            if (!path.includes("Spring_Bot_Breaker_2026/")) {
-                return;
-            }
-            const headingName = nameMatch ? nameMatch[1].trim() : "";
-            const altName = cardMatch[1].trim();
-            const normalized = normalizePath(path);
-            if (headingName) {
-                map.set(headingName, normalized);
-            }
-            if (altName) {
-                map.set(altName, normalized);
-            }
-        });
-        return map;
+    const setSelection = (text) => {
+        if (selectionEl) {
+            selectionEl.textContent = text;
+        }
     };
 
-    const parseEventRobots = (content) => {
-        const headerPattern = EVENT_HEADER.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        const eventMatch = content.match(new RegExp(`${headerPattern}[\\s\\S]*?(?:\\n---\\n|$)`));
-        if (!eventMatch) {
-            return [];
-        }
-        const eventBlock = eventMatch[0];
-        const robotsMatch = eventBlock.match(/###\s+Robots[\s\S]*?(?:###\s+Notes|$)/);
-        const robotsBlock = robotsMatch ? robotsMatch[0] : eventBlock;
-        const lines = robotsBlock.split(/\r?\n/);
-        const robots = [];
-        for (const line of lines) {
-            const match = line.match(/^-\s+@\S+\s+(.+?)\s+\(([^)]+)\)\s*$/);
-            if (match) {
-                robots.push({ name: match[1].trim(), weight: match[2].trim() });
+    const parseDbRecords = (content) => {
+        let selected = null;
+        const cursorMatch = content.match(/```cursor([\s\S]*?)```/);
+        if (cursorMatch) {
+            let inSelected = false;
+            for (const line of cursorMatch[1].split(/\r?\n/)) {
+                const stripped = line.trim();
+                if (stripped.startsWith("selected:")) {
+                    inSelected = true;
+                    continue;
+                }
+                if (inSelected) {
+                    const itemMatch = stripped.match(/^-\s*(\S+)/);
+                    if (itemMatch) {
+                        selected = itemMatch[1];
+                        break;
+                    }
+                    if (stripped && !stripped.startsWith("-")) {
+                        break;
+                    }
+                }
             }
         }
-        return robots;
+
+        const outRecords = {};
+        const outOrder = [];
+        const outCoords = {};
+
+        const blocks = content.split(/\n\s*---+\s*\n/);
+        for (const block of blocks) {
+            const lines = block.split(/\r?\n/).map((line) => line.replace(/\n$/, ""));
+            let headerIndex = -1;
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].startsWith("@")) {
+                    headerIndex = i;
+                    break;
+                }
+            }
+            if (headerIndex === -1) {
+                continue;
+            }
+            const headerLine = lines[headerIndex].trim();
+            const recordId = headerLine.split(/\s+/)[0];
+            const body = lines.slice(headerIndex + 1).join("\n").replace(/^\n+|\n+$/g, "");
+
+            let title = null;
+            for (const line of body.split(/\r?\n/)) {
+                const match = line.match(/^##\s+(.*)$/);
+                if (match) {
+                    title = match[1].trim();
+                    break;
+                }
+            }
+
+            const edges = [];
+            const relatesMatch = headerLine.match(/relates:([^|]+)/);
+            if (relatesMatch) {
+                for (const tokenRaw of relatesMatch[1].split(",")) {
+                    const token = tokenRaw.trim();
+                    if (!token) {
+                        continue;
+                    }
+                    let edgeType = "relates";
+                    let target = token;
+                    if (token.includes(">")) {
+                        const parts = token.split(">", 2);
+                        edgeType = parts[0].trim();
+                        target = parts[1].trim();
+                    }
+                    edges.push({ type: edgeType, target });
+                }
+            }
+
+            const coordMatch = recordId.match(/@LAT(-?\d+(?:\.\d+)?)LON(-?\d+(?:\.\d+)?)/);
+            if (coordMatch) {
+                outCoords[recordId] = [parseFloat(coordMatch[1]), parseFloat(coordMatch[2])];
+            }
+
+            outRecords[recordId] = { header: headerLine, body, title, edges };
+            outOrder.push(recordId);
+        }
+
+        return { records: outRecords, order: outOrder, selected, coords: outCoords };
     };
 
-    const orderBots = (robots) => {
-        const ordered = [];
-        WEIGHT_ORDER.forEach((weight) => {
-            robots.filter((robot) => robot.weight === weight).forEach((robot) => {
-                ordered.push(robot);
-            });
-        });
-        return ordered;
-    };
-
-    const renderStack = () => {
-        if (!stackEl) {
+    const setHeader = () => {
+        if (!selectedId || !records[selectedId]) {
+            setSelection("No record selected");
             return;
         }
-        stackEl.innerHTML = "";
-        bots.forEach((bot, index) => {
-            const img = document.createElement("img");
-            img.src = bot.card;
-            img.alt = `${bot.name} robot card`;
-            img.loading = "eager";
-            img.decoding = "async";
-            img.className = "ttdb-card";
-            img.style.setProperty("--stack-index", Math.min(index, 6));
-            if (index === 0) {
-                img.classList.add("is-active");
-            }
-            stackEl.appendChild(img);
-        });
-        updateMeta(0);
+        const title = records[selectedId].title;
+        setSelection(title ? `Selected: ${title}` : `Selected: ${selectedId}`);
     };
 
-    const updateMeta = (index) => {
-        const bot = bots[index];
-        if (!bot) {
+    const selectRecord = (recordId) => {
+        if (!recordId || !records[recordId]) {
             return;
         }
-        if (nameEl) {
-            nameEl.textContent = bot.name;
-        }
-        if (weightEl) {
-            weightEl.textContent = bot.weight;
-        }
-        const cards = stackEl ? Array.from(stackEl.querySelectorAll(".ttdb-card")) : [];
-        const incoming = cards[index];
-
-        cards.forEach((card) => {
-            card.classList.remove("is-active", "is-enter");
-        });
-
-        if (incoming) {
-            incoming.classList.add("is-active");
-        }
-
-        previousIndex = index;
+        selectedId = recordId;
+        setHeader();
+        centerOnSelected();
+        renderGlobe();
     };
 
-    const runTransition = (nextIndex) => {
-        const cards = stackEl ? Array.from(stackEl.querySelectorAll(".ttdb-card")) : [];
-        const outgoing = cards[activeIndex];
-        const incoming = cards[nextIndex];
-        if (!outgoing || !incoming) {
-            activeIndex = nextIndex;
-            updateMeta(activeIndex);
+    const updateFromContent = (content) => {
+        if (content.startsWith("File not found:") || content.startsWith("TypeError")) {
+            records = {};
+            order = [];
+            coords = {};
+            selectedId = null;
+            setStatus("TTDB not reachable");
+            setSelection("Check back soon");
+            renderGlobe();
             return;
         }
-
-        cards.forEach((card) => {
-            card.classList.remove("is-active", "is-enter");
-        });
-
-        outgoing.classList.add("is-active");
-
-        const swoop = () => {
-            incoming.classList.add("is-enter");
-            requestAnimationFrame(() => {
-                incoming.classList.add("is-active");
-                incoming.classList.remove("is-enter");
-            });
-        };
-
-        const finalize = () => {
-            activeIndex = nextIndex;
-            updateMeta(activeIndex);
-        };
-
-        transitionTimer = window.setTimeout(() => {
-            swoop();
-            transitionTimer = window.setTimeout(finalize, SWOOP_MS);
-        }, HOLD_MS);
-    };
-
-    const startRotation = () => {
-        if (prefersReducedMotion || bots.length <= 1) {
-            return;
+        const parsed = parseDbRecords(content);
+        records = parsed.records;
+        order = parsed.order;
+        coords = parsed.coords;
+        if (!records[selectedId]) {
+            selectedId = parsed.selected || (order.length ? order[0] : null);
         }
-        rotateTimer = window.setInterval(() => {
-            const nextIndex = (activeIndex + 1) % bots.length;
-            if (transitionTimer) {
-                window.clearTimeout(transitionTimer);
-                transitionTimer = null;
-            }
-            runTransition(nextIndex);
-        }, ROTATE_MS);
+        setStatus(order.length ? `Records: ${order.length}` : "No records found");
+        setHeader();
+        centerOnSelected();
+        renderGlobe();
     };
 
     const fetchTtdbContent = async () => {
@@ -658,12 +636,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!res.ok) {
                     continue;
                 }
-                const content = await res.text();
-                if (!content.includes(EVENT_HEADER)) {
-                    continue;
-                }
-                ttdbBase = path.slice(0, path.lastIndexOf("/") + 1);
-                return content;
+                return await res.text();
             } catch (err) {
                 continue;
             }
@@ -671,38 +644,297 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("TTDB fetch failed");
     };
 
-    fetchTtdbContent()
-        .then((content) => {
-            const cardMap = parseCardImages(content);
-            const robots = parseEventRobots(content);
-            bots = orderBots(robots)
-                .map((robot) => ({
-                    ...robot,
-                    card: cardMap.get(robot.name)
-                }))
-                .filter((robot) => robot.card);
+    const refreshAll = () => {
+        fetchTtdbContent()
+            .then(updateFromContent)
+            .catch(() => {
+                setStatus("TTDB not reachable");
+                setSelection("Check back soon");
+            });
+    };
 
-            if (!bots.length) {
-                if (nameEl) {
-                    nameEl.textContent = "Roster unavailable";
-                }
-                if (weightEl) {
-                    weightEl.textContent = "TTDB not reachable";
-                }
-                return;
-            }
+    const centerOnSelected = () => {
+        if (!selectedId) {
+            return;
+        }
+        const coord = coords[selectedId];
+        if (!coord) {
+            return;
+        }
+        const [lat, lon] = coord;
+        const latR = (lat * Math.PI) / 180;
+        const lonR = (lon * Math.PI) / 180;
+        const x = Math.cos(latR) * Math.sin(lonR);
+        const y = Math.sin(latR);
+        const z = Math.cos(latR) * Math.cos(lonR);
+        const rotLon = -Math.atan2(x, z);
+        const z1 = Math.hypot(x, z);
+        const rotLat = Math.atan2(y, z1);
+        globeTargetLat = rotLat;
+        globeTargetLon = rotLon;
+        if (!globeAnimating) {
+            globeAnimating = true;
+            window.setTimeout(animateGlobe, ANIMATION_MS);
+        }
+    };
 
-            renderStack();
-            startRotation();
-        })
-        .catch(() => {
-            if (nameEl) {
-                nameEl.textContent = "Roster unavailable";
+    const angleDelta = (target, current) => {
+        let delta = target - current;
+        while (delta > Math.PI) {
+            delta -= 2 * Math.PI;
+        }
+        while (delta < -Math.PI) {
+            delta += 2 * Math.PI;
+        }
+        return delta;
+    };
+
+    const animateGlobe = () => {
+        if (!globeAnimating) {
+            return;
+        }
+        const deltaLat = angleDelta(globeTargetLat, globeRotLat);
+        const deltaLon = angleDelta(globeTargetLon, globeRotLon);
+        if (Math.abs(deltaLat) < 0.002 && Math.abs(deltaLon) < 0.002) {
+            globeRotLat = globeTargetLat;
+            globeRotLon = globeTargetLon;
+            globeAnimating = false;
+            renderGlobe();
+            return;
+        }
+        globeRotLat += deltaLat * 0.15;
+        globeRotLon += deltaLon * 0.15;
+        renderGlobe();
+        window.setTimeout(animateGlobe, ANIMATION_MS);
+    };
+
+    const projectPoint = (lat, lon) => {
+        const latR = (lat * Math.PI) / 180;
+        const lonR = (lon * Math.PI) / 180;
+        let x = Math.cos(latR) * Math.sin(lonR);
+        let y = Math.sin(latR);
+        let z = Math.cos(latR) * Math.cos(lonR);
+
+        const cosY = Math.cos(globeRotLon);
+        const sinY = Math.sin(globeRotLon);
+        const x1 = x * cosY + z * sinY;
+        const z1 = -x * sinY + z * cosY;
+
+        const cosX = Math.cos(globeRotLat);
+        const sinX = Math.sin(globeRotLat);
+        const y1 = y * cosX - z1 * sinX;
+        const z2 = y * sinX + z1 * cosX;
+
+        return [x1, y1, z2];
+    };
+
+    const drawGraticule = (ctx, cx, cy, radius) => {
+        const drawVisibleLine = (points) => {
+            let line = [];
+            for (const [px, py, visible] of points) {
+                if (visible) {
+                    line.push([px, py]);
+                } else if (line.length) {
+                    if (line.length >= 2) {
+                        drawLine(line);
+                    }
+                    line = [];
+                }
             }
-            if (weightEl) {
-                weightEl.textContent = "TTDB not reachable";
+            if (line.length >= 2) {
+                drawLine(line);
             }
-        });
+        };
+
+        const drawLine = (points) => {
+            ctx.beginPath();
+            ctx.strokeStyle = "#1a1f2a";
+            ctx.lineWidth = 1;
+            ctx.moveTo(points[0][0], points[0][1]);
+            for (let i = 1; i < points.length; i++) {
+                ctx.lineTo(points[i][0], points[i][1]);
+            }
+            ctx.stroke();
+        };
+
+        for (let lon = -150; lon < 180; lon += 30) {
+            const points = [];
+            for (let lat = -90; lat <= 90; lat += 6) {
+                const [x, y, z] = projectPoint(lat, lon);
+                if (z > 0) {
+                    points.push([cx + x * radius, cy - y * radius, true]);
+                } else {
+                    points.push([0, 0, false]);
+                }
+            }
+            drawVisibleLine(points);
+        }
+
+        for (let lat = -60; lat < 90; lat += 30) {
+            const points = [];
+            for (let lon = -180; lon <= 180; lon += 6) {
+                const [x, y, z] = projectPoint(lat, lon);
+                if (z > 0) {
+                    points.push([cx + x * radius, cy - y * radius, true]);
+                } else {
+                    points.push([0, 0, false]);
+                }
+            }
+            drawVisibleLine(points);
+        }
+    };
+
+    const renderGlobe = () => {
+        if (!globeCanvas) {
+            return;
+        }
+        const ctx = globeCanvas.getContext("2d");
+        const rect = globeCanvas.getBoundingClientRect();
+        const width = Math.max(rect.width, 200);
+        const height = Math.max(rect.height, 200);
+        globeCanvas.width = width;
+        globeCanvas.height = height;
+        ctx.clearRect(0, 0, width, height);
+
+        globeItems = [];
+
+        const padding = 6;
+        const radius = Math.min(width, height) / 2 - padding;
+        if (radius <= 10) {
+            return;
+        }
+
+        const cx = width / 2;
+        const cy = height / 2;
+
+        ctx.fillStyle = "#0e1117";
+        ctx.strokeStyle = "#2a2f3a";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, radius, radius, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.strokeStyle = "#141824";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, radius * 0.92, radius * 0.92, 0, 0, Math.PI * 2);
+        ctx.stroke();
+
+        drawGraticule(ctx, cx, cy, radius);
+
+        const projections = {};
+        const nodesFront = [];
+        const nodesBack = [];
+        let selectedPoint = null;
+
+        for (const [recordId, [lat, lon]] of Object.entries(coords)) {
+            const [x, y, z] = projectPoint(lat, lon);
+            projections[recordId] = [x, y, z];
+            if (recordId === selectedId) {
+                selectedPoint = [recordId, x, y, z];
+            } else if (z > 0) {
+                nodesFront.push([recordId, x, y, z]);
+            } else {
+                nodesBack.push([recordId, x, y, z]);
+            }
+        }
+
+        ctx.fillStyle = "#2b303b";
+        for (const [recordId, x, y, z] of nodesBack) {
+            const px = cx + x * radius;
+            const py = cy - y * radius;
+            ctx.beginPath();
+            ctx.ellipse(px, py, 3, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        for (const [sourceId, record] of Object.entries(records)) {
+            const edges = record.edges || [];
+            if (!edges.length) {
+                continue;
+            }
+            const sourceProj = projections[sourceId];
+            if (!sourceProj || sourceProj[2] <= 0) {
+                continue;
+            }
+            const sxp = cx + sourceProj[0] * radius;
+            const syp = cy - sourceProj[1] * radius;
+            for (const edge of edges) {
+                const targetId = edge.target;
+                const targetProj = projections[targetId];
+                if (!targetProj || targetProj[2] <= 0) {
+                    continue;
+                }
+                const txp = cx + targetProj[0] * radius;
+                const typ = cy - targetProj[1] * radius;
+                const isSelected = sourceId === selectedId || targetId === selectedId;
+                ctx.strokeStyle = isSelected ? "#7cc7ff" : "#2a3a4d";
+                ctx.lineWidth = isSelected ? 2 : 1;
+                ctx.beginPath();
+                ctx.moveTo(sxp, syp);
+                ctx.lineTo(txp, typ);
+                ctx.stroke();
+            }
+        }
+
+        for (const [recordId, x, y, z] of nodesFront) {
+            const px = cx + x * radius;
+            const py = cy - y * radius;
+            ctx.fillStyle = "#7cc7ff";
+            ctx.strokeStyle = "#0b0b10";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.ellipse(px, py, 5, 5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            globeItems.push({ id: recordId, x: px, y: py, r: 6 });
+        }
+
+        if (selectedPoint) {
+            const [recordId, x, y, z] = selectedPoint;
+            const px = cx + x * radius;
+            const py = cy - y * radius;
+            ctx.fillStyle = "#ffd166";
+            ctx.strokeStyle = "#f4a261";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.ellipse(px, py, 7, 7, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = "#e9e9f0";
+            ctx.font = "bold 10px Segoe UI";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "bottom";
+            const label = records[recordId]?.title || recordId;
+            ctx.fillText(label, px, py - 8);
+            globeItems.push({ id: recordId, x: px, y: py, r: 9 });
+        }
+    };
+
+    globeCanvas.addEventListener("click", (event) => {
+        const rect = globeCanvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        for (const item of globeItems) {
+            const dx = item.x - x;
+            const dy = item.y - y;
+            if (Math.hypot(dx, dy) <= item.r) {
+                selectRecord(item.id);
+                break;
+            }
+        }
+    });
+
+    window.addEventListener("resize", () => {
+        renderGlobe();
+    });
+
+    window.setInterval(() => {
+        refreshAll();
+    }, REFRESH_MS);
+
+    refreshAll();
 });
 </script>
 <script>
