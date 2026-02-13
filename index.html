@@ -487,6 +487,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let cycleIndex = 0;
     let cycleSourceId = null;
     let eventId = null;
+    let labelScaleStart = 0;
+    let labelScaleUntil = 0;
     const imageCache = new Map();
 
     const setStatus = (text) => {
@@ -670,6 +672,11 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
         selectedId = recordId;
+        if (fromCycle) {
+            const now = Date.now();
+            labelScaleStart = now;
+            labelScaleUntil = now + CYCLE_STEP_MS;
+        }
         setHeader();
         centerOnSelected();
         renderGlobe();
@@ -1059,11 +1066,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (isSelected) {
                 const label = records[recordId]?.title || recordId;
-                ctx.fillStyle = "#e9e9f0";
-                ctx.font = "bold 10px Segoe UI";
+                const now = Date.now();
+                let scale = 1;
+                if (now < labelScaleUntil && labelScaleUntil > labelScaleStart) {
+                    const t = (now - labelScaleStart) / (labelScaleUntil - labelScaleStart);
+                    const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+                    scale = 1 + 9 * eased;
+                }
+                ctx.fillStyle = "#ff2e2e";
+                ctx.shadowColor = "rgba(255, 64, 64, 0.9)";
+                ctx.shadowBlur = 18;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+                ctx.font = `bold ${Math.round(10 * scale)}px Segoe UI`;
                 ctx.textAlign = "center";
                 ctx.textBaseline = "bottom";
                 ctx.fillText(label, px, py - 8);
+                ctx.shadowColor = "transparent";
+                ctx.shadowBlur = 0;
             }
         };
 
