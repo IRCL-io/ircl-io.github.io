@@ -471,6 +471,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const CYCLE_STEP_MS = 3000;
     const SELECT_SCALE_EXP = 4.0;
     const BASE_SCALE = 0.10;
+    const DRAG_SENSITIVITY = 0.005;
+    const DRAG_THRESHOLD = 6;
+    const DRAG_LAT_LIMIT = Math.PI / 2 - 0.08;
     let records = {};
     let order = [];
     let coords = {};
@@ -489,6 +492,15 @@ document.addEventListener("DOMContentLoaded", () => {
     let eventId = null;
     let labelScaleStart = 0;
     let labelScaleUntil = 0;
+    let userInteracted = false;
+    let dragActive = false;
+    let dragPointerId = null;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let dragLastX = 0;
+    let dragLastY = 0;
+    let dragStartedAt = 0;
+    let suppressClickUntil = 0;
     const imageCache = new Map();
 
     const setStatus = (text) => {
@@ -755,6 +767,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const scheduleCycleFromEvent = () => {
         cancelCycle();
+        if (userInteracted) {
+            return;
+        }
         if (!eventId) {
             return;
         }
@@ -1097,7 +1112,77 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    const clampLat = (lat) => {
+        return Math.max(-DRAG_LAT_LIMIT, Math.min(DRAG_LAT_LIMIT, lat));
+    };
+
+    const startDrag = (event) => {
+        if (event.pointerType === "mouse" && event.button !== 0) {
+            return;
+        }
+        userInteracted = true;
+        dragActive = false;
+        dragPointerId = event.pointerId;
+        dragStartX = event.clientX;
+        dragStartY = event.clientY;
+        dragLastX = event.clientX;
+        dragLastY = event.clientY;
+        dragStartedAt = Date.now();
+        globeCanvas.setPointerCapture(event.pointerId);
+        cancelCycle();
+    };
+
+    const moveDrag = (event) => {
+        if (dragPointerId === null || event.pointerId !== dragPointerId) {
+            return;
+        }
+        const dxTotal = event.clientX - dragStartX;
+        const dyTotal = event.clientY - dragStartY;
+        if (!dragActive) {
+            if (Math.hypot(dxTotal, dyTotal) < DRAG_THRESHOLD) {
+                return;
+            }
+            dragActive = true;
+        }
+        const dx = event.clientX - dragLastX;
+        const dy = event.clientY - dragLastY;
+        dragLastX = event.clientX;
+        dragLastY = event.clientY;
+
+        globeRotLon += dx * DRAG_SENSITIVITY;
+        globeRotLat = clampLat(globeRotLat + dy * DRAG_SENSITIVITY);
+        globeTargetLat = globeRotLat;
+        globeTargetLon = globeRotLon;
+        globeAnimating = false;
+        renderGlobe();
+    };
+
+    const endDrag = (event) => {
+        if (dragPointerId === null || event.pointerId !== dragPointerId) {
+            return;
+        }
+        globeCanvas.releasePointerCapture(event.pointerId);
+        dragPointerId = null;
+        const wasDrag = dragActive;
+        if (wasDrag) {
+            suppressClickUntil = Date.now() + 250;
+        }
+        dragActive = false;
+        scheduleCycleFromEvent();
+    };
+
+    globeCanvas.style.touchAction = "none";
+    globeCanvas.addEventListener("pointerdown", startDrag);
+    globeCanvas.addEventListener("pointermove", moveDrag);
+    globeCanvas.addEventListener("pointerup", endDrag);
+    globeCanvas.addEventListener("pointercancel", endDrag);
+    globeCanvas.addEventListener("pointerleave", endDrag);
+
     globeCanvas.addEventListener("click", (event) => {
+        if (Date.now() < suppressClickUntil) {
+            return;
+        }
+        userInteracted = true;
         const rect = globeCanvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
