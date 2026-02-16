@@ -471,6 +471,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const CYCLE_STEP_MS = 3000;
     const SELECT_SCALE_EXP = 4.0;
     const BASE_SCALE = 0.10;
+    const GLOBE_ZOOM_MIN = 0.7;
+    const GLOBE_ZOOM_MAX = 1.35;
     const DRAG_SENSITIVITY = 0.005;
     const DRAG_THRESHOLD = 6;
     const DRAG_LAT_LIMIT = Math.PI / 2 - 0.08;
@@ -493,6 +495,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let labelScaleStart = 0;
     let labelScaleUntil = 0;
     let userInteracted = false;
+    let globeZoom = 1;
     let dragActive = false;
     let dragPointerId = null;
     let dragStartX = 0;
@@ -952,7 +955,8 @@ document.addEventListener("DOMContentLoaded", () => {
         globeItems = [];
 
         const padding = 6;
-        const radius = Math.min(width, height) / 2 - padding;
+        const baseRadius = Math.min(width, height) / 2 - padding;
+        const radius = baseRadius * globeZoom;
         if (radius <= 10) {
             return;
         }
@@ -1177,6 +1181,18 @@ document.addEventListener("DOMContentLoaded", () => {
     globeCanvas.addEventListener("pointerup", endDrag);
     globeCanvas.addEventListener("pointercancel", endDrag);
     globeCanvas.addEventListener("pointerleave", endDrag);
+    globeCanvas.addEventListener(
+        "wheel",
+        (event) => {
+            event.preventDefault();
+            userInteracted = true;
+            const zoomFactor = Math.exp(-event.deltaY * 0.0015);
+            globeZoom = Math.max(GLOBE_ZOOM_MIN, Math.min(GLOBE_ZOOM_MAX, globeZoom * zoomFactor));
+            renderGlobe();
+            cancelCycle();
+        },
+        { passive: false }
+    );
 
     globeCanvas.addEventListener("click", (event) => {
         if (Date.now() < suppressClickUntil) {

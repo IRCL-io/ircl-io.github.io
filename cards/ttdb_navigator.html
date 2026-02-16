@@ -209,6 +209,8 @@
   const DB_PATH = "cards/IRCL_TTDB.md";
   const REFRESH_MS = 1500;
   const ANIMATION_MS = 16;
+  const GLOBE_ZOOM_MIN = 0.7;
+  const GLOBE_ZOOM_MAX = 1.35;
 
   const recordList = document.getElementById("recordList");
   const recordText = document.getElementById("recordText");
@@ -230,6 +232,7 @@
   let globeTargetLon = 0;
   let globeAnimating = false;
   let globeItems = [];
+  let globeZoom = 1;
 
   function escapeHtml(text) {
     return text
@@ -669,7 +672,8 @@
     const width = Math.max(rect.width, 200);
     const height = Math.max(rect.height, 200);
     const padding = 6;
-    const radius = width / 2 - padding;
+    const baseRadius = width / 2 - padding;
+    const radius = baseRadius * globeZoom;
     if (radius <= 10) return;
 
     const cx = width / 2;
@@ -786,6 +790,16 @@
       }
     }
   });
+  globeCanvas.addEventListener(
+    "wheel",
+    (event) => {
+      event.preventDefault();
+      const zoomFactor = Math.exp(-event.deltaY * 0.0015);
+      globeZoom = Math.max(GLOBE_ZOOM_MIN, Math.min(GLOBE_ZOOM_MAX, globeZoom * zoomFactor));
+      renderGlobe();
+    },
+    { passive: false }
+  );
 
   refreshBtn.addEventListener("click", () => refreshAll(true));
   window.addEventListener("resize", () => {
