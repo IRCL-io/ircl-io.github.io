@@ -56,10 +56,11 @@ agent_note: "Cycle-01 event dataset for Spring Bot Breaker 2026."
 
 ---
 
-@LAT0LON0 | created:1770743813 | updated:1770743813 | relates:has_bot>@LAT-75LON-170,has_bot>@LAT-60LON-130,has_bot>@LAT-45LON-90,has_bot>@LAT-30LON-50,has_bot>@LAT-15LON-10,has_bot>@LAT0LON30,has_bot>@LAT15LON70,has_bot>@LAT30LON110,has_bot>@LAT45LON150,has_bot>@LAT60LON-170,has_bot>@LAT75LON-130,has_bot>@LAT-75LON-130,has_bot>@LAT-60LON-90,has_bot>@LAT-45LON-50,has_bot>@LAT-30LON-10,has_bot>@LAT-15LON30,has_bot>@LAT0LON70,has_bot>@LAT15LON110,has_bot>@LAT30LON150,has_bot>@LAT45LON-170,has_bot>@LAT60LON-130,has_bot>@LAT75LON-90,has_bot>@LAT-75LON-90,has_bot>@LAT-60LON-50
+@LAT0LON0 | created:1770743813 | updated:1770743813 | z:100
+relates:has_bot>@LAT-75LON-170,has_bot>@LAT-60LON-130,has_bot>@LAT-45LON-90,has_bot>@LAT-30LON-50,has_bot>@LAT-15LON-10,has_bot>@LAT0LON30,has_bot>@LAT15LON70,has_bot>@LAT30LON110,has_bot>@LAT45LON150,has_bot>@LAT60LON-170,has_bot>@LAT75LON-130,has_bot>@LAT-75LON-130,has_bot>@LAT-60LON-90,has_bot>@LAT-45LON-50,has_bot>@LAT-30LON-10,has_bot>@LAT-15LON30,has_bot>@LAT0LON70,has_bot>@LAT15LON110,has_bot>@LAT30LON150,has_bot>@LAT45LON-170,has_bot>@LAT60LON-130,has_bot>@LAT75LON-90,has_bot>@LAT-75LON-90,has_bot>@LAT-60LON-50
 
 ## Bot Oblivion 2025 (Event)
-- Back card image: ![Bot Oblivion 2025 Back](Bot_Oblivion_2025/Bot_Oblivion_2025_back.png)
+- Back card image: ![Bot Oblivion 2025](Bot_Oblivion_2025/BotOblivion2025.png)
 - URL: https://www.robotcombatevents.com/events/4646
 - Location: Gem State Gaming Convention
 - Dates: Saturday, July 19, 2025 - Sunday, July 20, 2025
@@ -335,10 +336,11 @@ agent_note: "Cycle-01 event dataset for Spring Bot Breaker 2026."
 
 ---
 
-@LAT-45LON-10 | created:1770754151 | updated:1770755062 | relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@LAT15LON150,has_bot>@LAT30LON-170,has_bot>@LAT45LON-130,has_bot>@LAT60LON-90,has_bot>@LAT75LON-50,has_bot>@LAT-75LON-50,has_bot>@LAT-60LON-10,has_bot>@LAT-45LON30,has_bot>@LAT-30LON70,has_bot>@LAT-15LON110,has_bot>@LAT0LON150,has_bot>@LAT15LON-170,has_bot>@LAT30LON-130,has_bot>@LAT45LON-90,has_bot>@LAT60LON-50,has_bot>@LAT-75LON-130,has_bot>@LAT75LON-10,has_bot>@LAT-75LON-10
+@LAT-45LON-10 | created:1770754151 | updated:1770755062 | z:100
+relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@LAT15LON150,has_bot>@LAT30LON-170,has_bot>@LAT45LON-130,has_bot>@LAT60LON-90,has_bot>@LAT75LON-50,has_bot>@LAT-75LON-50,has_bot>@LAT-60LON-10,has_bot>@LAT-45LON30,has_bot>@LAT-30LON70,has_bot>@LAT-15LON110,has_bot>@LAT0LON150,has_bot>@LAT15LON-170,has_bot>@LAT30LON-130,has_bot>@LAT45LON-90,has_bot>@LAT60LON-50,has_bot>@LAT-75LON-130,has_bot>@LAT75LON-10,has_bot>@LAT-75LON-10
 
 ## Spring Bot Breaker 2026 (Event)
-- Back card image: ![Spring Bot Breaker 2026 Back](Spring_Bot_Breaker_2026/Spring_Bot_Breaker_2026_back.png)
+- Back card image: ![Spring Bot Breaker 2026](Spring_Bot_Breaker_2026/IRCL_SBB2026-2.jpg)
 - URL: https://www.robotcombatevents.com/events/6479
 - Location: 7211 W Colonial St, Boise, ID 83709, USA
 - Date: Saturday, March 28, 2026
