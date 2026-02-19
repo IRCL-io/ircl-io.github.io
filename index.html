@@ -1085,8 +1085,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const visibleBotIds = getVisibleBotIds();
         const visibleBotSet = new Set(visibleBotIds);
         const projections = {};
-        const nodesFront = [];
-        const nodesBack = [];
+        const drawOrder = [];
         let selectedPoint = null;
 
         for (const recordId of visibleBotIds) {
@@ -1099,21 +1098,72 @@ document.addEventListener("DOMContentLoaded", () => {
             projections[recordId] = [x, y, z];
             if (recordId === selectedId) {
                 selectedPoint = [recordId, x, y, z];
-            } else if (z > 0) {
-                nodesFront.push([recordId, x, y, z]);
             } else {
-                nodesBack.push([recordId, x, y, z]);
+                drawOrder.push([recordId, x, y, z]);
             }
         }
 
-        ctx.fillStyle = "#2b303b";
-        for (const [recordId, x, y, z] of nodesBack) {
-            const px = cx + x * radius;
-            const py = cy - y * radius;
+        const drawElevatedEventRecord = () => {
+            if (!eventId || !records[eventId] || !coords[eventId]) {
+                return;
+            }
+            const eventRecord = records[eventId];
+            const [eventLat, eventLon] = coords[eventId];
+            const [x, y, z] = projectPoint(eventLat, eventLon);
+            const isMuted = z <= 0;
+
+            const normalizedZ = Math.max(0, Number(eventRecord.z) || 0);
+            const elevationRatio = Math.min(EVENT_ELEVATION_RATIO_MAX, normalizedZ * EVENT_Z_SCALE);
+            const elevatedRadius = radius * (1 + elevationRatio);
+            const baseX = cx + x * radius;
+            const baseY = cy - y * radius;
+            const px = cx + x * elevatedRadius;
+            const py = cy - y * elevatedRadius;
+
+            ctx.save();
+            ctx.strokeStyle = isMuted ? "rgba(148, 156, 172, 0.32)" : "rgba(255, 209, 102, 0.45)";
+            ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.ellipse(px, py, 3, 3, 0, 0, Math.PI * 2);
-            ctx.fill();
-        }
+            ctx.moveTo(baseX, baseY);
+            ctx.lineTo(px, py);
+            ctx.stroke();
+            ctx.restore();
+
+            const img = eventRecord.cardImage ? getImage(eventRecord.cardImage) : null;
+            if (img && img.complete && img.naturalWidth) {
+                const maxDim = Math.max(img.naturalWidth, img.naturalHeight);
+                let scale = maxDim > 0 ? (radius * 0.42) / maxDim : BASE_SCALE;
+                if (maxDim > 0) {
+                    scale = Math.min(scale, (radius * 0.75) / maxDim);
+                }
+                const drawW = img.naturalWidth * scale;
+                const drawH = img.naturalHeight * scale;
+                ctx.save();
+                if (isMuted) {
+                    ctx.globalAlpha = 0.22;
+                    ctx.filter = "grayscale(1) brightness(0.52)";
+                }
+                ctx.drawImage(img, px - drawW / 2, py - drawH / 2, drawW, drawH);
+                ctx.restore();
+            } else {
+                ctx.fillStyle = isMuted ? "rgba(148, 156, 172, 0.35)" : "#ffd166";
+                ctx.strokeStyle = isMuted ? "rgba(66, 72, 84, 0.8)" : "#3b2a00";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.ellipse(px, py, 8, 8, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+            }
+
+            const label = eventRecord.title || eventId;
+            ctx.fillStyle = isMuted ? "rgba(162, 172, 190, 0.82)" : "#ffd166";
+            ctx.font = "600 12px Segoe UI";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "bottom";
+            ctx.fillText(label, px, py - 10);
+        };
+
+        drawElevatedEventRecord();
 
         for (const sourceId of visibleBotIds) {
             const record = records[sourceId];
@@ -1151,7 +1201,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        const drawNode = (recordId, x, y, z, isSelected) => {
+        const drawNode = (recordId, x, y, z, isSelected, options = {}) => {
+            const { muted = z <= 0 } = options;
             const px = cx + x * radius;
             const py = cy - y * radius;
             const record = records[recordId] || {};
@@ -1178,25 +1229,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 const drawW = img.naturalWidth * scale;
                 const drawH = img.naturalHeight * scale;
+                ctx.save();
+                if (muted) {
+                    ctx.globalAlpha = isSelected ? 0.36 : 0.22;
+                    ctx.filter = "grayscale(1) brightness(0.55)";
+                }
                 ctx.drawImage(img, px - drawW / 2, py - drawH / 2, drawW, drawH);
-                globeItems.push({
-                    id: recordId,
-                    x: px,
-                    y: py,
-                    r: Math.max(drawW, drawH) / 2,
-                    z,
-                    isSelected
-                });
+                ctx.restore();
+                if (!muted || isSelected) {
+                    globeItems.push({
+                        id: recordId,
+                        x: px,
+                        y: py,
+                        r: Math.max(drawW, drawH) / 2,
+                        z,
+                        isSelected
+                    });
+                }
             } else {
                 const size = isSelected ? 7 : 5;
-                ctx.fillStyle = isSelected ? "#ffd166" : "#7cc7ff";
-                ctx.strokeStyle = isSelected ? "#f4a261" : "#0b0b10";
+                ctx.fillStyle = muted
+                    ? (isSelected ? "rgba(188, 193, 204, 0.55)" : "rgba(124, 145, 173, 0.38)")
+                    : (isSelected ? "#ffd166" : "#7cc7ff");
+                ctx.strokeStyle = muted ? "rgba(42, 50, 64, 0.9)" : (isSelected ? "#f4a261" : "#0b0b10");
                 ctx.lineWidth = 2;
                 ctx.beginPath();
                 ctx.ellipse(px, py, size, size, 0, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.stroke();
-                globeItems.push({ id: recordId, x: px, y: py, r: size + 2, z, isSelected });
+                if (!muted || isSelected) {
+                    globeItems.push({ id: recordId, x: px, y: py, r: size + 2, z, isSelected });
+                }
             }
 
             if (isSelected) {
@@ -1208,9 +1271,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
                     scale = 1 + 9 * eased;
                 }
-                ctx.fillStyle = "#ff2e2e";
-                ctx.shadowColor = "rgba(255, 64, 64, 0.9)";
-                ctx.shadowBlur = 18;
+                ctx.fillStyle = muted ? "rgba(176, 186, 202, 0.9)" : "#ff2e2e";
+                ctx.shadowColor = muted ? "transparent" : "rgba(255, 64, 64, 0.9)";
+                ctx.shadowBlur = muted ? 0 : 18;
                 ctx.shadowOffsetX = 0;
                 ctx.shadowOffsetY = 0;
                 ctx.font = `bold ${Math.round(10 * scale)}px Segoe UI`;
@@ -1222,70 +1285,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         };
 
-        for (const [recordId, x, y, z] of nodesFront) {
-            drawNode(recordId, x, y, z, false);
+        for (const [recordId, x, y, z] of drawOrder) {
+            drawNode(recordId, x, y, z, false, { muted: z <= 0 });
         }
 
         if (selectedPoint) {
             const [recordId, x, y, z] = selectedPoint;
-            drawNode(recordId, x, y, z, true);
+            drawNode(recordId, x, y, z, true, { muted: z <= 0 });
         }
-
-        const drawElevatedEventRecord = () => {
-            if (!eventId || !records[eventId] || !coords[eventId]) {
-                return;
-            }
-            const eventRecord = records[eventId];
-            const [eventLat, eventLon] = coords[eventId];
-            const [x, y, z] = projectPoint(eventLat, eventLon);
-            if (z <= 0) {
-                return;
-            }
-
-            const normalizedZ = Math.max(0, Number(eventRecord.z) || 0);
-            const elevationRatio = Math.min(EVENT_ELEVATION_RATIO_MAX, normalizedZ * EVENT_Z_SCALE);
-            const elevatedRadius = radius * (1 + elevationRatio);
-            const baseX = cx + x * radius;
-            const baseY = cy - y * radius;
-            const px = cx + x * elevatedRadius;
-            const py = cy - y * elevatedRadius;
-
-            ctx.strokeStyle = "rgba(255, 209, 102, 0.45)";
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(baseX, baseY);
-            ctx.lineTo(px, py);
-            ctx.stroke();
-
-            const img = eventRecord.cardImage ? getImage(eventRecord.cardImage) : null;
-            if (img && img.complete && img.naturalWidth) {
-                const maxDim = Math.max(img.naturalWidth, img.naturalHeight);
-                let scale = maxDim > 0 ? (radius * 0.42) / maxDim : BASE_SCALE;
-                if (maxDim > 0) {
-                    scale = Math.min(scale, (radius * 0.75) / maxDim);
-                }
-                const drawW = img.naturalWidth * scale;
-                const drawH = img.naturalHeight * scale;
-                ctx.drawImage(img, px - drawW / 2, py - drawH / 2, drawW, drawH);
-            } else {
-                ctx.fillStyle = "#ffd166";
-                ctx.strokeStyle = "#3b2a00";
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.ellipse(px, py, 8, 8, 0, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.stroke();
-            }
-
-            const label = eventRecord.title || eventId;
-            ctx.fillStyle = "#ffd166";
-            ctx.font = "600 12px Segoe UI";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "bottom";
-            ctx.fillText(label, px, py - 10);
-        };
-
-        drawElevatedEventRecord();
     };
 
     const clampLat = (lat) => {
