@@ -472,6 +472,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const CYCLE_START_DELAY_MS = 1200;
     const SELECT_SCALE_EXP = 4.0;
     const BASE_SCALE = 0.10;
+    const EVENT_Z_SCALE = 0.002;
+    const EVENT_ELEVATION_RATIO_MAX = 0.55;
     const GLOBE_ZOOM_MIN = 0.7;
     const GLOBE_ZOOM_MAX = 1.35;
     const DRAG_SENSITIVITY = 0.005;
@@ -505,6 +507,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let dragLastY = 0;
     let dragStartedAt = 0;
     let suppressClickUntil = 0;
+    let hasInitializedSelection = false;
     const imageCache = new Map();
 
     const setStatus = (text) => {
@@ -640,9 +643,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const edges = [];
-            const relatesMatch = headerLine.match(/relates:([^|]+)/);
-            if (relatesMatch) {
-                for (const tokenRaw of relatesMatch[1].split(",")) {
+            const edgeSet = new Set();
+            const addRelatesEdges = (value) => {
+                for (const tokenRaw of value.split(",")) {
                     const token = tokenRaw.trim();
                     if (!token) {
                         continue;
@@ -654,8 +657,44 @@ document.addEventListener("DOMContentLoaded", () => {
                         edgeType = parts[0].trim();
                         target = parts[1].trim();
                     }
+                    if (!target) {
+                        continue;
+                    }
+                    const key = `${edgeType}>${target}`;
+                    if (edgeSet.has(key)) {
+                        continue;
+                    }
+                    edgeSet.add(key);
                     edges.push({ type: edgeType, target });
                 }
+            };
+
+            const relatesMatch = headerLine.match(/(?:^|\|)\s*relates:([^|]+)/);
+            if (relatesMatch) {
+                addRelatesEdges(relatesMatch[1]);
+            }
+            for (const line of lines.slice(headerIndex + 1)) {
+                const relatesLineMatch = line.trim().match(/^relates:\s*(.+)$/i);
+                if (relatesLineMatch) {
+                    addRelatesEdges(relatesLineMatch[1]);
+                }
+            }
+
+            let z = 0;
+            const zMatch = headerLine.match(/(?:^|\|)\s*z:\s*(-?\d+(?:\.\d+)?)/i);
+            if (zMatch) {
+                z = parseFloat(zMatch[1]);
+            } else {
+                for (const line of lines.slice(headerIndex + 1)) {
+                    const zLineMatch = line.trim().match(/^z:\s*(-?\d+(?:\.\d+)?)/i);
+                    if (zLineMatch) {
+                        z = parseFloat(zLineMatch[1]);
+                        break;
+                    }
+                }
+            }
+            if (!Number.isFinite(z)) {
+                z = 0;
             }
 
             const coordMatch = recordId.match(/@LAT(-?\d+(?:\.\d+)?)LON(-?\d+(?:\.\d+)?)/);
@@ -666,7 +705,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const cardImage = extractCardImage(body);
             const url = extractFieldValue(body, ["URL"]);
 
-            outRecords[recordId] = { header: headerLine, body, title, edges, cardImage, url };
+            outRecords[recordId] = { header: headerLine, body, title, edges, cardImage, url, z };
             outOrder.push(recordId);
         }
 
@@ -711,6 +750,10 @@ document.addEventListener("DOMContentLoaded", () => {
             .map((edge) => edge.target);
     }
 
+    function isEventRecord(recordId) {
+        return getEventBots(recordId).length > 0;
+    }
+
     function getPrimaryEventId(recordId) {
         if (!recordId || !records[recordId]) {
             return null;
@@ -738,7 +781,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             const record = records[recordId];
-            if (!record || !coords[recordId] || !record.cardImage) {
+            if (!record || !coords[recordId] || !record.cardImage || isEventRecord(recordId)) {
                 return;
             }
             seen.add(recordId);
@@ -764,6 +807,8 @@ document.addEventListener("DOMContentLoaded", () => {
             order = [];
             coords = {};
             selectedId = null;
+            eventId = null;
+            hasInitializedSelection = false;
             imageCache.clear();
             cancelCycle();
             setStatus("TTDB not reachable");
@@ -777,20 +822,15 @@ document.addEventListener("DOMContentLoaded", () => {
         coords = parsed.coords;
         imageCache.clear();
         const selectedCursorId = parsed.selected && records[parsed.selected] ? parsed.selected : null;
-        const cursorEventId = getPrimaryEventId(selectedCursorId);
-        if (cursorEventId) {
-            eventId = cursorEventId;
-        } else if (eventId && !records[eventId]) {
-            eventId = null;
-        }
+        const resolvedEventId = getPrimaryEventId(selectedCursorId) || getPrimaryEventId(selectedId);
+        eventId = resolvedEventId || (eventId && records[eventId] ? eventId : null);
 
         const visibleBots = getVisibleBotIds();
-        if (!records[selectedId] || !visibleBots.includes(selectedId)) {
-            if (selectedCursorId && visibleBots.includes(selectedCursorId)) {
-                selectedId = selectedCursorId;
-            } else {
-                selectedId = visibleBots.length ? visibleBots[0] : null;
-            }
+        if (!hasInitializedSelection) {
+            selectedId = visibleBots.length ? visibleBots[0] : null;
+            hasInitializedSelection = true;
+        } else if (!records[selectedId] || !visibleBots.includes(selectedId)) {
+            selectedId = visibleBots.length ? visibleBots[0] : null;
         }
 
         if (eventId) {
@@ -865,7 +905,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const recordId = cycleList[cycleIndex];
         cycleIndex = (cycleIndex + 1) % cycleList.length;
-        if (records[recordId]) {
+        if (records[recordId] && recordId !== eventId) {
             selectRecord(recordId, { fromCycle: true });
         }
         cycleAfterId = window.setTimeout(cycleStep, CYCLE_STEP_MS);
@@ -1190,6 +1230,62 @@ document.addEventListener("DOMContentLoaded", () => {
             const [recordId, x, y, z] = selectedPoint;
             drawNode(recordId, x, y, z, true);
         }
+
+        const drawElevatedEventRecord = () => {
+            if (!eventId || !records[eventId] || !coords[eventId]) {
+                return;
+            }
+            const eventRecord = records[eventId];
+            const [eventLat, eventLon] = coords[eventId];
+            const [x, y, z] = projectPoint(eventLat, eventLon);
+            if (z <= 0) {
+                return;
+            }
+
+            const normalizedZ = Math.max(0, Number(eventRecord.z) || 0);
+            const elevationRatio = Math.min(EVENT_ELEVATION_RATIO_MAX, normalizedZ * EVENT_Z_SCALE);
+            const elevatedRadius = radius * (1 + elevationRatio);
+            const baseX = cx + x * radius;
+            const baseY = cy - y * radius;
+            const px = cx + x * elevatedRadius;
+            const py = cy - y * elevatedRadius;
+
+            ctx.strokeStyle = "rgba(255, 209, 102, 0.45)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(baseX, baseY);
+            ctx.lineTo(px, py);
+            ctx.stroke();
+
+            const img = eventRecord.cardImage ? getImage(eventRecord.cardImage) : null;
+            if (img && img.complete && img.naturalWidth) {
+                const maxDim = Math.max(img.naturalWidth, img.naturalHeight);
+                let scale = maxDim > 0 ? (radius * 0.42) / maxDim : BASE_SCALE;
+                if (maxDim > 0) {
+                    scale = Math.min(scale, (radius * 0.75) / maxDim);
+                }
+                const drawW = img.naturalWidth * scale;
+                const drawH = img.naturalHeight * scale;
+                ctx.drawImage(img, px - drawW / 2, py - drawH / 2, drawW, drawH);
+            } else {
+                ctx.fillStyle = "#ffd166";
+                ctx.strokeStyle = "#3b2a00";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.ellipse(px, py, 8, 8, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+            }
+
+            const label = eventRecord.title || eventId;
+            ctx.fillStyle = "#ffd166";
+            ctx.font = "600 12px Segoe UI";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "bottom";
+            ctx.fillText(label, px, py - 10);
+        };
+
+        drawElevatedEventRecord();
     };
 
     const clampLat = (lat) => {
