@@ -474,9 +474,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const BASE_SCALE = 0.10;
     const EVENT_Z_SCALE = 0.002;
     const EVENT_ELEVATION_RATIO_MAX = 0.55;
-    const LABEL_BASE_SCALE = 3.8;
-    const LABEL_BURST_SCALE = 33;
-    const LABEL_FONT_BASE_PX = 10;
     const GLOBE_ZOOM_MIN = 0.7;
     const GLOBE_ZOOM_MAX = 1.35;
     const DRAG_SENSITIVITY = 0.005;
@@ -498,8 +495,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let cycleIndex = 0;
     let cycleSourceId = null;
     let eventId = null;
-    let labelScaleStart = 0;
-    let labelScaleUntil = 0;
     let userInteracted = false;
     let globeZoom = 1;
     let dragActive = false;
@@ -730,11 +725,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
         selectedId = recordId;
-        if (fromCycle) {
-            const now = Date.now();
-            labelScaleStart = now;
-            labelScaleUntil = now + CYCLE_STEP_MS;
-        }
         setHeader();
         centerOnSelected();
         renderGlobe();
@@ -1158,12 +1148,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 ctx.stroke();
             }
 
-            const label = eventRecord.title || eventId;
-            ctx.fillStyle = isMuted ? "rgba(162, 172, 190, 0.82)" : "#ffd166";
-            ctx.font = "600 12px Segoe UI";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "bottom";
-            ctx.fillText(label, px, py - 10);
         };
 
         drawElevatedEventRecord();
@@ -1265,27 +1249,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
-            if (isSelected) {
-                const label = records[recordId]?.title || recordId;
-                const now = Date.now();
-                let scale = LABEL_BASE_SCALE;
-                if (now < labelScaleUntil && labelScaleUntil > labelScaleStart) {
-                    const t = (now - labelScaleStart) / (labelScaleUntil - labelScaleStart);
-                    const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-                    scale = LABEL_BASE_SCALE + LABEL_BURST_SCALE * eased;
-                }
-                ctx.fillStyle = muted ? "rgba(176, 186, 202, 0.9)" : "#ff2e2e";
-                ctx.shadowColor = muted ? "transparent" : "rgba(255, 64, 64, 0.9)";
-                ctx.shadowBlur = muted ? 0 : 18;
-                ctx.shadowOffsetX = 0;
-                ctx.shadowOffsetY = 0;
-                ctx.font = `bold ${Math.round(LABEL_FONT_BASE_PX * scale)}px Segoe UI`;
-                ctx.textAlign = "center";
-                ctx.textBaseline = "bottom";
-                ctx.fillText(label, px, py - 8);
-                ctx.shadowColor = "transparent";
-                ctx.shadowBlur = 0;
-            }
         };
 
         for (const [recordId, x, y, z] of drawOrder) {
