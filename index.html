@@ -469,6 +469,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
     const ANIMATION_MS = 16;
     const CYCLE_STEP_MS = 3000;
+    const CYCLE_START_DELAY_MS = 1200;
     const SELECT_SCALE_EXP = 4.0;
     const BASE_SCALE = 0.10;
     const GLOBE_ZOOM_MIN = 0.7;
@@ -710,6 +711,53 @@ document.addEventListener("DOMContentLoaded", () => {
             .map((edge) => edge.target);
     }
 
+    function getPrimaryEventId(recordId) {
+        if (!recordId || !records[recordId]) {
+            return null;
+        }
+        if (getEventBots(recordId).length) {
+            return recordId;
+        }
+        const edges = records[recordId].edges || [];
+        for (const edge of edges) {
+            if (edge.type !== "competes_in") {
+                continue;
+            }
+            if (getEventBots(edge.target).length) {
+                return edge.target;
+            }
+        }
+        return null;
+    }
+
+    function getVisibleBotIds(sourceId = eventId) {
+        const out = [];
+        const seen = new Set();
+        const addIfVisible = (recordId) => {
+            if (seen.has(recordId)) {
+                return;
+            }
+            const record = records[recordId];
+            if (!record || !coords[recordId] || !record.cardImage) {
+                return;
+            }
+            seen.add(recordId);
+            out.push(recordId);
+        };
+
+        if (sourceId) {
+            for (const botId of getEventBots(sourceId)) {
+                addIfVisible(botId);
+            }
+            return out;
+        }
+
+        for (const recordId of order) {
+            addIfVisible(recordId);
+        }
+        return out;
+    }
+
     const updateFromContent = (content) => {
         if (content.startsWith("File not found:") || content.startsWith("TypeError")) {
             records = {};
@@ -728,14 +776,28 @@ document.addEventListener("DOMContentLoaded", () => {
         order = parsed.order;
         coords = parsed.coords;
         imageCache.clear();
-        const candidateEvent = parsed.selected && records[parsed.selected] ? parsed.selected : null;
-        const candidateBots = candidateEvent ? getEventBots(candidateEvent) : [];
-        eventId = candidateBots.length ? candidateEvent : null;
-        const eventBots = eventId ? candidateBots : [];
-        if (!records[selectedId] || (eventBots.length && !eventBots.includes(selectedId))) {
-            selectedId = eventBots.length ? eventBots[0] : parsed.selected || (order.length ? order[0] : null);
+        const selectedCursorId = parsed.selected && records[parsed.selected] ? parsed.selected : null;
+        const cursorEventId = getPrimaryEventId(selectedCursorId);
+        if (cursorEventId) {
+            eventId = cursorEventId;
+        } else if (eventId && !records[eventId]) {
+            eventId = null;
         }
-        setStatus(order.length ? `Records: ${order.length}` : "No records found");
+
+        const visibleBots = getVisibleBotIds();
+        if (!records[selectedId] || !visibleBots.includes(selectedId)) {
+            if (selectedCursorId && visibleBots.includes(selectedCursorId)) {
+                selectedId = selectedCursorId;
+            } else {
+                selectedId = visibleBots.length ? visibleBots[0] : null;
+            }
+        }
+
+        if (eventId) {
+            setStatus(visibleBots.length ? `Bots in selected event: ${visibleBots.length}` : "No robots in selected event");
+        } else {
+            setStatus(visibleBots.length ? `Robot cards: ${visibleBots.length}` : "No robot cards found");
+        }
         setHeader();
         centerOnSelected();
         renderGlobe();
@@ -776,14 +838,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!eventId) {
             return;
         }
-        const bots = getEventBots(eventId);
+        const bots = getVisibleBotIds(eventId);
         if (!bots.length) {
             return;
         }
         cycleSourceId = eventId;
         cycleList = bots;
         cycleIndex = 0;
-        cycleAfterId = window.setTimeout(cycleStep, CYCLE_STEP_MS);
+        cycleAfterId = window.setTimeout(cycleStep, CYCLE_START_DELAY_MS);
     };
 
     const cancelCycle = () => {
@@ -980,12 +1042,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         drawGraticule(ctx, cx, cy, radius);
 
+        const visibleBotIds = getVisibleBotIds();
+        const visibleBotSet = new Set(visibleBotIds);
         const projections = {};
         const nodesFront = [];
         const nodesBack = [];
         let selectedPoint = null;
 
-        for (const [recordId, [lat, lon]] of Object.entries(coords)) {
+        for (const recordId of visibleBotIds) {
+            const coord = coords[recordId];
+            if (!coord) {
+                continue;
+            }
+            const [lat, lon] = coord;
             const [x, y, z] = projectPoint(lat, lon);
             projections[recordId] = [x, y, z];
             if (recordId === selectedId) {
@@ -1006,7 +1075,11 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.fill();
         }
 
-        for (const [sourceId, record] of Object.entries(records)) {
+        for (const sourceId of visibleBotIds) {
+            const record = records[sourceId];
+            if (!record) {
+                continue;
+            }
             const edges = record.edges || [];
             if (!edges.length) {
                 continue;
@@ -1019,6 +1092,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const syp = cy - sourceProj[1] * radius;
             for (const edge of edges) {
                 const targetId = edge.target;
+                if (!visibleBotSet.has(targetId)) {
+                    continue;
+                }
                 const targetProj = projections[targetId];
                 if (!targetProj || targetProj[2] <= 0) {
                     continue;
