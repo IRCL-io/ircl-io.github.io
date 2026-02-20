@@ -1351,7 +1351,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const rect = globeCanvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
-        for (const item of globeItems) {
+        for (let i = globeItems.length - 1; i >= 0; i -= 1) {
+            const item = globeItems[i];
             const dx = item.x - x;
             const dy = item.y - y;
             if (Math.hypot(dx, dy) <= item.r) {
