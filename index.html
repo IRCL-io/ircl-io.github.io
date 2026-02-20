@@ -471,6 +471,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const CYCLE_STEP_MS = 3000;
     const CYCLE_START_DELAY_MS = 1200;
     const SELECT_SCALE_EXP = 4.0;
+    const FRONT_TARGET_HEIGHT_RATIO = 0.42;
+    const SELECT_TARGET_HEIGHT_RATIO = 0.8;
+    const SELECT_FRONT_SCALE_BOOST = 1.12;
     const BASE_SCALE = 0.10;
     const EVENT_Z_SCALE = 0.002;
     const EVENT_ELEVATION_RATIO_MAX = 0.55;
@@ -1195,21 +1198,20 @@ document.addEventListener("DOMContentLoaded", () => {
             const record = records[recordId] || {};
             const imageRef = record.cardImage;
             const img = imageRef ? getImage(imageRef) : null;
+            const frontT = Math.max(0, Math.min(1, (z + 1) / 2));
+            const frontCurve = Math.pow(frontT, SELECT_SCALE_EXP);
             if (img && img.complete && img.naturalWidth) {
-                let scale = BASE_SCALE;
-                if (isSelected) {
-                    const t = Math.max(0, Math.min(1, (z + 1) / 2));
-                    const tExp = Math.pow(t, SELECT_SCALE_EXP);
-                    const maxDim = Math.max(img.naturalWidth, img.naturalHeight);
-                    const targetPixels = Math.max(height * 0.8, 1);
-                    let targetScale = maxDim > 0 ? targetPixels / maxDim : BASE_SCALE;
-                    if (targetScale < BASE_SCALE) {
-                        targetScale = BASE_SCALE;
-                    }
-                    scale = BASE_SCALE + (targetScale - BASE_SCALE) * tExp;
-                }
-
                 const maxDim = Math.max(img.naturalWidth, img.naturalHeight);
+                const targetHeightRatio = isSelected ? SELECT_TARGET_HEIGHT_RATIO : FRONT_TARGET_HEIGHT_RATIO;
+                const targetPixels = Math.max(height * targetHeightRatio, 1);
+                let targetScale = maxDim > 0 ? targetPixels / maxDim : BASE_SCALE;
+                if (targetScale < BASE_SCALE) {
+                    targetScale = BASE_SCALE;
+                }
+                let scale = BASE_SCALE + (targetScale - BASE_SCALE) * frontCurve;
+                if (isSelected) {
+                    scale *= SELECT_FRONT_SCALE_BOOST;
+                }
                 const maxAllowed = radius * 1.9;
                 if (maxDim > 0) {
                     scale = Math.min(scale, maxAllowed / maxDim);
@@ -1234,7 +1236,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
                 }
             } else {
-                const size = isSelected ? 7 : 5;
+                const minSize = isSelected ? 7 : 5;
+                const maxSize = isSelected ? 14 : 10;
+                const size = minSize + (maxSize - minSize) * frontCurve;
                 ctx.fillStyle = muted
                     ? (isSelected ? "rgba(188, 193, 204, 0.55)" : "rgba(124, 145, 173, 0.38)")
                     : (isSelected ? "#ffd166" : "#7cc7ff");
