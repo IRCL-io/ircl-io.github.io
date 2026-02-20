@@ -199,7 +199,7 @@ relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@L
 - Card image: ![Black Talon](Spring_Bot_Breaker_2026/Black_Talon.png)
 - Weight class: Full Combat Antweight
 - Team: Trouble Robotics
-- Image: ![Black Talon](unknown)
+- Image: ![Black Talon](https://ircl-io.github.io/cards/cards/Spring_Bot_Breaker_2026/IRCL_SBB2026-2.jpg)
 
 ---
 
@@ -209,7 +209,7 @@ relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@L
 - Card image: ![Ghost Viper](Spring_Bot_Breaker_2026/Ghost_Viper.png)
 - Weight class: Full Combat Antweight
 - Team: Team Dairy
-- Image: ![Ghost Viper](unknown)
+- Image: ![Ghost Viper](https://ircl-io.github.io/cards/cards/Spring_Bot_Breaker_2026/IRCL_SBB2026-2.jpg)
 
 ---
 
@@ -291,7 +291,7 @@ relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@L
 - Card image: ![Outbreak Plantfected](Spring_Bot_Breaker_2026/Outbreak_Plantfected.png)
 - Weight class: Plastic Antweight
 - Team: Trouble Robotics
-- Image: ![Outbreak Plantfected](https://www.robotcombatevents.com/assets/RCELogo-3383ca77f76e5be2b7755ea9d0c464aea25a87d8c9f2a4cffd63643392f59fe7.png)
+- Image: ![Outbreak Plantfected](https://ircl-io.github.io/cards/cards/Spring_Bot_Breaker_2026/IRCL_SBB2026-2.jpg)
 
 ---
 
@@ -302,7 +302,7 @@ relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@L
 - Weight class: Beetleweight
 - Team: Barnhouse Robotics
 - URL: https://www.robotcombatevents.com/groups/2796/resources/22541
-- Image: ![Doomflower](https://www.robotcombatevents.com/assets/RCELogo-3383ca77f76e5be2b7755ea9d0c464aea25a87d8c9f2a4cffd63643392f59fe7.png)
+- Image: ![Doomflower](https://ircl-io.github.io/cards/cards/Spring_Bot_Breaker_2026/IRCL_SBB2026-2.jpg)
 
 ---
 
