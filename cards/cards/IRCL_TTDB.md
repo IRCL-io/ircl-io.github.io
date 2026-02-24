@@ -57,7 +57,7 @@ agent_note: "Cycle-01 event dataset for Spring Bot Breaker 2026."
 ---
 
 @LAT-45LON-10 | created:1770754151 | updated:1771546070 | z:100
-relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@LAT15LON150,has_bot>@LAT30LON-170,has_bot>@LAT-45LON70,has_bot>@LAT45LON-130,has_bot>@LAT60LON-90,has_bot>@LAT75LON-50,has_bot>@LAT-75LON-50,has_bot>@LAT-60LON-10,has_bot>@LAT-45LON30,has_bot>@LAT-45LON110,has_bot>@LAT-45LON150,has_bot>@LAT-45LON-170,has_bot>@LAT-45LON-90,has_bot>@LAT-30LON70,has_bot>@LAT-15LON110,has_bot>@LAT0LON150,has_bot>@LAT15LON-170,has_bot>@LAT30LON-130,has_bot>@LAT45LON-90,has_bot>@LAT60LON-50,has_bot>@LAT-75LON-130,has_bot>@LAT75LON-10,has_bot>@LAT-75LON-10,has_bot>@LAT-60LON30
+relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@LAT15LON150,has_bot>@LAT30LON-170,has_bot>@LAT-45LON70,has_bot>@LAT60LON-90,has_bot>@LAT75LON-50,has_bot>@LAT-75LON-50,has_bot>@LAT-60LON-10,has_bot>@LAT30LON10,has_bot>@LAT45LON10,has_bot>@LAT-45LON30,has_bot>@LAT-45LON110,has_bot>@LAT-45LON150,has_bot>@LAT-45LON-170,has_bot>@LAT-45LON-90,has_bot>@LAT-30LON70,has_bot>@LAT-15LON110,has_bot>@LAT0LON150,has_bot>@LAT15LON-170,has_bot>@LAT30LON-130,has_bot>@LAT45LON-90,has_bot>@LAT60LON-50,has_bot>@LAT-75LON-130,has_bot>@LAT75LON-10,has_bot>@LAT-75LON-10,has_bot>@LAT-60LON30,has_bot>@LAT-30LON-150,has_bot>@LAT-15LON-110,has_bot>@LAT0LON-70,has_bot>@LAT-60LON-90,has_bot>@LAT75LON-90,has_bot>@LAT-30LON-30
 
 ## Spring Bot Breaker 2026 (Event)
 - Event image: ![Spring Bot Breaker 2026](Spring_Bot_Breaker_2026/IRCL_SBB2026-2.jpg)
@@ -75,9 +75,9 @@ relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@L
   - Plastic Antweight: https://www.robotcombatevents.com/events/6479/competitions/7077
   - Beetleweight: https://www.robotcombatevents.com/events/6479/competitions/7079
 - Registrations:
-  - Full Combat Antweight: 11
-  - Plastic Antweight: 6
-  - Beetleweight: 10
+  - Full Combat Antweight: 15
+  - Plastic Antweight: 8
+  - Beetleweight: 11
 
 ### Robots
 #### Full Combat Antweight
@@ -92,6 +92,10 @@ relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@L
 - @LAT-75LON-10 Ghost Viper (Full Combat Antweight)
 - @LAT-60LON30 Brawndo the thirst mutilator (Full Combat Antweight)
 - @LAT30LON-130 Spur (Full Combat Antweight)
+- @LAT-30LON-150 Dread (Full Combat Antweight)
+- @LAT-15LON-110 TinkaTuff (Full Combat Antweight)
+- @LAT0LON-70 Bob² (Full Combat Antweight)
+- @LAT-60LON-90 JUMBO (Full Combat Antweight)
 
 #### Plastic Antweight
 - @LAT-30LON30 Smite (Plastic Antweight)
@@ -100,9 +104,10 @@ relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@L
 - @LAT15LON150 Ammit (Plastic Antweight)
 - @LAT30LON-170 Broadside Killer (Plastic Antweight)
 - @LAT-45LON70 Outbreak Plantfected (Plastic Antweight)
+- @LAT75LON-90 Rickrolled (Plastic Antweight)
+- @LAT-30LON-30 BOB (Plastic Antweight)
 
 #### Beetleweight
-- @LAT45LON-130 Doomflower (Beetleweight)
 - @LAT60LON-90 Renegade (Beetleweight)
 - @LAT-75LON-50 Sukuna 宿儺 (Beetleweight)
 - @LAT-45LON30 Over-N-Out (Beetleweight)
@@ -112,6 +117,8 @@ relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@L
 - @LAT-45LON-90 Virilade (Beetleweight)
 - @LAT75LON-50 Dreadly Croissant (Beetleweight)
 - @LAT-60LON-10 Fafner (Beetleweight)
+- @LAT30LON10 Mistwitz (Beetleweight)
+- @LAT45LON10 Bunzilla!! (Beetleweight)
 
 ### Notes
 - Uses SPARC rules for robot construction.
@@ -233,6 +240,36 @@ relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@L
 
 ---
 
+@LAT-30LON-150 | created:1771547000 | updated:1771547000 | relates:competes_in>@LAT-45LON-10
+
+## Dread
+- Card image: ![Dread](Spring_Bot_Breaker_2026/Dread.png)
+- Weight class: Full Combat Antweight
+- Team: Bad Decisions Robotics
+- Image: ![Dread](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/18290/Screenshot_2026-01-30_103651.png)
+
+---
+
+@LAT-15LON-110 | created:1771547300 | updated:1771547300 | relates:competes_in>@LAT-45LON-10
+
+## TinkaTuff
+- Card image: ![TinkaTuff](Spring_Bot_Breaker_2026/TinkaTuff.png)
+- Weight class: Full Combat Antweight
+- Team: Batchelor Bots
+- Image: ![TinkaTuff](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/25120/Tinkatink_ANTWEIGHT.png)
+
+---
+
+@LAT0LON-70 | created:1771547300 | updated:1771547300 | relates:competes_in>@LAT-45LON-10
+
+## Bob²
+- Card image: ![Bob²](Spring_Bot_Breaker_2026/Bob.png)
+- Weight class: Full Combat Antweight
+- Team: DiscomBOBulators
+- Image: ![Bob²](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/26097/Screenshot_20260223_215306_Google_2.jpg)
+
+---
+
 @LAT-30LON30 | created:1770754151 | updated:1770754151 | relates:competes_in>@LAT-45LON-10
 
 ## Smite
@@ -295,7 +332,17 @@ relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@L
 
 ---
 
-@LAT45LON-130 | created:1770754151 | updated:1770754151 | relates:competes_in>@LAT-45LON-10
+@LAT-30LON-30 | created:1771547200 | updated:1771547200 | relates:competes_in>@LAT-45LON-10
+
+## BOB
+- Card image: ![BOB](Spring_Bot_Breaker_2026/Bob.png)
+- Weight class: Plastic Antweight
+- Team: DiscomBOBulators
+- Image: ![BOB](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/16282/20260221_090547-1.jpg)
+
+---
+
+@LAT45LON-130 | created:1770754151 | updated:1770754151
 
 ## Doomflower
 - Card image: ![Doomflower](Spring_Bot_Breaker_2026/Doomflower.png)
@@ -396,6 +443,37 @@ relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@L
 - Weight class: Beetleweight
 - Team: BoweBots
 - Image: ![Fafner](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/24479/Fafner.jpg)
+
+---
+
+@LAT30LON10 | created:1771547500 | updated:1771547500 | relates:competes_in>@LAT-45LON-10
+
+## Mistwitz
+- Card image: ![Mistwitz](Spring_Bot_Breaker_2026/Mistwitz.png)
+- Weight class: Beetleweight
+- Team: Batchelor Bots
+- Image: ![Mistwitz](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/25853/More_SSP.png)
+
+---
+
+@LAT45LON10 | created:1771547500 | updated:1771547500 | relates:competes_in>@LAT-45LON-10
+
+## Bunzilla!!
+- Card image: ![Bunzilla!!](Spring_Bot_Breaker_2026/Bunzilla.png)
+- Weight class: Beetleweight
+- Team: Barnhouse Robotics
+- Image: ![Bunzilla!!](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/26039/PXL_20260212_225443801.jpg)
+
+---
+
+@LAT15LON-30 | created:1771547000 | updated:1771547000
+
+## CRUX
+- Card image: ![CRUX](Spring_Bot_Breaker_2026/CRUX.png)
+- Weight class: Beetleweight
+- Team: Bunkyard Bots
+- URL: https://www.robotcombatevents.com/groups/3499/resources/15796
+- Image: ![CRUX](https://www.robotcombatevents.com/assets/RCELogo-3383ca77f76e5be2b7755ea9d0c464aea25a87d8c9f2a4cffd63643392f59fe7.png)
 
 ---
 
@@ -539,7 +617,7 @@ relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@L
 
 ---
 
-@LAT-60LON-90 | created:1770743813 | updated:1771545786 | relates:competes_in>@LAT0LON0
+@LAT-60LON-90 | created:1770743813 | updated:1771545786 | relates:competes_in>@LAT0LON0,competes_in>@LAT-45LON-10
 
 ## JUMBO
 - Card image: ![JUMBO](Spring_Bot_Breaker_2026/JUMBO.png)
@@ -629,10 +707,10 @@ relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@L
 
 ---
 
-@LAT75LON-90 | created:1770743813 | updated:1770743813 | relates:competes_in>@LAT0LON0
+@LAT75LON-90 | created:1770743813 | updated:1770743813 | relates:competes_in>@LAT0LON0,competes_in>@LAT-45LON-10
 
 ## Rickrolled
-- Card image: ![Rickrolled](Bot_Oblivion_2025/Rickrolled.png)
+- Card image: ![Rickrolled](Spring_Bot_Breaker_2026/Rickrolled.png)
 - Weight class: Plastic Antweight
 - Team: BoweBots
 - Image: ![Rickrolled](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/21313/Screenshot_2025-06-24_153703.png)
