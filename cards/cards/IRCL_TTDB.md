@@ -308,7 +308,7 @@ Bot - Team
 @LAT0LON-70 | created:1771547300 | updated:1771547300 | relates:competes_in>@LAT-45LON-10
 
 ## Bob²
-- Card image: ![Bob²](Spring_Bot_Breaker_2026/Bob.png)
+- Card image: ![Bob²](Spring_Bot_Breaker_2026/Bob2.png)
 - Weight class: Full Combat Antweight
 - Team: DiscomBOBulators
 - Image: ![Bob²](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/26097/Screenshot_20260223_215306_Google_2.jpg)
