@@ -56,8 +56,8 @@ agent_note: "event dataset for Spring Bot Breaker 2026."
 
 ---
 
-@LAT-45LON-10 | created:1770754151 | updated:1772109495 | z:100
-relates:has_bot>@LAT-30LON70,has_bot>@LAT-15LON110,has_bot>@LAT0LON150,has_bot>@LAT15LON-170,has_bot>@LAT45LON-90,has_bot>@LAT60LON-50,has_bot>@LAT-75LON-130,has_bot>@LAT75LON-10,has_bot>@LAT-75LON-10,has_bot>@LAT-60LON30,has_bot>@LAT30LON-130,has_bot>@LAT-30LON-150,has_bot>@LAT-15LON-110,has_bot>@LAT0LON-70,has_bot>@LAT-60LON-90,has_bot>@LAT-75LON30,has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@LAT15LON150,has_bot>@LAT30LON-170,has_bot>@LAT-45LON70,has_bot>@LAT75LON-90,has_bot>@LAT-30LON-30,has_bot>@LAT60LON-90,has_bot>@LAT-75LON-50,has_bot>@LAT-45LON30,has_bot>@LAT-45LON110,has_bot>@LAT-45LON150,has_bot>@LAT-45LON-170,has_bot>@LAT-45LON-90,has_bot>@LAT75LON-50,has_bot>@LAT-60LON-10,has_bot>@LAT30LON10,has_bot>@LAT45LON10,has_bot>@LAT-60LON70
+@LAT-45LON-10 | created:1770754151 | updated:1772807653 | z:100
+relates:has_bot>@LAT-30LON70,has_bot>@LAT-15LON110,has_bot>@LAT0LON150,has_bot>@LAT15LON-170,has_bot>@LAT45LON-90,has_bot>@LAT60LON-50,has_bot>@LAT-75LON-130,has_bot>@LAT75LON-10,has_bot>@LAT-75LON-10,has_bot>@LAT-60LON30,has_bot>@LAT30LON-130,has_bot>@LAT-30LON-150,has_bot>@LAT-15LON-110,has_bot>@LAT0LON-70,has_bot>@LAT-60LON-90,has_bot>@LAT-75LON30,has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@LAT15LON150,has_bot>@LAT30LON-170,has_bot>@LAT-45LON70,has_bot>@LAT75LON-90,has_bot>@LAT-30LON-30,has_bot>@LAT60LON-90,has_bot>@LAT-75LON-50,has_bot>@LAT-45LON30,has_bot>@LAT-45LON110,has_bot>@LAT-45LON150,has_bot>@LAT-45LON-170,has_bot>@LAT-45LON-90,has_bot>@LAT75LON-50,has_bot>@LAT-60LON-10,has_bot>@LAT30LON10,has_bot>@LAT45LON10,has_bot>@LAT-60LON70,has_bot>@LAT-15LON-10,has_bot>@LAT0LON30
 
 ## Spring Bot Breaker 2026 (Event)
 - Event image: ![Spring Bot Breaker 2026](Spring_Bot_Breaker_2026/IRCL_SBB2026-2.jpg)
@@ -72,7 +72,8 @@ relates:has_bot>@LAT-30LON70,has_bot>@LAT-15LON110,has_bot>@LAT0LON150,has_bot>@
 
 Competitions:
 ### Full Combat Antweight
-https://www.robotcombatevents.com/events/6479/competitions/7078
+url - count
+https://www.robotcombatevents.com/events/6479/competitions/7078 - 16
 
 Bot	- Team
 - Metally Croissant	- BoweBots	 
@@ -93,7 +94,8 @@ Bot	- Team
 - Sovereign Gear - Rosified Pantheon Robotics	
 
 ### Plastic Antweight
-https://www.robotcombatevents.com/events/6479/competitions/7077
+url - count
+https://www.robotcombatevents.com/events/6479/competitions/7077 - 8
 
 Bot - Team
 - Smite - Barnhouse Robotics	
@@ -106,7 +108,8 @@ Bot - Team
 - BOB -	DiscomBOBulators
 
 ### Beetleweight
-https://www.robotcombatevents.com/events/6479/competitions/7079
+url - count
+https://www.robotcombatevents.com/events/6479/competitions/7079 - 14
 
 Bot - Team
 - Renegade - Bad Decisions Robotics	
@@ -121,6 +124,8 @@ Bot - Team
 - Mistwitz - Batchelor Bots	
 - Bunzilla!!- Barnhouse Robotics	
 - VALKYRIA - Rosified Pantheon Robotics
+- Gyro - Geometrically Robotic
+- Plan B - Something
 
 ### Robots
 #### Full Combat Antweight
@@ -164,6 +169,8 @@ Bot - Team
 - @LAT30LON10 Mistwitz (Beetleweight)
 - @LAT45LON10 Bunzilla!! (Beetleweight)
 - @LAT-60LON70 VALKYRIA (Beetleweight)
+- @LAT-15LON-10 Gyro (Beetleweight)
+- @LAT0LON30 Plan B (Beetleweight)
 
 ### Notes
 - Uses SPARC rules for robot construction.
@@ -612,20 +619,20 @@ relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@L
 
 ---
 
-@LAT-15LON-10 | created:1770743813 | updated:1770743813 | relates:competes_in>@LAT0LON0
+@LAT-15LON-10 | created:1770743813 | updated:1772807653 | relates:competes_in>@LAT0LON0,competes_in>@LAT-45LON-10
 
 ## Gyro
-- Card image: ![Gyro](Bot_Oblivion_2025/Gyro.png)
+- Card image: ![Gyro](Spring_Bot_Breaker_2026/Gyro.png)
 - Weight class: Beetleweight
 - Team: Geometrically Robotic
-- Image: ![Gyro](https://www.robotcombatevents.com/assets/RCELogo-3383ca77f76e5be2b7755ea9d0c464aea25a87d8c9f2a4cffd63643392f59fe7.png)
+- Image: ![Gyro](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/21311/20250801_193625.jpg)
 
 ---
 
-@LAT0LON30 | created:1770743813 | updated:1770743813 | relates:competes_in>@LAT0LON0
+@LAT0LON30 | created:1770743813 | updated:1772807653 | relates:competes_in>@LAT0LON0,competes_in>@LAT-45LON-10
 
 ## Plan B
-- Card image: ![Plan_B](Bot_Oblivion_2025/Plan_B.png)
+- Card image: ![Plan B](Spring_Bot_Breaker_2026/Plan_B.png)
 - Weight class: Beetleweight
 - Team: Something
 - Image: ![Plan B](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/18553/476064446_519674403912169_7897790394868896022_n.jpg)
