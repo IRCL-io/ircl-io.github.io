@@ -106,6 +106,7 @@ Bot - Team
 - Outbreak Plantfected - Trouble Robotics	
 - Rickrolled - BoweBots	
 - BOB -	DiscomBOBulators
+- I Think I'm A Clone Now - BoweBots
 
 ### Beetleweight
 url - count
@@ -739,10 +740,10 @@ relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@L
 
 ---
 
-@LAT15LON110 | created:1770743813 | updated:1770743813 | relates:competes_in>@LAT0LON0
+@LAT15LON110 | created:1770743813 | updated:1772807653 | relates:competes_in>@LAT0LON0,competes_in>@LAT-45LON-10
 
 ## I Think I'm A Clone Now
-- Card image: ![I_Think_I_m_A_Clone_Now](Bot_Oblivion_2025/I_Think_I_m_A_Clone_Now.png)
+- Card image: ![I Think I'm A Clone Now](Spring_Bot_Breaker_2026/I_Think_I_m_A_Clone_Now.png)
 - Weight class: Plastic Antweight
 - Team: BoweBots
 - Image: ![I Think I'm A Clone Now](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/19596/PXL_20250314_020823711_2__1_.jpg)
