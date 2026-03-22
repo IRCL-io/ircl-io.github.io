@@ -57,7 +57,7 @@ agent_note: "event dataset for Spring Bot Breaker 2026."
 ---
 
 @LAT-45LON-10 | created:1770754151 | updated:1772807653 | z:100
-relates:has_bot>@LAT-30LON70,has_bot>@LAT-15LON110,has_bot>@LAT0LON150,has_bot>@LAT15LON-170,has_bot>@LAT45LON-90,has_bot>@LAT60LON-50,has_bot>@LAT-75LON-130,has_bot>@LAT75LON-10,has_bot>@LAT-75LON-10,has_bot>@LAT-60LON30,has_bot>@LAT30LON-130,has_bot>@LAT-30LON-150,has_bot>@LAT-15LON-110,has_bot>@LAT0LON-70,has_bot>@LAT-60LON-90,has_bot>@LAT-75LON30,has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@LAT15LON150,has_bot>@LAT30LON-170,has_bot>@LAT-45LON70,has_bot>@LAT75LON-90,has_bot>@LAT-30LON-30,has_bot>@LAT60LON-90,has_bot>@LAT-75LON-50,has_bot>@LAT-45LON30,has_bot>@LAT-45LON110,has_bot>@LAT-45LON150,has_bot>@LAT-45LON-170,has_bot>@LAT-45LON-90,has_bot>@LAT75LON-50,has_bot>@LAT-60LON-10,has_bot>@LAT30LON10,has_bot>@LAT45LON10,has_bot>@LAT-60LON70,has_bot>@LAT-15LON-10,has_bot>@LAT0LON30
+relates:has_bot>@LAT-30LON70,has_bot>@LAT-15LON110,has_bot>@LAT0LON150,has_bot>@LAT15LON-170,has_bot>@LAT45LON-90,has_bot>@LAT60LON-50,has_bot>@LAT-75LON-130,has_bot>@LAT75LON-10,has_bot>@LAT-75LON-10,has_bot>@LAT-60LON30,has_bot>@LAT30LON-130,has_bot>@LAT-30LON-150,has_bot>@LAT-15LON-110,has_bot>@LAT0LON-70,has_bot>@LAT-60LON-90,has_bot>@LAT-75LON30,has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@LAT15LON150,has_bot>@LAT30LON-170,has_bot>@LAT-45LON70,has_bot>@LAT75LON-90,has_bot>@LAT-30LON-30,has_bot>@LAT60LON-90,has_bot>@LAT-75LON-50,has_bot>@LAT-45LON30,has_bot>@LAT-45LON110,has_bot>@LAT-45LON150,has_bot>@LAT-45LON-170,has_bot>@LAT-45LON-90,has_bot>@LAT75LON-50,has_bot>@LAT-60LON-10,has_bot>@LAT30LON10,has_bot>@LAT45LON10,has_bot>@LAT-60LON70,has_bot>@LAT-15LON-10,has_bot>@LAT0LON30,has_bot>@LAT15LON110
 
 ## Spring Bot Breaker 2026 (Event)
 - Event image: ![Spring Bot Breaker 2026](Spring_Bot_Breaker_2026/IRCL_SBB2026-2.jpg)
@@ -156,6 +156,7 @@ Bot - Team
 - @LAT-45LON70 Outbreak Plantfected (Plastic Antweight)
 - @LAT75LON-90 Rickrolled (Plastic Antweight)
 - @LAT-30LON-30 BOB (Plastic Antweight)
+- @LAT15LON110 I Think I'm A Clone Now (Plastic Antweight)
 
 #### Beetleweight
 - @LAT60LON-90 Renegade (Beetleweight)
@@ -740,7 +741,7 @@ relates:has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@L
 
 ---
 
-@LAT15LON110 | created:1770743813 | updated:1772807653 | relates:competes_in>@LAT0LON0,competes_in>@LAT-45LON-10
+@LAT15LON110 | created:1770743813 | updated:1772807653 | relates:competes_in>@LAT-45LON-10
 
 ## I Think I'm A Clone Now
 - Card image: ![I Think I'm A Clone Now](Spring_Bot_Breaker_2026/I_Think_I_m_A_Clone_Now.png)
