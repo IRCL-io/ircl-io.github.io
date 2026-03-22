@@ -46,6 +46,14 @@ typed_edges:
   note: "Types are free-form tokens; edges remain directional."
 ```
 
+> Coordinate layout note:
+> Bot coordinates alternate between +LON (right hemisphere) and -LON (left hemisphere) in roster order,
+> so that cards bounce in from opposite sides of the globe back and forth.
+> - Full Combat Antweight: LON ±30,  LAT -75 → +30 step 15  (positions 1-16)
+> - Plastic Antweight:     LON ±70,  LAT -60 → 0  step 15  (positions 1-9)
+> - Beetleweight:          LON ±110, LAT -75 → +15 step 15  (positions 1-14)
+> Odd roster positions → +LON (right). Even roster positions → -LON (left).
+
 ```cursor
 selected:
   - @LAT-45LON-10
@@ -57,7 +65,7 @@ agent_note: "event dataset for Spring Bot Breaker 2026."
 ---
 
 @LAT-45LON-10 | created:1770754151 | updated:1772807653 | z:100
-relates:has_bot>@LAT-30LON70,has_bot>@LAT-15LON110,has_bot>@LAT0LON150,has_bot>@LAT15LON-170,has_bot>@LAT45LON-90,has_bot>@LAT60LON-50,has_bot>@LAT-75LON-130,has_bot>@LAT75LON-10,has_bot>@LAT-75LON-10,has_bot>@LAT-60LON30,has_bot>@LAT30LON-130,has_bot>@LAT-30LON-150,has_bot>@LAT-15LON-110,has_bot>@LAT0LON-70,has_bot>@LAT-60LON-90,has_bot>@LAT-75LON30,has_bot>@LAT-30LON30,has_bot>@LAT-15LON70,has_bot>@LAT0LON110,has_bot>@LAT15LON150,has_bot>@LAT30LON-170,has_bot>@LAT-45LON70,has_bot>@LAT75LON-90,has_bot>@LAT-30LON-30,has_bot>@LAT60LON-90,has_bot>@LAT-75LON-50,has_bot>@LAT-45LON30,has_bot>@LAT-45LON110,has_bot>@LAT-45LON150,has_bot>@LAT-45LON-170,has_bot>@LAT-45LON-90,has_bot>@LAT75LON-50,has_bot>@LAT-60LON-10,has_bot>@LAT30LON10,has_bot>@LAT45LON10,has_bot>@LAT-60LON70,has_bot>@LAT-15LON-10,has_bot>@LAT0LON30,has_bot>@LAT15LON110
+relates:has_bot>@LAT-75LON30,has_bot>@LAT-75LON-30,has_bot>@LAT-60LON30,has_bot>@LAT-60LON-30,has_bot>@LAT-45LON30,has_bot>@LAT-45LON-30,has_bot>@LAT-30LON30,has_bot>@LAT-30LON-30,has_bot>@LAT-15LON30,has_bot>@LAT-15LON-30,has_bot>@LAT0LON30,has_bot>@LAT0LON-30,has_bot>@LAT15LON30,has_bot>@LAT15LON-30,has_bot>@LAT30LON30,has_bot>@LAT30LON-30,has_bot>@LAT-60LON70,has_bot>@LAT-60LON-70,has_bot>@LAT-45LON70,has_bot>@LAT-45LON-70,has_bot>@LAT-30LON70,has_bot>@LAT-30LON-70,has_bot>@LAT-15LON70,has_bot>@LAT-15LON-70,has_bot>@LAT0LON70,has_bot>@LAT-75LON110,has_bot>@LAT-75LON-110,has_bot>@LAT-60LON110,has_bot>@LAT-60LON-110,has_bot>@LAT-45LON110,has_bot>@LAT-45LON-110,has_bot>@LAT-30LON110,has_bot>@LAT-30LON-110,has_bot>@LAT-15LON110,has_bot>@LAT-15LON-110,has_bot>@LAT0LON110,has_bot>@LAT0LON-110,has_bot>@LAT15LON110,has_bot>@LAT15LON-110
 
 ## Spring Bot Breaker 2026 (Event)
 - Event image: ![Spring Bot Breaker 2026](Spring_Bot_Breaker_2026/IRCL_SBB2026-2.jpg)
@@ -76,35 +84,35 @@ url - count
 https://www.robotcombatevents.com/events/6479/competitions/7078 - 16
 
 Bot	- Team
-- Metally Croissant	- BoweBots	 
-- TENACITY!	- Team HyperTech Robotics	
-- Anteater - BoomBox	
-- Benny	- ADHD Garage	
-- Lil' Nasty - Barnhouse Robotics	
-- Zephyr - Atlas	
-- ICU2 - Tele Present Tense	
-- Black Talon	- Trouble Robotics	
-- Ghost Viper	- Team Dairy	
-- Brawndo the thirst mutilator - Idiocracy	
-- Spur - ADHD Garage	
-- Dread - Bad Decisions Robotics	
-- TinkaTuff - Batchelor Bots	
-- Bob² - DiscomBOBulators	
-- JUMBO - Something	
-- Sovereign Gear - Rosified Pantheon Robotics	
+- Metally Croissant	- BoweBots
+- TENACITY!	- Team HyperTech Robotics
+- Anteater - BoomBox
+- Benny	- ADHD Garage
+- Lil' Nasty - Barnhouse Robotics
+- Zephyr - Atlas
+- ICU2 - Tele Present Tense
+- Black Talon	- Trouble Robotics
+- Ghost Viper	- Team Dairy
+- Brawndo the thirst mutilator - Idiocracy
+- Spur - ADHD Garage
+- Dread - Bad Decisions Robotics
+- TinkaTuff - Batchelor Bots
+- Bob² - DiscomBOBulators
+- JUMBO - Something
+- Sovereign Gear - Rosified Pantheon Robotics
 
 ### Plastic Antweight
 url - count
 https://www.robotcombatevents.com/events/6479/competitions/7077 - 9
 
 Bot - Team
-- Smite - Barnhouse Robotics	
-- Deadly Croissant - BoweBots	
-- Lil'Gnarly - Barnhouse Robotics	
+- Smite - Barnhouse Robotics
+- Deadly Croissant - BoweBots
+- Lil'Gnarly - Barnhouse Robotics
 - Ammit - BoomBox
-- Broadside Killer - BoweBots	
-- Outbreak Plantfected - Trouble Robotics	
-- Rickrolled - BoweBots	
+- Broadside Killer - BoweBots
+- Outbreak Plantfected - Trouble Robotics
+- Rickrolled - BoweBots
 - BOB -	DiscomBOBulators
 - I Think I'm A Clone Now - BoweBots
 
@@ -113,73 +121,73 @@ url - count
 https://www.robotcombatevents.com/events/6479/competitions/7079 - 14
 
 Bot - Team
-- Renegade - Bad Decisions Robotics	
-- Sukuna 宿儺 - Team HyperTech Robotics	
-- Over-N-Out - ADHD Garage	
-- Falling Guillotine - Trouble Robotics	
-- The Corrugated Crusader - ADHD Garage	
-- Sub-Zero - BoomBox	
-- Virilade - Idiocracy	
-- Dreadly Croissant -	BoweBots	
-- Fafner - BoweBots	
-- Mistwitz - Batchelor Bots	
-- Bunzilla!!- Barnhouse Robotics	
+- Renegade - Bad Decisions Robotics
+- Sukuna 宿儺 - Team HyperTech Robotics
+- Over-N-Out - ADHD Garage
+- Falling Guillotine - Trouble Robotics
+- The Corrugated Crusader - ADHD Garage
+- Sub-Zero - BoomBox
+- Virilade - Idiocracy
+- Dreadly Croissant -	BoweBots
+- Fafner - BoweBots
+- Mistwitz - Batchelor Bots
+- Bunzilla!!- Barnhouse Robotics
 - VALKYRIA - Rosified Pantheon Robotics
 - Gyro - Geometrically Robotic
 - Plan B - Something
 
 ### Robots
 #### Full Combat Antweight
-- @LAT-30LON70 Metally Croissant (Full Combat Antweight)
-- @LAT-15LON110 TENACITY! (Full Combat Antweight)
-- @LAT0LON150 Anteater (Full Combat Antweight)
-- @LAT15LON-170 Benny (Full Combat Antweight)
-- @LAT45LON-90 Lil' Nasty (Full Combat Antweight)
-- @LAT60LON-50 Zephyr (Full Combat Antweight)
-- @LAT-75LON-130 ICU2 (Full Combat Antweight)
-- @LAT75LON-10 Black Talon (Full Combat Antweight)
-- @LAT-75LON-10 Ghost Viper (Full Combat Antweight)
-- @LAT-60LON30 Brawndo the thirst mutilator (Full Combat Antweight)
-- @LAT30LON-130 Spur (Full Combat Antweight)
-- @LAT-30LON-150 Dread (Full Combat Antweight)
-- @LAT-15LON-110 TinkaTuff (Full Combat Antweight)
-- @LAT0LON-70 Bob² (Full Combat Antweight)
-- @LAT-60LON-90 JUMBO (Full Combat Antweight)
-- @LAT-75LON30 Sovereign Gear (Full Combat Antweight)
+- @LAT-75LON30 Metally Croissant (Full Combat Antweight)
+- @LAT-75LON-30 TENACITY! (Full Combat Antweight)
+- @LAT-60LON30 Anteater (Full Combat Antweight)
+- @LAT-60LON-30 Benny (Full Combat Antweight)
+- @LAT-45LON30 Lil' Nasty (Full Combat Antweight)
+- @LAT-45LON-30 Zephyr (Full Combat Antweight)
+- @LAT-30LON30 ICU2 (Full Combat Antweight)
+- @LAT-30LON-30 Black Talon (Full Combat Antweight)
+- @LAT-15LON30 Ghost Viper (Full Combat Antweight)
+- @LAT-15LON-30 Brawndo the thirst mutilator (Full Combat Antweight)
+- @LAT0LON30 Spur (Full Combat Antweight)
+- @LAT0LON-30 Dread (Full Combat Antweight)
+- @LAT15LON30 TinkaTuff (Full Combat Antweight)
+- @LAT15LON-30 Bob² (Full Combat Antweight)
+- @LAT30LON30 JUMBO (Full Combat Antweight)
+- @LAT30LON-30 Sovereign Gear (Full Combat Antweight)
 
 #### Plastic Antweight
-- @LAT-30LON30 Smite (Plastic Antweight)
-- @LAT-15LON70 Deadly Croissant (Plastic Antweight)
-- @LAT0LON110 Lil'Gnarly (Plastic Antweight)
-- @LAT15LON150 Ammit (Plastic Antweight)
-- @LAT30LON-170 Broadside Killer (Plastic Antweight)
-- @LAT-45LON70 Outbreak Plantfected (Plastic Antweight)
-- @LAT75LON-90 Rickrolled (Plastic Antweight)
-- @LAT-30LON-30 BOB (Plastic Antweight)
-- @LAT15LON110 I Think I'm A Clone Now (Plastic Antweight)
+- @LAT-60LON70 Smite (Plastic Antweight)
+- @LAT-60LON-70 Deadly Croissant (Plastic Antweight)
+- @LAT-45LON70 Lil'Gnarly (Plastic Antweight)
+- @LAT-45LON-70 Ammit (Plastic Antweight)
+- @LAT-30LON70 Broadside Killer (Plastic Antweight)
+- @LAT-30LON-70 Outbreak Plantfected (Plastic Antweight)
+- @LAT-15LON70 Rickrolled (Plastic Antweight)
+- @LAT-15LON-70 BOB (Plastic Antweight)
+- @LAT0LON70 I Think I'm A Clone Now (Plastic Antweight)
 
 #### Beetleweight
-- @LAT60LON-90 Renegade (Beetleweight)
-- @LAT-75LON-50 Sukuna 宿儺 (Beetleweight)
-- @LAT-45LON30 Over-N-Out (Beetleweight)
-- @LAT-45LON110 Falling Guillotine (Beetleweight)
-- @LAT-45LON150 The Corrugated Crusader (Beetleweight)
-- @LAT-45LON-170 Sub-Zero (Beetleweight)
-- @LAT-45LON-90 Virilade (Beetleweight)
-- @LAT75LON-50 Dreadly Croissant (Beetleweight)
-- @LAT-60LON-10 Fafner (Beetleweight)
-- @LAT30LON10 Mistwitz (Beetleweight)
-- @LAT45LON10 Bunzilla!! (Beetleweight)
-- @LAT-60LON70 VALKYRIA (Beetleweight)
-- @LAT-15LON-10 Gyro (Beetleweight)
-- @LAT0LON30 Plan B (Beetleweight)
+- @LAT-75LON110 Renegade (Beetleweight)
+- @LAT-75LON-110 Sukuna 宿儺 (Beetleweight)
+- @LAT-60LON110 Over-N-Out (Beetleweight)
+- @LAT-60LON-110 Falling Guillotine (Beetleweight)
+- @LAT-45LON110 The Corrugated Crusader (Beetleweight)
+- @LAT-45LON-110 Sub-Zero (Beetleweight)
+- @LAT-30LON110 Virilade (Beetleweight)
+- @LAT-30LON-110 Dreadly Croissant (Beetleweight)
+- @LAT-15LON110 Fafner (Beetleweight)
+- @LAT-15LON-110 Mistwitz (Beetleweight)
+- @LAT0LON110 Bunzilla!! (Beetleweight)
+- @LAT0LON-110 VALKYRIA (Beetleweight)
+- @LAT15LON110 Gyro (Beetleweight)
+- @LAT15LON-110 Plan B (Beetleweight)
 
 ### Notes
 - Uses SPARC rules for robot construction.
 
 ---
 
-@LAT-30LON70 | created:1770754582 | updated:1770754582 | relates:competes_in>@LAT-45LON-10
+@LAT-75LON30 | created:1770754582 | updated:1770754582 | relates:competes_in>@LAT-45LON-10
 
 ## Metally Croissant
 - Card image: ![Metally Croissant](Spring_Bot_Breaker_2026/Metally_Croissant.png)
@@ -190,7 +198,7 @@ Bot - Team
 
 ---
 
-@LAT-15LON110 | created:1770754582 | updated:1770754582 | relates:competes_in>@LAT-45LON-10
+@LAT-75LON-30 | created:1770754582 | updated:1770754582 | relates:competes_in>@LAT-45LON-10
 
 ## TENACITY!
 - Card image: ![TENACITY!](Spring_Bot_Breaker_2026/TENACITY.png)
@@ -201,7 +209,7 @@ Bot - Team
 
 ---
 
-@LAT0LON150 | created:1770754582 | updated:1770754582 | relates:competes_in>@LAT-45LON-10
+@LAT-60LON30 | created:1770754582 | updated:1770754582 | relates:competes_in>@LAT-45LON-10
 
 ## Anteater
 - Card image: ![Anteater](Spring_Bot_Breaker_2026/Anteater.png)
@@ -212,7 +220,7 @@ Bot - Team
 
 ---
 
-@LAT15LON-170 | created:1770754582 | updated:1770754582 | relates:competes_in>@LAT-45LON-10
+@LAT-60LON-30 | created:1770754582 | updated:1770754582 | relates:competes_in>@LAT-45LON-10
 
 ## Benny
 - Card image: ![Benny](Spring_Bot_Breaker_2026/Benny.png)
@@ -223,7 +231,7 @@ Bot - Team
 
 ---
 
-@LAT45LON-90 | created:1770754582 | updated:1770754582 | relates:competes_in>@LAT-45LON-10
+@LAT-45LON30 | created:1770754582 | updated:1770754582 | relates:competes_in>@LAT-45LON-10
 
 ## Lil' Nasty
 - Card image: ![Lil' Nasty](Spring_Bot_Breaker_2026/Lil_Nasty.png)
@@ -234,7 +242,7 @@ Bot - Team
 
 ---
 
-@LAT60LON-50 | created:1770754582 | updated:1770754582 | relates:competes_in>@LAT-45LON-10
+@LAT-45LON-30 | created:1770754582 | updated:1770754582 | relates:competes_in>@LAT-45LON-10
 
 ## Zephyr
 - Card image: ![Zephyr](Spring_Bot_Breaker_2026/Zephyr.png)
@@ -244,7 +252,7 @@ Bot - Team
 
 ---
 
-@LAT-75LON-130 | created:1770743813 | updated:1770755062 | relates:competes_in>@LAT0LON0,competes_in>@LAT-45LON-10
+@LAT-30LON30 | created:1770743813 | updated:1770755062 | relates:competes_in>@LAT-45LON-10
 
 ## ICU2
 - Card image: ![ICU2](Spring_Bot_Breaker_2026/ICU2.png)
@@ -255,7 +263,7 @@ Bot - Team
 
 ---
 
-@LAT75LON-10 | created:1770754582 | updated:1770754582 | relates:competes_in>@LAT-45LON-10
+@LAT-30LON-30 | created:1770754582 | updated:1770754582 | relates:competes_in>@LAT-45LON-10
 
 ## Black Talon
 - Card image: ![Black Talon](Spring_Bot_Breaker_2026/Black_Talon.png)
@@ -266,7 +274,7 @@ Bot - Team
 
 ---
 
-@LAT-75LON-10 | created:1770754582 | updated:1770754582 | relates:competes_in>@LAT-45LON-10
+@LAT-15LON30 | created:1770754582 | updated:1770754582 | relates:competes_in>@LAT-45LON-10
 
 ## Ghost Viper
 - Card image: ![Ghost Viper](Spring_Bot_Breaker_2026/Ghost_Viper.png)
@@ -276,7 +284,7 @@ Bot - Team
 
 ---
 
-@LAT-60LON30 | created:1771536994 | updated:1771537136 | relates:competes_in>@LAT-45LON-10
+@LAT-15LON-30 | created:1771536994 | updated:1771537136 | relates:competes_in>@LAT-45LON-10
 
 ## Brawndo the thirst mutilator
 - Card image: ![Brawndo the thirst mutilator](Spring_Bot_Breaker_2026/Brawndo_the_thirst_mutilator.png)
@@ -286,7 +294,7 @@ Bot - Team
 
 ---
 
-@LAT30LON-130 | created:1770754582 | updated:1771545786 | relates:competes_in>@LAT-45LON-10
+@LAT0LON30 | created:1770754582 | updated:1771545786 | relates:competes_in>@LAT-45LON-10
 
 ## Spur
 - Card image: ![Spur](Spring_Bot_Breaker_2026/Spur.png)
@@ -296,7 +304,7 @@ Bot - Team
 
 ---
 
-@LAT-30LON-150 | created:1771547000 | updated:1771547000 | relates:competes_in>@LAT-45LON-10
+@LAT0LON-30 | created:1771547000 | updated:1771547000 | relates:competes_in>@LAT-45LON-10
 
 ## Dread
 - Card image: ![Dread](Spring_Bot_Breaker_2026/Dread.png)
@@ -306,7 +314,7 @@ Bot - Team
 
 ---
 
-@LAT-15LON-110 | created:1771547300 | updated:1771547300 | relates:competes_in>@LAT-45LON-10
+@LAT15LON30 | created:1771547300 | updated:1771547300 | relates:competes_in>@LAT-45LON-10
 
 ## TinkaTuff
 - Card image: ![TinkaTuff](Spring_Bot_Breaker_2026/TinkaTuff.png)
@@ -316,7 +324,7 @@ Bot - Team
 
 ---
 
-@LAT0LON-70 | created:1771547300 | updated:1771547300 | relates:competes_in>@LAT-45LON-10
+@LAT15LON-30 | created:1771547300 | updated:1771547300 | relates:competes_in>@LAT-45LON-10
 
 ## Bob²
 - Card image: ![Bob²](Spring_Bot_Breaker_2026/Bob2.png)
@@ -326,7 +334,17 @@ Bot - Team
 
 ---
 
-@LAT-75LON30 | created:1772109495 | updated:1772109495 | relates:competes_in>@LAT-45LON-10
+@LAT30LON30 | created:1770743813 | updated:1771545786 | relates:competes_in>@LAT-45LON-10
+
+## JUMBO
+- Card image: ![JUMBO](Spring_Bot_Breaker_2026/JUMBO.png)
+- Weight class: Full Combat Antweight
+- Team: Something
+- Image: ![JUMBO](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/11026/jumbo.jpg)
+
+---
+
+@LAT30LON-30 | created:1772109495 | updated:1772109495 | relates:competes_in>@LAT-45LON-10
 
 ## Sovereign Gear
 - Card image: ![Sovereign Gear](Spring_Bot_Breaker_2026/Sovereign_Gear.png)
@@ -336,7 +354,7 @@ Bot - Team
 
 ---
 
-@LAT-30LON30 | created:1770754151 | updated:1770754151 | relates:competes_in>@LAT-45LON-10
+@LAT-60LON70 | created:1770754151 | updated:1770754151 | relates:competes_in>@LAT-45LON-10
 
 ## Smite
 - Card image: ![Smite](Spring_Bot_Breaker_2026/Smite.png)
@@ -347,7 +365,7 @@ Bot - Team
 
 ---
 
-@LAT-15LON70 | created:1770754151 | updated:1770754151 | relates:competes_in>@LAT-45LON-10
+@LAT-60LON-70 | created:1770754151 | updated:1770754151 | relates:competes_in>@LAT-45LON-10
 
 ## Deadly Croissant
 - Card image: ![Deadly Croissant](Spring_Bot_Breaker_2026/Deadly_Croissant.png)
@@ -358,7 +376,7 @@ Bot - Team
 
 ---
 
-@LAT0LON110 | created:1770754151 | updated:1771545356 | relates:competes_in>@LAT-45LON-10
+@LAT-45LON70 | created:1770754151 | updated:1771545356 | relates:competes_in>@LAT-45LON-10
 
 ## Lil'Gnarly
 - Card image: ![Lil'Gnarly](Spring_Bot_Breaker_2026/Lil_Gnarly.png)
@@ -368,7 +386,7 @@ Bot - Team
 
 ---
 
-@LAT15LON150 | created:1770754151 | updated:1771545356 | relates:competes_in>@LAT-45LON-10
+@LAT-45LON-70 | created:1770754151 | updated:1771545356 | relates:competes_in>@LAT-45LON-10
 
 ## Ammit
 - Card image: ![Ammit](Spring_Bot_Breaker_2026/Ammit.png)
@@ -378,7 +396,7 @@ Bot - Team
 
 ---
 
-@LAT30LON-170 | created:1770754151 | updated:1771545356 | relates:competes_in>@LAT-45LON-10
+@LAT-30LON70 | created:1770754151 | updated:1771545356 | relates:competes_in>@LAT-45LON-10
 
 ## Broadside Killer
 - Card image: ![Broadside Killer](Spring_Bot_Breaker_2026/Broadside_Killer.png)
@@ -388,7 +406,7 @@ Bot - Team
 
 ---
 
-@LAT-45LON70 | created:1771545356 | updated:1771545356 | relates:competes_in>@LAT-45LON-10
+@LAT-30LON-70 | created:1771545356 | updated:1771545356 | relates:competes_in>@LAT-45LON-10
 
 ## Outbreak Plantfected
 - Card image: ![Outbreak Plantfected](Spring_Bot_Breaker_2026/Outbreak_Plantfected.png)
@@ -398,7 +416,17 @@ Bot - Team
 
 ---
 
-@LAT-30LON-30 | created:1771547200 | updated:1771547200 | relates:competes_in>@LAT-45LON-10
+@LAT-15LON70 | created:1770743813 | updated:1770743813 | relates:competes_in>@LAT-45LON-10
+
+## Rickrolled
+- Card image: ![Rickrolled](Spring_Bot_Breaker_2026/Rickrolled.png)
+- Weight class: Plastic Antweight
+- Team: BoweBots
+- Image: ![Rickrolled](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/21313/Screenshot_2025-06-24_153703.png)
+
+---
+
+@LAT-15LON-70 | created:1771547200 | updated:1771547200 | relates:competes_in>@LAT-45LON-10
 
 ## BOB
 - Card image: ![BOB](Spring_Bot_Breaker_2026/BOB.png)
@@ -406,10 +434,19 @@ Bot - Team
 - Team: DiscomBOBulators
 - Image: ![BOB](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/16282/20260221_090547-1.jpg)
 
+---
+
+@LAT0LON70 | created:1770743813 | updated:1772807653 | relates:competes_in>@LAT-45LON-10
+
+## I Think I'm A Clone Now
+- Card image: ![I Think I'm A Clone Now](Spring_Bot_Breaker_2026/I_Think_I_m_A_Clone_Now.png)
+- Weight class: Plastic Antweight
+- Team: BoweBots
+- Image: ![I Think I'm A Clone Now](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/19596/PXL_20250314_020823711_2__1_.jpg)
 
 ---
 
-@LAT60LON-90 | created:1770754151 | updated:1770754151 | relates:competes_in>@LAT-45LON-10
+@LAT-75LON110 | created:1770754151 | updated:1770754151 | relates:competes_in>@LAT-45LON-10
 
 ## Renegade
 - Card image: ![Renegade](Spring_Bot_Breaker_2026/Renegade.png)
@@ -420,7 +457,7 @@ Bot - Team
 
 ---
 
-@LAT-75LON-50 | created:1770754151 | updated:1770754151 | relates:competes_in>@LAT-45LON-10
+@LAT-75LON-110 | created:1770754151 | updated:1770754151 | relates:competes_in>@LAT-45LON-10
 
 ## Sukuna 宿儺
 - Card image: ![Sukuna 宿儺](Spring_Bot_Breaker_2026/Sukuna.png)
@@ -431,7 +468,7 @@ Bot - Team
 
 ---
 
-@LAT-45LON30 | created:1770754151 | updated:1770754151 | relates:competes_in>@LAT-45LON-10
+@LAT-60LON110 | created:1770754151 | updated:1770754151 | relates:competes_in>@LAT-45LON-10
 
 ## Over-N-Out
 - Card image: ![Over-N-Out](Spring_Bot_Breaker_2026/Over_N_Out.png)
@@ -442,7 +479,7 @@ Bot - Team
 
 ---
 
-@LAT-45LON110 | created:1771546070 | updated:1771546070 | relates:competes_in>@LAT-45LON-10
+@LAT-60LON-110 | created:1771546070 | updated:1771546070 | relates:competes_in>@LAT-45LON-10
 
 ## Falling Guillotine
 - Card image: ![Falling Guillotine](Spring_Bot_Breaker_2026/Falling_Guillotine.png)
@@ -452,7 +489,7 @@ Bot - Team
 
 ---
 
-@LAT-45LON150 | created:1771546070 | updated:1771546070 | relates:competes_in>@LAT-45LON-10
+@LAT-45LON110 | created:1771546070 | updated:1771546070 | relates:competes_in>@LAT-45LON-10
 
 ## The Corrugated Crusader
 - Card image: ![The Corrugated Crusader](Spring_Bot_Breaker_2026/The_Corrugated_Crusader.png)
@@ -462,7 +499,7 @@ Bot - Team
 
 ---
 
-@LAT-45LON-170 | created:1771546070 | updated:1771546070 | relates:competes_in>@LAT-45LON-10
+@LAT-45LON-110 | created:1771546070 | updated:1771546070 | relates:competes_in>@LAT-45LON-10
 
 ## Sub-Zero
 - Card image: ![Sub-Zero](Spring_Bot_Breaker_2026/Sub_Zero.png)
@@ -472,7 +509,7 @@ Bot - Team
 
 ---
 
-@LAT-45LON-90 | created:1770743813 | updated:1771546070 | relates:competes_in>@LAT0LON0,competes_in>@LAT-45LON-10
+@LAT-30LON110 | created:1770743813 | updated:1771546070 | relates:competes_in>@LAT-45LON-10
 
 ## Virilade
 - Card image: ![Virilade](Spring_Bot_Breaker_2026/Virilade.png)
@@ -482,7 +519,7 @@ Bot - Team
 
 ---
 
-@LAT75LON-50 | created:1770754151 | updated:1770754151 | relates:competes_in>@LAT-45LON-10
+@LAT-30LON-110 | created:1770754151 | updated:1770754151 | relates:competes_in>@LAT-45LON-10
 
 ## Dreadly Croissant
 - Card image: ![Dreadly Croissant](Spring_Bot_Breaker_2026/Dreadly_Croissant.png)
@@ -492,7 +529,7 @@ Bot - Team
 
 ---
 
-@LAT-60LON-10 | created:1770754151 | updated:1770754151 | relates:competes_in>@LAT-45LON-10
+@LAT-15LON110 | created:1770754151 | updated:1770754151 | relates:competes_in>@LAT-45LON-10
 
 ## Fafner
 - Card image: ![Fafner](Spring_Bot_Breaker_2026/Fafner.png)
@@ -502,7 +539,7 @@ Bot - Team
 
 ---
 
-@LAT30LON10 | created:1771547500 | updated:1771547500 | relates:competes_in>@LAT-45LON-10
+@LAT-15LON-110 | created:1771547500 | updated:1771547500 | relates:competes_in>@LAT-45LON-10
 
 ## Mistwitz
 - Card image: ![Mistwitz](Spring_Bot_Breaker_2026/Mistwitz.png)
@@ -512,7 +549,7 @@ Bot - Team
 
 ---
 
-@LAT45LON10 | created:1771547500 | updated:1771547500 | relates:competes_in>@LAT-45LON-10
+@LAT0LON110 | created:1771547500 | updated:1771547500 | relates:competes_in>@LAT-45LON-10
 
 ## Bunzilla!!
 - Card image: ![Bunzilla!!](Spring_Bot_Breaker_2026/Bunzilla.png)
@@ -522,7 +559,7 @@ Bot - Team
 
 ---
 
-@LAT-60LON70 | created:1772109495 | updated:1772109495 | relates:competes_in>@LAT-45LON-10
+@LAT0LON-110 | created:1772109495 | updated:1772109495 | relates:competes_in>@LAT-45LON-10
 
 ## VALKYRIA
 - Card image: ![VALKYRIA](Spring_Bot_Breaker_2026/VALKYRIA.png)
@@ -530,10 +567,9 @@ Bot - Team
 - Team: Rosified Pantheon Robotics
 - Image: ![VALKYRIA](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/24209/VALKYRIA.png)
 
-
 ---
 
-@LAT-15LON-10 | created:1770743813 | updated:1772807653 | relates:competes_in>@LAT-45LON-10
+@LAT15LON110 | created:1770743813 | updated:1772807653 | relates:competes_in>@LAT-45LON-10
 
 ## Gyro
 - Card image: ![Gyro](Spring_Bot_Breaker_2026/Gyro.png)
@@ -543,44 +579,10 @@ Bot - Team
 
 ---
 
-@LAT0LON30 | created:1770743813 | updated:1772807653 | relates:competes_in>@LAT-45LON-10
+@LAT15LON-110 | created:1770743813 | updated:1772807653 | relates:competes_in>@LAT-45LON-10
 
 ## Plan B
 - Card image: ![Plan B](Spring_Bot_Breaker_2026/Plan_B.png)
 - Weight class: Beetleweight
 - Team: Something
 - Image: ![Plan B](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/18553/476064446_519674403912169_7897790394868896022_n.jpg)
-
-
----
-
-@LAT-60LON-90 | created:1770743813 | updated:1771545786 | relates:competes_in>@LAT-45LON-10
-
-## JUMBO
-- Card image: ![JUMBO](Spring_Bot_Breaker_2026/JUMBO.png)
-- Weight class: Full Combat Antweight
-- Team: Something
-- Image: ![JUMBO](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/11026/jumbo.jpg)
-
-
----
-
-@LAT15LON110 | created:1770743813 | updated:1772807653 | relates:competes_in>@LAT-45LON-10
-
-## I Think I'm A Clone Now
-- Card image: ![I Think I'm A Clone Now](Spring_Bot_Breaker_2026/I_Think_I_m_A_Clone_Now.png)
-- Weight class: Plastic Antweight
-- Team: BoweBots
-- Image: ![I Think I'm A Clone Now](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/19596/PXL_20250314_020823711_2__1_.jpg)
-
-
----
-
-@LAT75LON-90 | created:1770743813 | updated:1770743813 | relates:competes_in>@LAT-45LON-10
-
-## Rickrolled
-- Card image: ![Rickrolled](Spring_Bot_Breaker_2026/Rickrolled.png)
-- Weight class: Plastic Antweight
-- Team: BoweBots
-- Image: ![Rickrolled](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/21313/Screenshot_2025-06-24_153703.png)
-
