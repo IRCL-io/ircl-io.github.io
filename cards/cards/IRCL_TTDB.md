@@ -401,7 +401,7 @@ Bot - Team
 @LAT-30LON-30 | created:1771547200 | updated:1771547200 | relates:competes_in>@LAT-45LON-10
 
 ## BOB
-- Card image: ![BOB](Spring_Bot_Breaker_2026/Bob.png)
+- Card image: ![BOB](Spring_Bot_Breaker_2026/BOB.png)
 - Weight class: Plastic Antweight
 - Team: DiscomBOBulators
 - Image: ![BOB](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/16282/20260221_090547-1.jpg)
@@ -528,7 +528,7 @@ Bot - Team
 - Card image: ![VALKYRIA](Spring_Bot_Breaker_2026/VALKYRIA.png)
 - Weight class: Beetleweight
 - Team: Rosified Pantheon Robotics
-- Image: ![VALKYRIA](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/24209/ft-3lb-undercutter-bot_lg.png)
+- Image: ![VALKYRIA](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/24209/VALKYRIA.png)
 
 
 ---
