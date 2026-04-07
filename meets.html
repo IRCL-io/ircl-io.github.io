@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spring Bot Breaker 2026 – Match Control</title>
+<style>
+:root {
+  --bg:      #0c0c10;
+  --panel:   #13131a;
+  --card-bg: #1a1a24;
+  --border:  #2c2c3c;
+  --accent:  #ff6600;
+  --text:    #dde0e8;
+  --dim:     #6a6a88;
+  --ant:     #3a9eff;
+  --plastic: #34d474;
+  --beetle:  #b06aff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Courier New', Courier, monospace;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ── HEADER ─────────────────────────────────────────────────── */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px;
+  background: var(--panel);
+  border-bottom: 2px solid var(--accent);
+  flex-shrink: 0;
+  gap: 12px;
+}
+.event-title {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--accent);
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+}
+.timer-wrap {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+#timer {
+  font-size: 2.6rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  min-width: 108px;
+  text-align: center;
+  color: #fff;
+  transition: color 0.3s;
+}
+#timer.warn   { color: #fbbf24; }
+#timer.danger { color: #f87171; }
+.tbtn {
+  background: var(--card-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+.tbtn:hover { background: var(--border); }
+.tbtn.active { border-color: #4ade80; color: #4ade80; }
+#timer-set {
+  width: 34px;
+  background: var(--card-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  text-align: center;
+  font-family: inherit;
+  font-size: 0.72rem;
+  padding: 4px;
+}
+.timer-unit { font-size: 0.72rem; color: var(--dim); }
+
+/* ── MAIN LAYOUT ─────────────────────────────────────────────── */
+main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── ROSTER ──────────────────────────────────────────────────── */
+.roster {
+  width: 220px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border-right: 2px solid var(--border);
+}
+.cat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  min-height: 0;
+}
+.cat:last-child { border-bottom: none; }
+.cat-head {
+  padding: 5px 8px;
+  font-size: 0.62rem;
+  font-weight: bold;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+}
+.cat-head.full    { color: var(--ant);     background: rgba(58,158,255,0.07); }
+.cat-head.plastic { color: var(--plastic); background: rgba(52,212,116,0.07); }
+.cat-head.beetle  { color: var(--beetle);  background: rgba(176,106,255,0.07); }
+
+.scroll-vp {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+.scroll-track {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+.scroll-vp:hover .scroll-track,
+.scroll-vp.paused .scroll-track {
+  animation-play-state: paused !important;
+}
+@keyframes scroll-up {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+.chip {
+  padding: 6px 8px;
+  font-size: 0.74rem;
+  cursor: grab;
+  border-bottom: 1px solid #1c1c26;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+  transition: background 0.1s;
+}
+.chip:hover  { background: #1e1e2c; }
+.chip:active { cursor: grabbing; }
+.chip.placed {
+  color: var(--dim);
+  cursor: not-allowed;
+  text-decoration: line-through;
+  opacity: 0.35;
+}
+
+/* ── ARENAS PANEL ────────────────────────────────────────────── */
+.arenas {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+.arena-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) var(--bg);
+}
+.arena-col:last-child { border-right: none; }
+.arena-head {
+  padding: 7px 12px;
+  font-size: 0.82rem;
+  font-weight: bold;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.arena-head.ant    { color: var(--ant);    background: rgba(58,158,255,0.05); }
+.arena-head.beetle { color: var(--beetle); background: rgba(176,106,255,0.05); }
+.arena-note { font-size: 0.58rem; opacity: 0.55; font-weight: normal; }
+
+/* ── STAGE ───────────────────────────────────────────────────── */
+.stage {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  border-bottom: 2px solid var(--border);
+  background: rgba(255,255,255,0.012);
+  flex-shrink: 0;
+}
+.slot {
+  flex: 1;
+  border: 2px dashed var(--border);
+  border-radius: 4px;
+  min-height: 155px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: var(--card-bg);
+  transition: border-color 0.12s, background 0.12s;
+  overflow: hidden;
+}
+.slot.over     { border-color: #ccc; background: rgba(255,255,255,0.05); }
+.slot.reject   { border-color: #f87171; background: rgba(248,113,113,0.04); }
+.slot.occupied { border-style: solid; border-color: var(--border); }
+.empty-lbl {
+  font-size: 0.58rem;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+}
+.slot img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 4px;
+  pointer-events: none;
+}
+
+/* ── QUEUES ──────────────────────────────────────────────────── */
+.queues-section {
+  padding: 8px;
+  flex: 1;
+}
+.qlabel {
+  font-size: 0.58rem;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 2px 2px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.queue-row {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+.qslot {
+  flex: 1;
+  border: 1px dashed var(--border);
+  border-radius: 3px;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: var(--card-bg);
+  transition: border-color 0.12s, background 0.12s;
+  overflow: hidden;
+}
+.qslot.over     { border-color: #999; background: rgba(255,255,255,0.04); }
+.qslot.reject   { border-color: #f87171; }
+.qslot.occupied { border-style: solid; border-color: #3a3a50; }
+.qname {
+  font-size: 0.72rem;
+  padding: 4px 20px 4px 6px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  cursor: grab;
+  width: 100%;
+}
+.qname:active { cursor: grabbing; }
+
+/* ── REMOVE BUTTON ───────────────────────────────────────────── */
+.xbtn {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.65);
+  color: #bbb;
+  border: 1px solid #444;
+  cursor: pointer;
+  font-size: 11px;
+  line-height: 16px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.12s;
+  z-index: 10;
+  padding: 0;
+}
+.slot:hover  .xbtn,
+.qslot:hover .xbtn { opacity: 1; }
+.xbtn:hover { background: rgba(200,50,50,0.8); color: #fff; }
+
+/* ── ADD QUEUE BUTTON ────────────────────────────────────────── */
+.add-q-btn {
+  background: none;
+  border: 1px dashed #303048;
+  color: #404060;
+  padding: 2px 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.6rem;
+  border-radius: 3px;
+  white-space: nowrap;
+  transition: border-color 0.12s, color 0.12s;
+}
+.add-q-btn:hover { border-color: #6060a0; color: #8080c0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="event-title">Spring Bot Breaker 2026</div>
+  <div class="timer-wrap">
+    <div id="timer">3:00</div>
+    <button class="tbtn" id="btn-start">Start</button>
+    <button class="tbtn" id="btn-stop">Stop</button>
+    <button class="tbtn" id="btn-reset">Reset</button>
+    <input type="number" id="timer-set" value="3" min="1" max="99">
+    <span class="timer-unit">min</span>
+  </div>
+</header>
+
+<main>
+  <aside class="roster" id="roster"></aside>
+  <div class="arenas" id="arenas">
+
+    <div class="arena-col" id="ant-col">
+      <div class="arena-head ant">
+        <span>Ant Arena</span>
+        <span class="arena-note">full combat + plastic</span>
+      </div>
+      <div class="stage" id="ant-stage"></div>
+      <div class="queues-section">
+        <div class="qlabel">
+          <span>Queue</span>
+          <button class="add-q-btn" data-arena="ant">+ Add Queue</button>
+        </div>
+        <div class="queue-rows" id="ant-queue-rows"></div>
+      </div>
+    </div>
+
+    <div class="arena-col" id="beetle-col">
+      <div class="arena-head beetle">
+        <span>Beetle Arena</span>
+        <span class="arena-note">beetle only</span>
+      </div>
+      <div class="stage" id="beetle-stage"></div>
+      <div class="queues-section">
+        <div class="qlabel">
+          <span>Queue</span>
+          <button class="add-q-btn" data-arena="beetle">+ Add Queue</button>
+        </div>
+        <div class="queue-rows" id="beetle-queue-rows"></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+// ── BOT DATA ────────────────────────────────────────────────────────────────
+const BASE = 'cards/cards/Spring_Bot_Breaker_2026/';
+const BOTS = {
+  full: [
+    { id: 'anteater',    name: 'Anteater',                     card: 'Anteater.png' },
+    { id: 'benny',       name: 'Benny',                        card: 'Benny.png' },
+    { id: 'bob2',        name: 'Bob\u00B2',                    card: 'Bob2.png' },
+    { id: 'brawndo',     name: 'Brawndo the thirst mutilator', card: 'Brawndo_the_thirst_mutilator.png' },
+    { id: 'cyclone',     name: 'Cyclone',                      card: 'Cyclone.png' },
+    { id: 'dread',       name: 'Dread',                        card: 'Dread.png' },
+    { id: 'ghost_viper', name: 'Ghost Viper',                  card: 'Ghost_Viper.png' },
+    { id: 'icu2',        name: 'ICU2',                         card: 'ICU2.png' },
+    { id: 'jumbo',       name: 'JUMBO',                        card: 'JUMBO.png' },
+    { id: 'lil_nasty',   name: "Lil' Nasty",                   card: 'Lil_Nasty.png' },
+    { id: 'metally',     name: 'Metally Croissant',            card: 'Metally_Croissant.png' },
+    { id: 'sovereign',   name: 'Sovereign Gear',               card: 'Sovereign_Gear.png' },
+    { id: 'spur',        name: 'Spur',                         card: 'Spur.png' },
+    { id: 'tenacity',    name: 'TENACITY!',                    card: 'TENACITY.png' },
+    { id: 'tinkatuff',   name: 'TinkaTuff',                    card: 'TinkaTuff.png' },
+    { id: 'zephyr',      name: 'Zephyr',                       card: 'Zephyr.png' },
+  ],
+  plastic: [
+    { id: 'ammit',      name: 'Ammit',                   card: 'Ammit.png' },
+    { id: 'bob',        name: 'BOB',                     card: 'BOB.png' },
+    { id: 'broadside',  name: 'Broadside Killer',        card: 'Broadside_Killer.png' },
+    { id: 'deadly',     name: 'Deadly Croissant',        card: 'Deadly_Croissant.png' },
+    { id: 'graveline',  name: 'Grave Line',              card: 'Grave_Line.png' },
+    { id: 'iclone',     name: "I Think I'm A Clone Now", card: 'I_Think_I_m_A_Clone_Now.png' },
+    { id: 'lilgnarly',  name: "Lil'Gnarly",              card: 'Lil_Gnarly.png' },
+    { id: 'rickrolled', name: 'Rickrolled',              card: 'Rickrolled.png' },
+    { id: 'thing',      name: 'Thing',                   card: 'Thing.png' },
+    { id: 'unicorna',   name: 'Unicorna',                card: 'Unicorna.png' },
+  ],
+  beetle: [
+    { id: 'bunzilla',  name: 'Bunzilla!!',               card: 'Bunzilla.png' },
+    { id: 'dreadly',   name: 'Dreadly Croissant',        card: 'Dreadly_Croissant.png' },
+    { id: 'fafner',    name: 'Fafner',                   card: 'Fafner.png' },
+    { id: 'gyro',      name: 'Gyro',                     card: 'Gyro.png' },
+    { id: 'mistwitz',  name: 'Mistwitz',                 card: 'Mistwitz.png' },
+    { id: 'overnout',  name: 'Over-N-Out',               card: 'Over_N_Out.png' },
+    { id: 'planb',     name: 'Plan B',                   card: 'Plan_B.png' },
+    { id: 'renegade',  name: 'Renegade',                 card: 'Renegade.png' },
+    { id: 'subzero',   name: 'Sub-Zero',                 card: 'Sub_Zero.png' },
+    { id: 'sukuna',    name: 'Sukuna \u5BBF\u5132',      card: 'Sukuna.png' },
+    { id: 'crusader',  name: 'The Corrugated Crusader',  card: 'The_Corrugated_Crusader.png' },
+    { id: 'valkyria',  name: 'VALKYRIA',                 card: 'VALKYRIA.png' },
+    { id: 'virilade',  name: 'Virilade',                 card: 'Virilade.png' },
+  ]
+};
+
+// flat lookup by id
+const BOT_MAP = {};
+for (const [cls, arr] of Object.entries(BOTS)) {
+  arr.forEach(b => { b.cls = cls; BOT_MAP[b.id] = b; });
+}
+
+// ── STATE ───────────────────────────────────────────────────────────────────
+const placedBots = new Set();   // ids currently in any slot
+let dragBotId    = null;        // tracked during drag for dragover checks
+let slotSeq      = 0;           // uid for slots
+
+// ── TIMER ───────────────────────────────────────────────────────────────────
+let timerSec   = 180;
+let timerTotal = 180;
+let timerTick  = null;
+
+const timerEl   = document.getElementById('timer');
+const setInput  = document.getElementById('timer-set');
+const btnStart  = document.getElementById('btn-start');
+const btnStop   = document.getElementById('btn-stop');
+const btnReset  = document.getElementById('btn-reset');
+
+function fmtTime(s) {
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+}
+function renderTimer() {
+  timerEl.textContent = fmtTime(timerSec);
+  timerEl.className   = timerSec <= 30 ? 'danger' : timerSec <= 60 ? 'warn' : '';
+}
+
+btnStart.addEventListener('click', () => {
+  if (timerTick) return;
+  timerTick = setInterval(() => {
+    if (timerSec > 0) { timerSec--; renderTimer(); }
+    else              { clearInterval(timerTick); timerTick = null; btnStart.classList.remove('active'); }
+  }, 1000);
+  btnStart.classList.add('active');
+});
+btnStop.addEventListener('click', () => {
+  clearInterval(timerTick); timerTick = null;
+  btnStart.classList.remove('active');
+});
+btnReset.addEventListener('click', () => {
+  clearInterval(timerTick); timerTick = null;
+  btnStart.classList.remove('active');
+  timerSec = timerTotal;
+  renderTimer();
+});
+setInput.addEventListener('change', () => {
+  const v  = Math.max(1, Math.min(99, parseInt(setInput.value) || 3));
+  setInput.value = v;
+  timerTotal = v * 60;
+  timerSec   = timerTotal;
+  renderTimer();
+});
+
+// ── ROSTER BUILD ─────────────────────────────────────────────────────────────
+function buildRoster() {
+  const roster = document.getElementById('roster');
+  const CATS = [
+    { key: 'full',    label: 'Full Combat Antweight', cls: 'full'    },
+    { key: 'plastic', label: 'Plastic Antweight',     cls: 'plastic' },
+    { key: 'beetle',  label: 'Beetleweight',          cls: 'beetle'  },
+  ];
+
+  CATS.forEach(({ key, label, cls }) => {
+    const sorted = [...BOTS[key]].sort((a, b) => a.name.localeCompare(b.name));
+
+    const cat  = document.createElement('div');
+    cat.className = 'cat';
+
+    const head = document.createElement('div');
+    head.className = `cat-head ${cls}`;
+    head.textContent = label;
+    cat.appendChild(head);
+
+    const vp    = document.createElement('div');
+    vp.className = 'scroll-vp';
+
+    const track = document.createElement('div');
+    track.className = 'scroll-track';
+
+    // item height = 6+6 padding + 1.3 line-height * 0.74rem ~= 29px; use 30px
+    const ITEM_H   = 30;
+    const totalH   = sorted.length * ITEM_H;
+    const duration = (totalH / 22).toFixed(1); // 22 px/s
+    track.style.animation = `scroll-up ${duration}s linear infinite`;
+
+    function makeChip(bot) {
+      const chip = document.createElement('div');
+      chip.className = 'chip';
+      chip.textContent = bot.name;
+      chip.draggable = true;
+      chip.dataset.botId = bot.id;
+
+      chip.addEventListener('dragstart', e => {
+        if (placedBots.has(bot.id)) { e.preventDefault(); return; }
+        dragBotId = bot.id;
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', JSON.stringify({ botId: bot.id, source: 'roster' }));
+        vp.classList.add('paused');
+      });
+      chip.addEventListener('dragend', () => {
+        dragBotId = null;
+        vp.classList.remove('paused');
+      });
+      return chip;
+    }
+
+    // original + clone for seamless loop
+    sorted.forEach(b => track.appendChild(makeChip(b)));
+    sorted.forEach(b => {
+      const c = makeChip(b);
+      c.setAttribute('aria-hidden', 'true');
+      track.appendChild(c);
+    });
+
+    vp.appendChild(track);
+    cat.appendChild(vp);
+    roster.appendChild(cat);
+  });
+}
+
+// ── CHIP PLACED STATE ────────────────────────────────────────────────────────
+function setPlaced(botId, isPlaced) {
+  if (isPlaced) placedBots.add(botId);
+  else          placedBots.delete(botId);
+
+  document.querySelectorAll(`.chip[data-bot-id="${botId}"]`).forEach(chip => {
+    chip.classList.toggle('placed', isPlaced);
+    chip.draggable = !isPlaced;
+  });
+}
+
+// ── SLOT CREATION ────────────────────────────────────────────────────────────
+function canDrop(slotEl, botId) {
+  if (slotEl.dataset.botId) return false;                       // occupied
+  const bot = BOT_MAP[botId];
+  if (!bot) return false;
+  if (slotEl.dataset.arena === 'beetle' && bot.cls !== 'beetle') return false;
+  return true;
+}
+
+function clearSlot(slotEl) {
+  const botId = slotEl.dataset.botId;
+  if (!botId) return;
+  slotEl.dataset.botId = '';
+  slotEl.classList.remove('occupied');
+  slotEl.querySelectorAll('img, .xbtn, .qname').forEach(el => el.remove());
+  setPlaced(botId, false);
+
+  if (slotEl.dataset.type === 'stage') {
+    const lbl = document.createElement('span');
+    lbl.className = 'empty-lbl';
+    lbl.textContent = 'drop here';
+    slotEl.appendChild(lbl);
+  }
+}
+
+function placeInStage(slotEl, botId) {
+  const bot = BOT_MAP[botId];
+  slotEl.dataset.botId = botId;
+  slotEl.classList.add('occupied');
+  slotEl.querySelector('.empty-lbl')?.remove();
+
+  const img = document.createElement('img');
+  img.src = BASE + bot.card;
+  img.alt = bot.name;
+  slotEl.appendChild(img);
+
+  addXBtn(slotEl);
+  setPlaced(botId, true);
+}
+
+function placeInQueue(slotEl, botId) {
+  const bot = BOT_MAP[botId];
+  slotEl.dataset.botId = botId;
+  slotEl.classList.add('occupied');
+
+  const qname = document.createElement('div');
+  qname.className = 'qname';
+  qname.textContent = bot.name;
+  qname.draggable = true;
+  qname.dataset.botId = botId;
+
+  qname.addEventListener('dragstart', e => {
+    dragBotId = botId;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', JSON.stringify({
+      botId,
+      source:  'queue',
+      slotId:  slotEl.dataset.slotId
+    }));
+  });
+  qname.addEventListener('dragend', () => { dragBotId = null; });
+
+  slotEl.appendChild(qname);
+  addXBtn(slotEl);
+  setPlaced(botId, true);
+}
+
+function addXBtn(parentEl) {
+  const btn = document.createElement('button');
+  btn.className = 'xbtn';
+  btn.textContent = '\u00D7';
+  btn.addEventListener('click', () => clearSlot(parentEl));
+  parentEl.appendChild(btn);
+}
+
+function attachDrop(slotEl) {
+  slotEl.addEventListener('dragover', e => {
+    e.preventDefault();
+    const ok = dragBotId && canDrop(slotEl, dragBotId);
+    slotEl.classList.toggle('over',   ok);
+    slotEl.classList.toggle('reject', !ok && !!dragBotId);
+    e.dataTransfer.dropEffect = ok ? 'move' : 'none';
+  });
+  slotEl.addEventListener('dragleave', () => {
+    slotEl.classList.remove('over', 'reject');
+  });
+  slotEl.addEventListener('drop', e => {
+    e.preventDefault();
+    slotEl.classList.remove('over', 'reject');
+    let data;
+    try { data = JSON.parse(e.dataTransfer.getData('text/plain')); } catch { return; }
+    const { botId, source, slotId } = data;
+    if (!botId || !canDrop(slotEl, botId)) return;
+
+    // Clear source queue slot (without unplacing — bot is still placed, just moving)
+    if (source === 'queue' && slotId) {
+      const src = document.querySelector(`[data-slot-id="${slotId}"]`);
+      if (src) {
+        src.dataset.botId = '';
+        src.classList.remove('occupied');
+        src.querySelectorAll('.qname, .xbtn').forEach(el => el.remove());
+        placedBots.delete(botId); // temporarily remove so setPlaced(true) re-grays chips
+      }
+    }
+
+    if (slotEl.dataset.type === 'stage') placeInStage(slotEl, botId);
+    else                                 placeInQueue(slotEl, botId);
+  });
+}
+
+function makeSlot(type, arena) {
+  const el = document.createElement('div');
+  el.className   = type === 'stage' ? 'slot' : 'qslot';
+  el.dataset.slotId = `s${++slotSeq}`;
+  el.dataset.arena  = arena;
+  el.dataset.type   = type;
+  el.dataset.botId  = '';
+
+  if (type === 'stage') {
+    const lbl = document.createElement('span');
+    lbl.className = 'empty-lbl';
+    lbl.textContent = 'drop here';
+    el.appendChild(lbl);
+  }
+
+  attachDrop(el);
+  return el;
+}
+
+// ── ARENA STAGE BUILD ────────────────────────────────────────────────────────
+function buildStage(arenaId, arena) {
+  const stage = document.getElementById(`${arenaId}-stage`);
+  stage.appendChild(makeSlot('stage', arena));
+  stage.appendChild(makeSlot('stage', arena));
+}
+
+// ── QUEUE ROW BUILD ───────────────────────────────────────────────────────────
+function addQueueRow(arena) {
+  const container = document.getElementById(`${arena}-queue-rows`);
+  const row = document.createElement('div');
+  row.className = 'queue-row';
+  row.appendChild(makeSlot('queue', arena));
+  row.appendChild(makeSlot('queue', arena));
+  container.appendChild(row);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+buildRoster();
+buildStage('ant',    'ant');
+buildStage('beetle', 'beetle');
+addQueueRow('ant');
+addQueueRow('beetle');
+
+document.querySelectorAll('.add-q-btn').forEach(btn => {
+  btn.addEventListener('click', () => addQueueRow(btn.dataset.arena));
+});
+
+renderTimer();
+</script>
+</body>
+</html>
