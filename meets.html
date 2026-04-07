@@ -349,7 +349,7 @@ main {
     <div class="arena-col" id="ant-col">
       <div class="arena-head ant">
         <span>Ant Arena</span>
-        <span class="arena-note">full combat + plastic</span>
+        <span class="arena-note">no beetles</span>
       </div>
       <div class="stage" id="ant-stage"></div>
       <div class="queues-section">
@@ -364,7 +364,6 @@ main {
     <div class="arena-col" id="beetle-col">
       <div class="arena-head beetle">
         <span>Beetle Arena</span>
-        <span class="arena-note">beetle only</span>
       </div>
       <div class="stage" id="beetle-stage"></div>
       <div class="queues-section">
@@ -569,7 +568,7 @@ function canDrop(slotEl, botId) {
   if (slotEl.dataset.botId) return false;                       // occupied
   const bot = BOT_MAP[botId];
   if (!bot) return false;
-  if (slotEl.dataset.arena === 'beetle' && bot.cls !== 'beetle') return false;
+  if (bot.cls === 'beetle' && slotEl.dataset.arena !== 'beetle') return false;
   return true;
 }
 
