@@ -326,6 +326,33 @@ main {
   transition: border-color 0.12s, color 0.12s;
 }
 .add-q-btn:hover { border-color: #6060a0; color: #8080c0; }
+
+/* drop zone below last queue — visible only while dragging */
+.queue-drop-zone {
+  height: 36px;
+  border: 1px dashed transparent;
+  border-radius: 3px;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.58rem;
+  color: transparent;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: border-color 0.12s, color 0.12s, background 0.12s;
+  pointer-events: none; /* inactive until dragging */
+}
+body.dragging .queue-drop-zone {
+  pointer-events: auto;
+  border-color: #303050;
+  color: #404060;
+}
+.queue-drop-zone.over {
+  border-color: #8080c0;
+  color: #9090d0;
+  background: rgba(128,128,200,0.06);
+}
 </style>
 </head>
 <body>
@@ -358,6 +385,7 @@ main {
           <button class="add-q-btn" data-arena="ant">+ Add Queue</button>
         </div>
         <div class="queue-rows" id="ant-queue-rows"></div>
+        <div class="queue-drop-zone" id="ant-queue-drop-zone">+ new queue</div>
       </div>
     </div>
 
@@ -372,6 +400,7 @@ main {
           <button class="add-q-btn" data-arena="beetle">+ Add Queue</button>
         </div>
         <div class="queue-rows" id="beetle-queue-rows"></div>
+        <div class="queue-drop-zone" id="beetle-queue-drop-zone">+ new queue</div>
       </div>
     </div>
 
@@ -709,12 +738,85 @@ function addQueueRow(arena) {
   container.appendChild(row);
 }
 
+function hasEmptyQueueSlot(arena) {
+  return !!document.querySelector(`#${arena}-queue-rows .qslot:not(.occupied)`);
+}
+
+// Auto-expand: attach to each queue-rows container + drop zone below
+function attachAutoQueue(arena) {
+  const container = document.getElementById(`${arena}-queue-rows`);
+  const dropZone  = document.getElementById(`${arena}-queue-drop-zone`);
+  let added = false; // reset each drag
+
+  document.addEventListener('dragstart', () => { added = false; });
+
+  function canExpandForBot() {
+    if (!dragBotId) return false;
+    const bot = BOT_MAP[dragBotId];
+    if (!bot) return false;
+    if (bot.cls === 'beetle' && arena !== 'beetle') return false;
+    return true;
+  }
+
+  // Auto-expand when hovering over full queue rows
+  container.addEventListener('dragover', e => {
+    e.preventDefault();
+    if (!canExpandForBot() || added) return;
+    if (!hasEmptyQueueSlot(arena)) {
+      addQueueRow(arena);
+      added = true;
+    }
+  });
+
+  // Drop zone below last queue
+  dropZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    if (!canExpandForBot()) return;
+    dropZone.classList.add('over');
+    e.dataTransfer.dropEffect = 'move';
+  });
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('over');
+  });
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('over');
+    if (!canExpandForBot()) return;
+    let data;
+    try { data = JSON.parse(e.dataTransfer.getData('text/plain')); } catch { return; }
+    const { botId, source, slotId } = data;
+    if (!botId) return;
+    addQueueRow(arena);
+    added = true;
+    // Place into the first empty slot of the new row
+    const newSlot = document.querySelector(`#${arena}-queue-rows .qslot:not(.occupied)`);
+    if (!newSlot) return;
+    if (source === 'queue' && slotId) {
+      const src = document.querySelector(`[data-slot-id="${slotId}"]`);
+      if (src) {
+        src.dataset.botId = '';
+        src.classList.remove('occupied');
+        src.querySelectorAll('.qname, .xbtn').forEach(el => el.remove());
+        placedBots.delete(botId);
+      }
+    }
+    placeInQueue(newSlot, botId);
+  });
+}
+
+// Toggle body.dragging so drop zones become interactive
+document.addEventListener('dragstart', () => document.body.classList.add('dragging'));
+document.addEventListener('dragend',   () => document.body.classList.remove('dragging'));
+
 // ── INIT ─────────────────────────────────────────────────────────────────────
 buildRoster();
 buildStage('ant',    'ant');
 buildStage('beetle', 'beetle');
 addQueueRow('ant');
 addQueueRow('beetle');
+
+attachAutoQueue('ant');
+attachAutoQueue('beetle');
 
 document.querySelectorAll('.add-q-btn').forEach(btn => {
   btn.addEventListener('click', () => addQueueRow(btn.dataset.arena));
