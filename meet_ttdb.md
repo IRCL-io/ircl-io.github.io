@@ -137,6 +137,34 @@ next free lane (70, 80, …) and their own MEET record here.
 
 ---
 
+@LAT30LON2 | created:1788048000 | updated:1788048000 | relates:depends_on@LAT10LON1,supports@LAT20LON1
+[ew]
+conf:170
+rev:0
+sal:200
+touched:1788048000
+[/ew]
+
+**MEET — IRCL: Cosmic Chaos 2026** (Upcoming)
+src: events/Cosmic Chaos 2026.html; https://www.robotcombatevents.com/events/9398
+
+Saturday, October 17, 2026, 10:00–20:00 MDT at ABU Games Battleground
+Gym, 7211 W Colonial St, Boise ID. A blacklight meet: both arenas lit by
+UV over painted floors. Two arenas run at once — the 4×4×2 ft arena for
+Plastic Antweight, the 8×8×4 ft arena for Antweight and Beetleweight.
+Three classes: 1 lb Plastic Antweight (PLAnt), 1 lb Antweight, 3 lb
+Beetleweight, each with a +50 g allowance for UV paint, LEDs, and other
+glow hardware — the allowance is a meet rule, not a class rule, and does
+not carry to other meets. Registration August 23 – October 16, 2026 on
+Robot Combat Events; roster not yet known, so meets.html is still staged
+for @LAT30LON1. Outcome lane: lat 70 (the next free lane after Spring Bot
+Breaker 2026's lat 60), lon = match number in running order across both
+arenas. conf 170 because the schedule and rules are read off the
+published listing, not yet run; sal 200 because it is the next meet to
+prepare.
+
+---
+
 @LAT98LON1 | created:1784592000 | updated:1784592000 | relates:supports@LAT20LON1,derived_from@LAT10LON1
 [ew]
 conf:190
