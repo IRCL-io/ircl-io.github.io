@@ -594,3 +594,50 @@
 
 
 
+
+/* Point-of-sale action tiles (in-person sales, kit orders, donations).
+   These reuse .event-cards / .event-card / .event-card-body / .event-meta so they
+   match the Treasure Valley Events panels; only the icon band and badge colors
+   are POS-specific. */
+.pos-actions {
+    margin-bottom: 40px;
+}
+
+.pos-card-media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 140px;
+    font-size: 46px;
+    color: #fff;
+    background: #f6f6f6;
+}
+
+.pos-media-onsite {
+    background: #1f7a45;
+}
+
+.pos-media-order {
+    background: #0052cc;
+}
+
+.pos-media-donate {
+    background: #d4af37;
+    color: #2b2100;
+}
+
+/* Badges sit on top of the colored icon band, so they invert against it. */
+.badge-sale {
+    background: rgba(255, 255, 255, 0.94);
+    color: #17603a;
+}
+
+.badge-order {
+    background: rgba(255, 255, 255, 0.94);
+    color: #003f99;
+}
+
+.badge-donate {
+    background: rgba(43, 33, 0, 0.88);
+    color: #ffe9a8;
+}
