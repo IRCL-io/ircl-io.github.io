@@ -594,50 +594,142 @@
 
 
 
-
 /* Point-of-sale action tiles (in-person sales, kit orders, donations).
    These reuse .event-cards / .event-card / .event-card-body / .event-meta so they
-   match the Treasure Valley Events panels; only the icon band and badge colors
-   are POS-specific. */
+   match the Treasure Valley Events panels; the icon band is a slow-drifting
+   "Cosmic Chaos" nebula gradient with a twinkling starfield over it, and the
+   badges/glow pick up the same neon violet-magenta-cyan palette. */
 .pos-actions {
     margin-bottom: 40px;
 }
 
+.pos-card {
+    border-color: rgba(138, 77, 255, 0.35);
+}
+
+.pos-card:hover {
+    box-shadow: 0 10px 26px rgba(120, 40, 200, 0.28), 0 0 0 1px rgba(255, 47, 208, 0.35);
+}
+
 .pos-card-media {
+    position: relative;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 140px;
     font-size: 46px;
     color: #fff;
-    background: #f6f6f6;
+    background-color: #12002b;
+    background-size: 300% 300%;
+    background-position: 0% 50%;
+    animation: cosmic-drift 14s ease-in-out infinite;
+}
+
+/* Starfield: four tiled dot layers that slowly slide and twinkle. */
+.pos-card-media::before {
+    content: "";
+    position: absolute;
+    inset: -80px;
+    z-index: 1;
+    pointer-events: none;
+    background-image:
+        radial-gradient(1.6px 1.6px at 18% 26%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0)),
+        radial-gradient(1.2px 1.2px at 72% 58%, rgba(190, 240, 255, 0.9), rgba(255, 255, 255, 0)),
+        radial-gradient(2px 2px at 46% 82%, rgba(255, 210, 255, 0.85), rgba(255, 255, 255, 0)),
+        radial-gradient(1.2px 1.2px at 88% 18%, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+    background-size: 120px 120px, 90px 90px, 160px 160px, 70px 70px;
+    opacity: 0.75;
+    animation: cosmic-starfield 26s linear infinite, cosmic-twinkle 5s ease-in-out infinite;
+}
+
+/* Soft nebula bloom that breathes behind the icon. */
+.pos-card-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 55%, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 62%);
+    animation: cosmic-bloom 7s ease-in-out infinite;
+}
+
+.pos-card-media i {
+    position: relative;
+    z-index: 2;
 }
 
 .pos-media-onsite {
-    background: #1f7a45;
+    background-image: linear-gradient(115deg, #1b0140, #6d15c4, #ff2fd0, #22e6ff, #6d15c4, #1b0140);
+    text-shadow: 0 0 14px rgba(255, 47, 208, 0.75), 0 0 30px rgba(34, 230, 255, 0.45);
 }
 
 .pos-media-order {
-    background: #0052cc;
+    background-image: linear-gradient(115deg, #04102e, #123bb8, #22e6ff, #8a4dff, #123bb8, #04102e);
+    text-shadow: 0 0 14px rgba(34, 230, 255, 0.8), 0 0 30px rgba(138, 77, 255, 0.45);
+    animation-duration: 11s;
 }
 
 .pos-media-donate {
-    background: #d4af37;
-    color: #2b2100;
+    background-image: linear-gradient(115deg, #2b0a4a, #b026ff, #ff6ad5, #ffc857, #b026ff, #2b0a4a);
+    color: #fff;
+    text-shadow: 0 0 14px rgba(255, 200, 87, 0.85), 0 0 30px rgba(255, 106, 213, 0.5);
+    animation-duration: 17s;
 }
 
-/* Badges sit on top of the colored icon band, so they invert against it. */
-.badge-sale {
+@keyframes cosmic-drift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes cosmic-starfield {
+    0%   { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-60px, 30px, 0); }
+}
+
+@keyframes cosmic-twinkle {
+    0%, 100% { opacity: 0.45; }
+    50%      { opacity: 0.95; }
+}
+
+@keyframes cosmic-bloom {
+    0%, 100% { opacity: 0.35; transform: scale(0.92); }
+    50%      { opacity: 0.85; transform: scale(1.06); }
+}
+
+/* Badges sit on top of the animated band, so they stay frosted-white with
+   neon type and a matching ring. */
+.badge-sale,
+.badge-order,
+.badge-donate {
     background: rgba(255, 255, 255, 0.94);
-    color: #17603a;
+    backdrop-filter: blur(2px);
+}
+
+.badge-sale {
+    color: #a3129b;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(255, 47, 208, 0.55);
 }
 
 .badge-order {
-    background: rgba(255, 255, 255, 0.94);
-    color: #003f99;
+    color: #0b3ca8;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(34, 230, 255, 0.65);
 }
 
 .badge-donate {
-    background: rgba(43, 33, 0, 0.88);
-    color: #ffe9a8;
+    color: #7a3b00;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(255, 200, 87, 0.75);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pos-card-media,
+    .pos-card-media::before,
+    .pos-card-media::after {
+        animation: none;
+    }
+
+    .pos-card-media {
+        background-position: 50% 50%;
+    }
 }
