@@ -7,8 +7,13 @@
 > - `RFCs/TTDB-RFC-0004-Event-ID-and-Collision.md`
 
 > Robot dedup policy:
-> - A robot record is unique by the `(name, team)` pair.
-> - When adding a robot, search for an existing record with the same `(name, team)` and reuse it.
+> - A robot record is unique by the `(name, team, event)` triple: every event appearance gets its own record.
+> - When adding a robot, search for an existing record with the same `(name, team, event)` and reuse it.
+> - Do NOT reuse a `(name, team)` record from a different event. Per-event fields (`Card image`,
+>   `Weight class`, the entry's `URL`) describe that event's card, so a shared record would lose them
+>   the next time either event's cards are generated.
+> - A robot that returns for a later event therefore has one record per event, each with its own
+>   coordinate ID and its own `competes_in` edge.
 > - Always maintain bidirectional links: event `has_bot` → robot and robot `competes_in` → event.
 
 ```mmpdb
@@ -49,17 +54,27 @@ typed_edges:
 > Coordinate layout note:
 > Bot coordinates alternate between +LON (right hemisphere) and -LON (left hemisphere) in roster order,
 > so that cards bounce in from opposite sides of the globe back and forth.
+> Odd roster positions → +LON (right). Even roster positions → -LON (left).
+> Each event claims its own LON bands so that per-event robot records never collide.
+>
+> Spring Bot Breaker 2026 — @LAT-45LON-10
 > - Full Combat Antweight: LON ±30,  LAT -75 → +30 step 15  (positions 1-16)
 > - Plastic Antweight:     LON ±70,  LAT -60 → 0  step 15  (positions 1-10)
 > - Beetleweight:          LON ±110, LAT -75 → +15 step 15  (positions 1-13)
-> Odd roster positions → +LON (right). Even roster positions → -LON (left).
+>
+> Cosmic Chaos 2026 — @LAT-45LON10
+> - Full Combat Antweight: LON ±35,  LAT -75 → -45 step 15  (positions 1-5)
+> - Plastic Antweight:     LON ±75,  LAT -60 → -45 step 15  (positions 1-4)
+> - Beetleweight:          LON ±115, LAT -75         step 15  (positions 1-2)
 
 ```cursor
 selected:
+  - @LAT-45LON10
   - @LAT-45LON-10
 preview:
+  @LAT-45LON10: "Cosmic Chaos 2026 event record with roster of robots and source URLs."
   @LAT-45LON-10: "Spring Bot Breaker 2026 event record with roster of robots and source URLs."
-agent_note: "event dataset for Spring Bot Breaker 2026."
+agent_note: "event datasets for Cosmic Chaos 2026 (primary) and Spring Bot Breaker 2026."
 ```
 
 ---
@@ -587,3 +602,194 @@ Bot - Team
 - Team: Something
 - Image: ![Plan B](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/18553/476064446_519674403912169_7897790394868896022_n.jpg)
 
+---
+
+@LAT-45LON10 | created:1789862400 | updated:1789862400 | z:100
+relates:has_bot>@LAT-75LON35,has_bot>@LAT-75LON-35,has_bot>@LAT-60LON35,has_bot>@LAT-60LON-35,has_bot>@LAT-45LON35,has_bot>@LAT-60LON75,has_bot>@LAT-60LON-75,has_bot>@LAT-45LON75,has_bot>@LAT-45LON-75,has_bot>@LAT-75LON115,has_bot>@LAT-75LON-115
+
+## Cosmic Chaos 2026 (Event)
+- Event image: ![Cosmic Chaos 2026](https://robotcombatevents.s3.amazonaws.com/uploads/event/logo/9398/file_00000000b73481fd9d1b948461788386.jpg)
+- Back card image: ![Cosmic Chaos 2026 Back](Cosmic_Chaos_2026/Cosmic_Chaos_2026_back.png)
+- URL: https://www.robotcombatevents.com/events/9398
+- Location: 7211 W Colonial St, Boise, ID 83709, USA
+- Date: Saturday, October 17, 2026
+- Begin: 10:00
+- End: 20:00
+- Website: https://ircl-io.github.io/
+- Registration fee: $25
+
+Competitions:
+### Full Combat Antweight
+url - count
+https://www.robotcombatevents.com/events/9398/competitions/9629 - 5
+
+Bot	- Team
+- Sovereign Gear - Rosified Pantheon Robotics
+- Event Horizon - Chaos Theory
+- Cyclone - Bobbsey Twins
+- Nino - Sidequest Robotics
+- HellTongue Micro - Devourment Robotics
+
+### Plastic Antweight
+url - count
+https://www.robotcombatevents.com/events/9398/competitions/9628 - 4
+
+Bot - Team
+- Entropy - Chaos Theory
+- Maul - Team Heat On
+- Dino Dude - Bobbsey Twins
+- Poison Ivy - Bobbsey Twins
+
+### Beetleweight
+url - count
+https://www.robotcombatevents.com/events/9398/competitions/9630 - 2
+
+Bot - Team
+- Adam Smasher - Team HyperTech Robotics
+- HellTongue - Devourment Robotics
+
+### Robots
+#### Full Combat Antweight
+- @LAT-75LON35 Sovereign Gear (Full Combat Antweight)
+- @LAT-75LON-35 Event Horizon (Full Combat Antweight)
+- @LAT-60LON35 Cyclone (Full Combat Antweight)
+- @LAT-60LON-35 Nino (Full Combat Antweight)
+- @LAT-45LON35 HellTongue Micro (Full Combat Antweight)
+
+#### Plastic Antweight
+- @LAT-60LON75 Entropy (Plastic Antweight)
+- @LAT-60LON-75 Maul (Plastic Antweight)
+- @LAT-45LON75 Dino Dude (Plastic Antweight)
+- @LAT-45LON-75 Poison Ivy (Plastic Antweight)
+
+#### Beetleweight
+- @LAT-75LON115 Adam Smasher (Beetleweight)
+- @LAT-75LON-115 HellTongue (Beetleweight)
+
+### Notes
+- Uses SPARC rules for robot construction.
+- Registration caps: 16 combatants per competition, 2 bots per team.
+- Robot Combat Events labels the competitions "1lb - Antweight", "1lb - Plastic Antweight"
+  and "3lb - Beetleweight"; recorded here with the league class names printed on the cards.
+
+---
+
+@LAT-75LON35 | created:1789862400 | updated:1789862400 | relates:competes_in>@LAT-45LON10
+
+## Sovereign Gear
+- Card image: ![Sovereign Gear](Cosmic_Chaos_2026/Sovereign_Gear.png)
+- Weight class: Full Combat Antweight
+- Team: Rosified Pantheon Robotics
+- URL: https://www.robotcombatevents.com/groups/7507/resources/23418
+- Image: ![Sovereign Gear](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/23418/Sovereign_Gear.png)
+
+---
+
+@LAT-75LON-35 | created:1789862400 | updated:1789862400 | relates:competes_in>@LAT-45LON10
+
+## Event Horizon
+- Card image: ![Event Horizon](Cosmic_Chaos_2026/Event_Horizon.png)
+- Weight class: Full Combat Antweight
+- Team: Chaos Theory
+- URL: https://www.robotcombatevents.com/groups/10125/resources/27982
+- Image: ![Event Horizon](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/27982/Assembly-rce-icon.png)
+
+---
+
+@LAT-60LON35 | created:1789862400 | updated:1789862400 | relates:competes_in>@LAT-45LON10
+
+## Cyclone
+- Card image: ![Cyclone](Cosmic_Chaos_2026/Cyclone.png)
+- Weight class: Full Combat Antweight
+- Team: Bobbsey Twins
+- URL: https://www.robotcombatevents.com/groups/9102/resources/21494
+- Image: ![Cyclone](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/21494/IMG_2010.png)
+
+---
+
+@LAT-60LON-35 | created:1789862400 | updated:1789862400 | relates:competes_in>@LAT-45LON10
+
+## Nino
+- Card image: ![Nino](Cosmic_Chaos_2026/Nino.png)
+- Weight class: Full Combat Antweight
+- Team: Sidequest Robotics
+- URL: https://www.robotcombatevents.com/groups/15924/resources/30812
+- Image: ![Nino](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/30812/IMG_1655__2_.jpeg)
+
+---
+
+@LAT-45LON35 | created:1789862400 | updated:1789862400 | relates:competes_in>@LAT-45LON10
+
+## HellTongue Micro
+- Card image: ![HellTongue Micro](Cosmic_Chaos_2026/HellTongue_Micro.png)
+- Weight class: Full Combat Antweight
+- Team: Devourment Robotics
+- URL: https://www.robotcombatevents.com/groups/7910/resources/30554
+- Image: ![HellTongue Micro](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/30554/image.png)
+
+---
+
+@LAT-60LON75 | created:1789862400 | updated:1789862400 | relates:competes_in>@LAT-45LON10
+
+## Entropy
+- Card image: ![Entropy](Cosmic_Chaos_2026/Entropy.png)
+- Weight class: Plastic Antweight
+- Team: Chaos Theory
+- URL: https://www.robotcombatevents.com/groups/10125/resources/22499
+- Image: ![Entropy](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/22499/4248.jpg)
+
+---
+
+@LAT-60LON-75 | created:1789862400 | updated:1789862400 | relates:competes_in>@LAT-45LON10
+
+## Maul
+- Card image: ![Maul](Cosmic_Chaos_2026/Maul.png)
+- Weight class: Plastic Antweight
+- Team: Team Heat On
+- URL: https://www.robotcombatevents.com/groups/14173/resources/28534
+- Image: ![Maul](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/28534/20260730_134435.jpg)
+
+---
+
+@LAT-45LON75 | created:1789862400 | updated:1789862400 | relates:competes_in>@LAT-45LON10
+
+## Dino Dude
+- Card image: ![Dino Dude](Cosmic_Chaos_2026/Dino_Dude.png)
+- Weight class: Plastic Antweight
+- Team: Bobbsey Twins
+- URL: https://www.robotcombatevents.com/groups/9102/resources/27970
+- Image: ![Dino Dude](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/27970/Photo_on_8-17-26_at_1.45_PM.jpg)
+
+---
+
+@LAT-45LON-75 | created:1789862400 | updated:1789862400 | relates:competes_in>@LAT-45LON10
+
+## Poison Ivy
+- Card image: ![Poison Ivy](Cosmic_Chaos_2026/Poison_Ivy.png)
+- Weight class: Plastic Antweight
+- Team: Bobbsey Twins
+- URL: https://www.robotcombatevents.com/groups/9102/resources/29316
+- Image: ![Poison Ivy](https://robotcombatevents.s3.amazonaws.com/uploads/event/logo/9398/file_00000000b73481fd9d1b948461788386.jpg)
+- Note: No robot photo posted on Robot Combat Events; event logo used as a placeholder.
+
+---
+
+@LAT-75LON115 | created:1789862400 | updated:1789862400 | relates:competes_in>@LAT-45LON10
+
+## Adam Smasher
+- Card image: ![Adam Smasher](Cosmic_Chaos_2026/Adam_Smasher.png)
+- Weight class: Beetleweight
+- Team: Team HyperTech Robotics
+- URL: https://www.robotcombatevents.com/groups/2609/resources/28002
+- Image: ![Adam Smasher](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/28002/Screenshot_2026-07-21_012133.png)
+
+---
+
+@LAT-75LON-115 | created:1789862400 | updated:1789862400 | relates:competes_in>@LAT-45LON10
+
+## HellTongue
+- Card image: ![HellTongue](Cosmic_Chaos_2026/HellTongue.png)
+- Weight class: Beetleweight
+- Team: Devourment Robotics
+- URL: https://www.robotcombatevents.com/groups/7910/resources/19377
+- Image: ![HellTongue](https://robotcombatevents.s3.amazonaws.com/uploads/resource/photo/19377/IMG_9057.png)
