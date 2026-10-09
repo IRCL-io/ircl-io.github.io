@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spring Bot Breaker 2026 – Match Control</title>
+<title>IRCL Match Control</title>
 <style>
 :root {
   --bg:      #0c0c10;
@@ -219,6 +219,7 @@ main {
   transition: border-color 0.12s, background 0.12s;
   overflow: hidden;
 }
+.arenas.single .slot { min-height: 300px; }
 .slot.over     { border-color: #ccc; background: rgba(255,255,255,0.05); }
 .slot.reject   { border-color: #f87171; background: rgba(248,113,113,0.04); }
 .slot.occupied { border-style: solid; border-color: var(--border); }
@@ -457,6 +458,19 @@ main {
 }
 #modal-elapsed { color: var(--text); }
 .modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* ── LOAD STATUS ─────────────────────────────────────────────── */
+.load-msg {
+  margin: auto;
+  max-width: 520px;
+  padding: 20px;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--dim);
+  text-align: center;
+}
+.load-msg.error { color: #f87171; }
+.load-msg code { color: var(--text); }
 .tbtn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* drop zone below last queue — visible only while dragging */
@@ -490,7 +504,7 @@ body.dragging .queue-drop-zone {
 <body>
 
 <header>
-  <div class="event-title">Spring Bot Breaker 2026</div>
+  <div class="event-title" id="event-title">Match Control</div>
   <div class="timer-wrap">
     <div id="timer">3:00</div>
     <button class="tbtn" id="btn-start">Start</button>
@@ -507,47 +521,9 @@ body.dragging .queue-drop-zone {
 
 <main>
   <aside class="roster" id="roster"></aside>
+  <!-- arena columns are built from the event record in events_ttdb.md -->
   <div class="arenas" id="arenas">
-
-    <div class="arena-col" id="ant-col">
-      <div class="arena-head ant">
-        <span>Ant Arena</span>
-        <span class="arena-note">no beetles</span>
-      </div>
-      <div class="stage" id="ant-stage"></div>
-      <div class="match-controls">
-        <button class="mbtn" data-arena="ant" data-act="next">▲ Next from queue</button>
-        <button class="mbtn primary" data-arena="ant" data-act="result">Record result</button>
-      </div>
-      <div class="queues-section">
-        <div class="qlabel">
-          <span>Queue</span>
-          <button class="add-q-btn" data-arena="ant">+ Add Queue</button>
-        </div>
-        <div class="queue-rows" id="ant-queue-rows"></div>
-        <div class="queue-drop-zone" id="ant-queue-drop-zone">+ new queue</div>
-      </div>
-    </div>
-
-    <div class="arena-col" id="beetle-col">
-      <div class="arena-head beetle">
-        <span>Beetle Arena</span>
-      </div>
-      <div class="stage" id="beetle-stage"></div>
-      <div class="match-controls">
-        <button class="mbtn" data-arena="beetle" data-act="next">▲ Next from queue</button>
-        <button class="mbtn primary" data-arena="beetle" data-act="result">Record result</button>
-      </div>
-      <div class="queues-section">
-        <div class="qlabel">
-          <span>Queue</span>
-          <button class="add-q-btn" data-arena="beetle">+ Add Queue</button>
-        </div>
-        <div class="queue-rows" id="beetle-queue-rows"></div>
-        <div class="queue-drop-zone" id="beetle-queue-drop-zone">+ new queue</div>
-      </div>
-    </div>
-
+    <div class="load-msg" id="load-msg">Loading event…</div>
   </div>
 </main>
 
@@ -582,60 +558,107 @@ body.dragging .queue-drop-zone {
 </div>
 
 <script>
-// ── BOT DATA ────────────────────────────────────────────────────────────────
-const BASE = 'cards/cards/Spring_Bot_Breaker_2026/';
-const BOTS = {
-  full: [
-    { id: 'anteater',    name: 'Anteater',                     card: 'Anteater.png' },
-    { id: 'benny',       name: 'Benny',                        card: 'Benny.png' },
-    { id: 'bob2',        name: 'Bob\u00B2',                    card: 'Bob2.png' },
-    { id: 'brawndo',     name: 'Brawndo the thirst mutilator', card: 'Brawndo_the_thirst_mutilator.png' },
-    { id: 'cyclone',     name: 'Cyclone',                      card: 'Cyclone.png' },
-    { id: 'dread',       name: 'Dread',                        card: 'Dread.png' },
-    { id: 'ghost_viper', name: 'Ghost Viper',                  card: 'Ghost_Viper.png' },
-    { id: 'icu2',        name: 'ICU2',                         card: 'ICU2.png' },
-    { id: 'jumbo',       name: 'JUMBO',                        card: 'JUMBO.png' },
-    { id: 'lil_nasty',   name: "Lil' Nasty",                   card: 'Lil_Nasty.png' },
-    { id: 'metally',     name: 'Metally Croissant',            card: 'Metally_Croissant.png' },
-    { id: 'sovereign',   name: 'Sovereign Gear',               card: 'Sovereign_Gear.png' },
-    { id: 'spur',        name: 'Spur',                         card: 'Spur.png' },
-    { id: 'tenacity',    name: 'TENACITY!',                    card: 'TENACITY.png' },
-    { id: 'tinkatuff',   name: 'TinkaTuff',                    card: 'TinkaTuff.png' },
-    { id: 'zephyr',      name: 'Zephyr',                       card: 'Zephyr.png' },
-  ],
-  plastic: [
-    { id: 'ammit',      name: 'Ammit',                   card: 'Ammit.png' },
-    { id: 'bob',        name: 'BOB',                     card: 'BOB.png' },
-    { id: 'broadside',  name: 'Broadside Killer',        card: 'Broadside_Killer.png' },
-    { id: 'deadly',     name: 'Deadly Croissant',        card: 'Deadly_Croissant.png' },
-    { id: 'graveline',  name: 'Grave Line',              card: 'Grave_Line.png' },
-    { id: 'iclone',     name: "I Think I'm A Clone Now", card: 'I_Think_I_m_A_Clone_Now.png' },
-    { id: 'lilgnarly',  name: "Lil'Gnarly",              card: 'Lil_Gnarly.png' },
-    { id: 'rickrolled', name: 'Rickrolled',              card: 'Rickrolled.png' },
-    { id: 'thing',      name: 'Thing',                   card: 'Thing.png' },
-    { id: 'unicorna',   name: 'Unicorna',                card: 'Unicorna.png' },
-  ],
-  beetle: [
-    { id: 'bunzilla',  name: 'Bunzilla!!',               card: 'Bunzilla.png' },
-    { id: 'dreadly',   name: 'Dreadly Croissant',        card: 'Dreadly_Croissant.png' },
-    { id: 'fafner',    name: 'Fafner',                   card: 'Fafner.png' },
-    { id: 'gyro',      name: 'Gyro',                     card: 'Gyro.png' },
-    { id: 'mistwitz',  name: 'Mistwitz',                 card: 'Mistwitz.png' },
-    { id: 'overnout',  name: 'Over-N-Out',               card: 'Over_N_Out.png' },
-    { id: 'planb',     name: 'Plan B',                   card: 'Plan_B.png' },
-    { id: 'renegade',  name: 'Renegade',                 card: 'Renegade.png' },
-    { id: 'subzero',   name: 'Sub-Zero',                 card: 'Sub_Zero.png' },
-    { id: 'sukuna',    name: 'Sukuna \u5BBF\u5132',      card: 'Sukuna.png' },
-    { id: 'crusader',  name: 'The Corrugated Crusader',  card: 'The_Corrugated_Crusader.png' },
-    { id: 'valkyria',  name: 'VALKYRIA',                 card: 'VALKYRIA.png' },
-    { id: 'virilade',  name: 'Virilade',                 card: 'Virilade.png' },
-  ]
-};
+// ── EVENT + ROSTER (events_ttdb.md → cards TTDB) ────────────────────────────
+// The live meet is the event record selected by events_ttdb.md's cursor, or
+// meets.html?event=<event_id>. Its roster is the cards store's has_bot edges,
+// filtered to the classes the event record lists (see events_ttdb.md @LAT10LON1).
+const EVENTS_FILE = 'events_ttdb.md';
+let EVENT = null;     // {event_id, title, timer_min, classes[], arenas[], outcome_lat, meet_record, ...}
+let BASE  = '';       // directory of the cards store; card paths are relative to it
+const BOTS      = {}; // class key → bots
+const BOT_MAP   = {}; // bot id → {id, name, card, team, cls}
+const ARENA_MAP = {}; // arena key → {key, label, classes[], note}
 
-// flat lookup by id
-const BOT_MAP = {};
-for (const [cls, arr] of Object.entries(BOTS)) {
-  arr.forEach(b => { b.cls = cls; BOT_MAP[b.id] = b; });
+// Split a TTDB file into its records, keyed by coordinate ("@LAT30LON2").
+function ttdbRecords(text) {
+  const recs = {};
+  text.split(/^(?=@LAT-?\d+LON-?\d+ \|)/m).forEach(chunk => {
+    const m = chunk.match(/^@LAT-?\d+LON-?\d+/);
+    if (m) recs[m[0]] = chunk;
+  });
+  return recs;
+}
+
+// Body lines `key: value`; `class:` and `arena:` repeat, everything else is scalar.
+function parseEventRecord(body) {
+  const ev = { classes: [], arenas: [] };
+  body.split('\n').forEach(line => {
+    const m = line.match(/^([a-z_]+):\s*(.+)$/);
+    if (!m) return;
+    const [, key, val] = m;
+    const parts = val.split('|').map(s => s.trim());
+    if (key === 'class') {
+      ev.classes.push({ key: parts[0], label: parts[1] || parts[0] });
+    } else if (key === 'arena') {
+      ev.arenas.push({
+        key:     parts[0],
+        label:   parts[1] || parts[0],
+        classes: (parts[2] || '').split(',').map(s => s.trim()).filter(Boolean),
+        note:    parts[3] || ''
+      });
+    } else {
+      ev[key] = val.trim();
+    }
+  });
+  return ev;
+}
+
+function selectEvent(text) {
+  const recs   = ttdbRecords(text);
+  const wanted = new URLSearchParams(location.search).get('event');
+  if (wanted) {
+    for (const body of Object.values(recs)) {
+      const ev = parseEventRecord(body);
+      if (ev.event_id === wanted) return ev;
+    }
+    throw new Error(`No event with event_id "${wanted}" in ${EVENTS_FILE}.`);
+  }
+  const sel = text.match(/```cursor[\s\S]*?selected:\s*\n\s*-\s*"?(@LAT-?\d+LON-?\d+)/);
+  if (!sel || !recs[sel[1]]) throw new Error(`${EVENTS_FILE} cursor does not select an event record.`);
+  return parseEventRecord(recs[sel[1]]);
+}
+
+function loadRoster(cardsText) {
+  const recs  = ttdbRecords(cardsText);
+  const evRec = recs[EVENT.cards_event];
+  if (!evRec) throw new Error(`${EVENT.cards_event} not found in ${EVENT.cards_store}.`);
+  const clsByLabel = {};
+  EVENT.classes.forEach(c => { clsByLabel[c.label] = c.key; BOTS[c.key] = []; });
+
+  for (const [, coord] of evRec.matchAll(/has_bot>(@LAT-?\d+LON-?\d+)/g)) {
+    const rec = recs[coord];
+    if (!rec) continue;
+    const field = re => (rec.match(re) || [])[1]?.trim() || '';
+    const name  = field(/^## (.+)$/m);
+    const card  = field(/^- Card image: !\[[^\]]*\]\(([^)]+)\)/m);
+    const cls   = clsByLabel[field(/^- Weight class:\s*(.+)$/m)];
+    if (!name || !card || !cls) continue; // class not running at this meet, or malformed
+    let id = card.replace(/^.*\//, '').replace(/\.[^.]+$/, '').toLowerCase();
+    if (BOT_MAP[id]) id += coord.replace(/\W/g, '');
+    const bot = { id, name, card, team: field(/^- Team:\s*(.+)$/m), cls };
+    BOTS[cls].push(bot);
+    BOT_MAP[id] = bot;
+  }
+}
+
+async function loadEvent() {
+  const get = f => fetch(f).then(r => r.ok ? r.text() : Promise.reject(new Error(`${f}: HTTP ${r.status}`)));
+  EVENT = selectEvent(await get(EVENTS_FILE));
+  const missing = ['title', 'cards_store', 'cards_event', 'outcome_lat', 'meet_record'].filter(k => !EVENT[k]);
+  if (!EVENT.classes.length) missing.push('class');
+  if (!EVENT.arenas.length)  missing.push('arena');
+  if (missing.length) {
+    throw new Error(`Event record "${EVENT.event_id || '?'}" is missing: ${missing.join(', ')}.`);
+  }
+  EVENT.arenas.forEach(a => { ARENA_MAP[a.key] = a; });
+  BASE = EVENT.cards_store.replace(/[^/]*$/, '');
+  loadRoster(await get(EVENT.cards_store));
+}
+
+function arenaAccepts(arenaKey, botId) {
+  const arena = ARENA_MAP[arenaKey];
+  const bot   = BOT_MAP[botId];
+  return !!(arena && bot && arena.classes.includes(bot.cls));
 }
 
 // ── STATE ───────────────────────────────────────────────────────────────────
@@ -691,11 +714,7 @@ setInput.addEventListener('change', () => {
 // ── ROSTER BUILD ─────────────────────────────────────────────────────────────
 function buildRoster() {
   const roster = document.getElementById('roster');
-  const CATS = [
-    { key: 'full',    label: 'Full Combat Antweight', cls: 'full'    },
-    { key: 'plastic', label: 'Plastic Antweight',     cls: 'plastic' },
-    { key: 'beetle',  label: 'Beetleweight',          cls: 'beetle'  },
-  ];
+  const CATS = EVENT.classes.map(c => ({ key: c.key, label: c.label, cls: c.key }));
 
   CATS.forEach(({ key, label, cls }) => {
     const sorted = [...BOTS[key]].sort((a, b) => a.name.localeCompare(b.name));
@@ -724,6 +743,7 @@ function buildRoster() {
       const chip = document.createElement('div');
       chip.className = 'chip';
       chip.textContent = bot.name;
+      if (bot.team) chip.title = bot.team;
       chip.draggable = true;
       chip.dataset.botId = bot.id;
 
@@ -769,10 +789,7 @@ function setPlaced(botId, isPlaced) {
 // ── SLOT CREATION ────────────────────────────────────────────────────────────
 function canDrop(slotEl, botId) {
   if (slotEl.dataset.botId) return false;                       // occupied
-  const bot = BOT_MAP[botId];
-  if (!bot) return false;
-  if (bot.cls === 'beetle' && slotEl.dataset.arena !== 'beetle') return false;
-  return true;
+  return arenaAccepts(slotEl.dataset.arena, botId);
 }
 
 function clearSlot(slotEl) {
@@ -895,7 +912,40 @@ function makeSlot(type, arena) {
   return el;
 }
 
-// ── ARENA STAGE BUILD ────────────────────────────────────────────────────────
+// ── ARENA BUILD ──────────────────────────────────────────────────────────────
+function buildArenas() {
+  const arenas = document.getElementById('arenas');
+  arenas.innerHTML = '';
+  arenas.classList.toggle('single', EVENT.arenas.length === 1);
+  EVENT.arenas.forEach(({ key, label, note }) => {
+    const col = document.createElement('div');
+    col.className = 'arena-col';
+    col.id = `${key}-col`;
+    col.innerHTML = `
+      <div class="arena-head ${key}">
+        <span></span>
+        <span class="arena-note"></span>
+      </div>
+      <div class="stage" id="${key}-stage"></div>
+      <div class="match-controls">
+        <button class="mbtn" data-arena="${key}" data-act="next">▲ Next from queue</button>
+        <button class="mbtn primary" data-arena="${key}" data-act="result">Record result</button>
+      </div>
+      <div class="queues-section">
+        <div class="qlabel">
+          <span>Queue</span>
+          <button class="add-q-btn" data-arena="${key}">+ Add Queue</button>
+        </div>
+        <div class="queue-rows" id="${key}-queue-rows"></div>
+        <div class="queue-drop-zone" id="${key}-queue-drop-zone">+ new queue</div>
+      </div>`;
+    const [lbl, nt] = col.querySelectorAll('.arena-head span');
+    lbl.textContent = label;
+    nt.textContent  = note;
+    arenas.appendChild(col);
+  });
+}
+
 function buildStage(arenaId, arena) {
   const stage = document.getElementById(`${arenaId}-stage`);
   stage.appendChild(makeSlot('stage', arena));
@@ -925,11 +975,7 @@ function attachAutoQueue(arena) {
   document.addEventListener('dragstart', () => { added = false; });
 
   function canExpandForBot() {
-    if (!dragBotId) return false;
-    const bot = BOT_MAP[dragBotId];
-    if (!bot) return false;
-    if (bot.cls === 'beetle' && arena !== 'beetle') return false;
-    return true;
+    return !!dragBotId && arenaAccepts(arena, dragBotId);
   }
 
   // Auto-expand when hovering over full queue rows
@@ -982,13 +1028,14 @@ function attachAutoQueue(arena) {
 document.addEventListener('dragstart', () => document.body.classList.add('dragging'));
 document.addEventListener('dragend',   () => document.body.classList.remove('dragging'));
 
-// ── MATCH LOG (agent memory: meet_ttdb.md, outcome lane lat 60) ──────────────
-// Contract per meet_ttdb.md @LAT10LON1: page fetches the store on load, merges
-// lat-60 records with localStorage (file wins, dedupe by match number), and
-// Export TTDB downloads the store with missing outcome records appended.
+// ── MATCH LOG (agent memory: meet_ttdb.md, the event's outcome lane) ────────
+// Contract per meet_ttdb.md @LAT10LON2: page fetches the store on load, merges
+// the event's outcome-lane records with localStorage (file wins, dedupe by
+// match number), and Export TTDB downloads the store with missing outcome
+// records appended. The lane comes from the event record's outcome_lat.
 const TTDB_FILE  = 'meet_ttdb.md';
-const OUTCOME_LAT = 60;
-const LS_KEY     = 'ircl_meet_lat60_log';
+let OUTCOME_LAT  = null; // set from EVENT.outcome_lat at init
+let LS_KEY       = null; // per lane, so meets never share a local log
 const METHOD_LABEL = { KO: 'KO', JD: 'JD', TAP: 'tap out', NS: 'no show' };
 
 let matchLog = [];   // {n, ts, arena, cls, red, blue, result, method, elapsed, fromFile}
@@ -999,10 +1046,11 @@ function loadLocalLog() {
   catch { return []; }
 }
 function saveLocalLog() {
+  if (!LS_KEY) return; // event not loaded yet
   localStorage.setItem(LS_KEY, JSON.stringify(matchLog.filter(m => !m.fromFile)));
 }
 
-// Tolerant parser: pull every @LAT60LONn record's key/value body lines.
+// Tolerant parser: pull every @LAT<lane>LONn record's key/value body lines.
 // Malformed records are skipped, never fatal (store rule: parser never crashes).
 function parseOutcomeRecords(text) {
   const out = [];
@@ -1044,7 +1092,7 @@ function outcomeToTTDB(m) {
   const title = m.result === 'draw'
     ? `${bot(m.red)} vs ${bot(m.blue)} — draw`
     : `${bot(m.result === 'red' ? m.red : m.blue)} def. ${bot(m.result === 'red' ? m.blue : m.red)}`;
-  return `@LAT${OUTCOME_LAT}LON${m.n} | created:${m.ts} | updated:${m.ts} | relates:derived_from@LAT30LON1
+  return `@LAT${OUTCOME_LAT}LON${m.n} | created:${m.ts} | updated:${m.ts} | relates:derived_from${EVENT.meet_record}
 [ew]
 conf:240
 rev:0
@@ -1062,7 +1110,7 @@ blue: ${m.blue}
 result: ${m.result}
 method: ${m.method}
 elapsed: ${m.elapsed}
-recorded_by: meets.html Spring Bot Breaker 2026`;
+recorded_by: meets.html ${EVENT.title}`;
 }
 
 // ── HISTORY PANEL ────────────────────────────────────────────────────────────
@@ -1199,13 +1247,6 @@ modalSave.addEventListener('click', () => {
   nextFromQueue(arena);
 });
 
-document.querySelectorAll('.mbtn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (btn.dataset.act === 'next') nextFromQueue(btn.dataset.arena);
-    else                            openResultModal(btn.dataset.arena);
-  });
-});
-
 // ── TTDB LOAD + EXPORT ───────────────────────────────────────────────────────
 function initMatchLog() {
   matchLog = mergeLogs([], loadLocalLog());
@@ -1221,6 +1262,7 @@ function initMatchLog() {
 }
 
 document.getElementById('btn-export').addEventListener('click', () => {
+  if (!EVENT) return;
   let base = ttdbBase;
   if (base === null) {
     alert('meet_ttdb.md could not be loaded (serve the site over http to export the full store). Exporting outcome records only.');
@@ -1239,21 +1281,53 @@ document.getElementById('btn-export').addEventListener('click', () => {
 });
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
-buildRoster();
-buildStage('ant',    'ant');
-buildStage('beetle', 'beetle');
-addQueueRow('ant');
-addQueueRow('beetle');
+function init() {
+  document.title = `${EVENT.title} – Match Control`;
+  document.getElementById('event-title').textContent = EVENT.title;
 
-attachAutoQueue('ant');
-attachAutoQueue('beetle');
+  const mins = Math.max(1, Math.min(99, parseInt(EVENT.timer_min, 10) || 3));
+  setInput.value = mins;
+  timerTotal = timerSec = mins * 60;
 
-document.querySelectorAll('.add-q-btn').forEach(btn => {
-  btn.addEventListener('click', () => addQueueRow(btn.dataset.arena));
-});
+  OUTCOME_LAT = parseInt(EVENT.outcome_lat, 10);
+  LS_KEY      = `ircl_meet_lat${OUTCOME_LAT}_log`;
+
+  buildRoster();
+  buildArenas();
+  EVENT.arenas.forEach(({ key }) => {
+    buildStage(key, key);
+    addQueueRow(key);
+    attachAutoQueue(key);
+  });
+
+  document.querySelectorAll('.add-q-btn').forEach(btn => {
+    btn.addEventListener('click', () => addQueueRow(btn.dataset.arena));
+  });
+  document.querySelectorAll('.mbtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.dataset.act === 'next') nextFromQueue(btn.dataset.arena);
+      else                            openResultModal(btn.dataset.arena);
+    });
+  });
+
+  renderTimer();
+  initMatchLog();
+}
+
+function showLoadError(err) {
+  const msg = document.getElementById('load-msg');
+  msg.classList.add('error');
+  msg.textContent = `Could not load the event: ${err.message}`;
+  if (location.protocol === 'file:') {
+    const hint = document.createElement('div');
+    hint.innerHTML = '<br>This page reads <code>events_ttdb.md</code> and the cards store over http. ' +
+      'Run <code>python service.py</code> and open <code>http://127.0.0.1:8000/meets.html</code>.';
+    msg.appendChild(hint);
+  }
+}
 
 renderTimer();
-initMatchLog();
+loadEvent().then(init, showLoadError);
 </script>
 </body>
 </html>

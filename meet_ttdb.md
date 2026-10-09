@@ -38,7 +38,7 @@ selected:
   - "@LAT20LON1"
 preview:
   "@LAT20LON1": "OBJECTIVE — build a complete meet management and event history; the store's highest-EPS record until a full meet has been run and reconciled"
-agent_note: "Store created 2026-07-21. Format follows agent-memory-system_ttdb.md (Profile 1). meets.html is the acting body: it stages matches, times them, records outcomes, and exports this file with outcome records appended at lat 60. Reconcile @LAT20LON1 when the first full meet is in the outcome lane."
+agent_note: "Store created 2026-07-21. Format follows agent-memory-system_ttdb.md (Profile 1). meets.html is the acting body: it stages matches, times them, records outcomes, and exports this file with outcome records appended at lat 60. Reconcile @LAT20LON1 when the first full meet is in the outcome lane. 2026-10-09: meets.html is now driven by events_ttdb.md (contract @LAT10LON2); live meet is Cosmic Chaos 2026, ant arena only (@LAT30LON3), outcome lane 70."
 ```
 
 ---
@@ -183,3 +183,72 @@ that matters to this store. Consequence: the export-and-commit step at the
 end of a meet is not bookkeeping, it is the moment experience becomes
 memory. @LAT20LON1 reconciles against what is in the lane, not against
 what the page displayed on the day.
+
+---
+
+@LAT10LON2 | created:1791504000 | updated:1791504000 | relates:revises@LAT10LON1,depends_on@LAT0LON0
+[ew]
+conf:200
+rev:0
+sal:180
+touched:1791504000
+[/ew]
+
+**Integration contract, revised — meets.html runs whatever meet events_ttdb.md selects**
+src: meets.html; events_ttdb.md
+
+Same loop as @LAT10LON1, but the page no longer has a roster or arenas
+built in. On load it reads events_ttdb.md, takes the event record its
+cursor selects (or `meets.html?event=<event_id>`), then reads the roster
+(bots, card images, weight classes) from the cards store the record names
+(cards/cards/IRCL_TTDB.md). Only classes the event record lists are shown,
+and only the arenas it lists are built. The outcome lane is the record's
+`outcome_lat`, not a fixed lat 60. Outcome records point at the record's
+`meet_record` (`derived_from`), and their `recorded_by` carries the event
+title. Each lane has its own localStorage key (`ircl_meet_lat<lane>_log`),
+so one meet's unsaved matches never appear in another's history; the
+lat-60 key is unchanged. The page now needs http (`python service.py`):
+on file:// it shows how to start the server instead of a roster.
+
+---
+
+@LAT30LON3 | created:1791504000 | updated:1791504000 | relates:revises@LAT30LON2,depends_on@LAT10LON2,supports@LAT20LON1
+[ew]
+conf:190
+rev:0
+sal:210
+touched:1791504000
+[/ew]
+
+**MEET, revised — IRCL: Cosmic Chaos 2026 runs on the ant arena only**
+src: league decision 2026-10-09; events_ttdb.md @LAT30LON2
+
+The meet is now limited to the ant arena. Beetleweight and the beetle
+arena are not running. Two classes compete: Full Combat Antweight (Sovereign
+Gear, Event Horizon, Cyclone, Nino, HellTongue Micro) and Plastic Antweight
+(Entropy, Maul, Dino Dude, Poison Ivy) — 9 bots, read from
+cards/cards/IRCL_TTDB.md @LAT-45LON10. The two registered beetles (Adam
+Smasher, HellTongue) are kept in the cards store but left off the page.
+Which physical arena serves as the ant arena (the 4×4×2 or the 8×8×4 ft)
+was not specified. meets.html is now staged for this meet. Outcome lane
+stays lat 70; lon = match number. The rest of @LAT30LON2 (date, venue,
+blacklight, +50 g glow allowance) still holds.
+
+---
+
+@LAT30LON4 | created:1791504000 | updated:1791504000 | relates:revises@LAT30LON3,supports@LAT20LON1
+[ew]
+conf:200
+rev:0
+sal:200
+touched:1791504000
+[/ew]
+
+**MEET, revised — Cosmic Chaos 2026's ant arena is the 4×4×2 ft arena**
+src: league decision 2026-10-09; events/Cosmic Chaos 2026.html
+
+Settles the open point in @LAT30LON3: the ant arena is the 4×4×2 ft
+arena. Full Combat Antweight and Plastic Antweight both fight there; the
+8×8×4 ft arena is not used at this meet. The public event page now
+lists the two ant classes and the one arena, with no beetleweight.
+Everything else in @LAT30LON3 holds.
